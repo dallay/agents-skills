@@ -1,0 +1,174 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Validate Skills
+
+on:
+  push:
+    branches: [main]
+    paths: ['skills/**']
+  pull_request:
+    paths: ['skills/**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate SKILL.md Manifests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Validate all skill manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Colors for output
+          RED='\033[0;31m'
+          GREEN='\033[0;32m'
+          YELLOW='\033[0;33m'
+          BOLD='\033[1m'
+          NC='\033[0m' # No Color
+
+          errors=0
+          validated=0
+
+          echo -e "${BOLD}=== Skill Manifest Validation ===${NC}"
+          echo ""
+
+          # --- Check for duplicate skill directories ---
+          if [ -d "skills" ]; then
+            dupes=$(find skills -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort | uniq -d || true)
+            if [ -n "$dupes" ]; then
+              echo -e "${RED}ERROR:${NC} Duplicate skill directories found:"
+              echo "$dupes" | while IFS= read -r d; do
+                echo -e "  - ${RED}$d${NC}"
+              done
+              errors=$((errors + 1))
+            fi
+          fi
+
+          # --- Find all SKILL.md files ---
+          mapfile -t skill_files < <(find skills -name "SKILL.md" -type f 2>/dev/null | sort)
+
+          if [ ${#skill_files[@]} -eq 0 ]; then
+            echo -e "${YELLOW}No skills found in skills/ directory. Nothing to validate.${NC}"
+            echo ""
+            echo -e "${BOLD}Summary:${NC} 0 skills validated, 0 errors"
+            exit 0
+          fi
+
+          # --- Validate each SKILL.md ---
+          for file in "${skill_files[@]}"; do
+            dir=$(dirname "$file")
+            skill_name=$(basename "$dir")
+            file_errors=0
+
+            # 1. Check frontmatter exists (file starts with ---)
+            first_line=$(head -1 "$file")
+            if [ "$first_line" != "---" ]; then
+              echo -e "${RED}ERROR:${NC} ${file} — missing frontmatter (must start with '---')"
+              file_errors=$((file_errors + 1))
+              errors=$((errors + 1))
+              validated=$((validated + 1))
+              continue
+            fi
+
+            # Extract frontmatter block (between first and second ---)
+            frontmatter=$(sed -n '2,/^---$/p' "$file" | sed '$d')
+            if [ -z "$frontmatter" ]; then
+              echo -e "${RED}ERROR:${NC} ${file} — empty or malformed frontmatter"
+              file_errors=$((file_errors + 1))
+              errors=$((errors + 1))
+              validated=$((validated + 1))
+              continue
+            fi
+
+            # 2. Check 'name' field exists
+            manifest_name=$(echo "$frontmatter" | grep -E '^name:\s*' | sed 's/^name:\s*//' | tr -d '[:space:]' || true)
+            if [ -z "$manifest_name" ]; then
+              echo -e "${RED}ERROR:${NC} ${file} — 'name' field missing in frontmatter"
+              file_errors=$((file_errors + 1))
+              errors=$((errors + 1))
+            else
+              # 3. Check name is kebab-case (lowercase letters, digits, hyphens only)
+              if ! echo "$manifest_name" | grep -qE '^[a-z][a-z0-9]*(-[a-z0-9]+)*$'; then
+                echo -e "${RED}ERROR:${NC} ${file} — name '${manifest_name}' is not valid kebab-case"
+                file_errors=$((file_errors + 1))
+                errors=$((errors + 1))
+              fi
+
+              # 4. Check name matches parent directory name
+              if [ "$manifest_name" != "$skill_name" ]; then
+                echo -e "${RED}ERROR:${NC} ${file} — name '${manifest_name}' does not match directory '${skill_name}'"
+                file_errors=$((file_errors + 1))
+                errors=$((errors + 1))
+              fi
+            fi
+
+            # 5. Check 'description' field exists and is non-empty
+            desc=$(echo "$frontmatter" | grep -E '^description:\s*' | sed 's/^description:\s*//' || true)
+            # Handle multi-line description with > or | YAML syntax
+            if [ -z "$desc" ] || [ "$desc" = ">" ] || [ "$desc" = "|" ]; then
+              # For folded/literal block scalars, check the next non-empty indented line
+              desc_block=$(echo "$frontmatter" | sed -n '/^description:/,/^[a-z]/p' | sed '1d;/^[a-z]/d' | tr -d '[:space:]')
+              if [ -z "$desc_block" ]; then
+                # Last resort: check if description has inline content
+                desc_inline=$(echo "$frontmatter" | grep -E '^description:\s*.+' | sed 's/^description:\s*//' | tr -d '[:space:]' || true)
+                if [ -z "$desc_inline" ] || [ "$desc_inline" = ">" ] || [ "$desc_inline" = "|" ]; then
+                  echo -e "${RED}ERROR:${NC} ${file} — 'description' field missing or empty"
+                  file_errors=$((file_errors + 1))
+                  errors=$((errors + 1))
+                fi
+              fi
+            fi
+
+            # 6. Check 'triggers' field exists (array of strings)
+            has_triggers=$(echo "$frontmatter" | grep -cE '^triggers:\s*$' || true)
+            has_triggers_inline=$(echo "$frontmatter" | grep -cE '^triggers:\s*\[' || true)
+            trigger_items=$(echo "$frontmatter" | grep -cE '^\s+-\s+' || true)
+
+            if [ "$has_triggers" -eq 0 ] && [ "$has_triggers_inline" -eq 0 ]; then
+              echo -e "${RED}ERROR:${NC} ${file} — 'triggers' field missing"
+              file_errors=$((file_errors + 1))
+              errors=$((errors + 1))
+            elif [ "$has_triggers" -gt 0 ] && [ "$trigger_items" -eq 0 ]; then
+              echo -e "${RED}ERROR:${NC} ${file} — 'triggers' field is empty (no items)"
+              file_errors=$((file_errors + 1))
+              errors=$((errors + 1))
+            fi
+
+            # 7. Check content after frontmatter is non-empty
+            content_after=$(awk 'BEGIN{n=0} /^---$/{n++; next} n>=2{print}' "$file" | tr -d '[:space:]')
+            if [ -z "$content_after" ]; then
+              echo -e "${RED}ERROR:${NC} ${file} — no content after frontmatter"
+              file_errors=$((file_errors + 1))
+              errors=$((errors + 1))
+            fi
+
+            # Report result for this file
+            if [ "$file_errors" -eq 0 ]; then
+              echo -e "${GREEN}  OK:${NC} ${file} (${skill_name})"
+            fi
+
+            validated=$((validated + 1))
+          done
+
+          # --- Summary ---
+          echo ""
+          echo -e "${BOLD}Summary:${NC} ${validated} skill(s) validated, ${errors} error(s)"
+
+          if [ "$errors" -gt 0 ]; then
+            echo ""
+            echo -e "${RED}${BOLD}FAILED:${NC} ${errors} validation error(s) found"
+            exit 1
+          fi
+
+          echo ""
+          echo -e "${GREEN}${BOLD}All skills validated successfully${NC}"

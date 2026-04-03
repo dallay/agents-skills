@@ -1,0 +1,47 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check-title:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate PR title follows conventional commits
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if echo "$PR_TITLE" | grep -qE '^(feat|fix|docs|chore|refactor|test|ci)(\(.+\))?!?: .+'; then
+            echo "✅ PR title is valid: $PR_TITLE"
+          else
+            echo "❌ PR title does not follow conventional commit format."
+            echo ""
+            echo "Expected format: <type>[optional scope][!]: <description>"
+            echo ""
+            echo "Allowed types:"
+            echo "  feat:     — new feature or skill"
+            echo "  fix:      — bug fix or content correction"
+            echo "  docs:     — documentation changes"
+            echo "  chore:    — maintenance, CI, tooling"
+            echo "  refactor: — code restructuring"
+            echo "  test:     — adding or updating tests"
+            echo "  ci:       — CI/CD workflow changes"
+            echo ""
+            echo "Examples:"
+            echo "  feat: add terraform skill"
+            echo "  fix(accessibility): correct WCAG reference"
+            echo "  docs: update CONTRIBUTING guide"
+            echo "  feat!: redesign skill manifest format"
+            echo ""
+            echo "Your title: $PR_TITLE"
+            exit 1
+          fi
