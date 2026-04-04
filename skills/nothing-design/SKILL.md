@@ -212,7 +212,7 @@ Nothing-inspired does **not** mean inaccessible. Preserve the visual language wh
 - Maintain readable contrast for all text and interactive states; do not use `--text-disabled` for essential content
 - Every interactive element needs a visible focus state; prefer border, underline, or inversion rather than glow/shadow
 - Respect minimum touch target size of 44x44px for controls
-- Provide reduced-motion friendly behavior; if animation is used, keep it subtle and removable
+- Provide reduced-motion-friendly behavior; if animation is used, keep it subtle and removable
 - Use semantic labels and accessible names for icon-only buttons, toggles, segmented controls, and data widgets
 - Do not communicate status with color alone; pair color with text, value, icon, pattern, or label
 

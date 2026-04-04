@@ -1,6 +1,6 @@
 # Mobile SEO
 
-### Responsive design
+## Responsive design
 
 ```html
 <!-- ❌ Not mobile-friendly -->
@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 ```
 
-### Tap targets
+## Tap targets
 
 ```css
 /* ❌ Too small for mobile */
@@ -28,7 +28,7 @@
 }
 ```
 
-### Font sizes
+## Font sizes
 
 ```css
 /* ❌ Too small on mobile */

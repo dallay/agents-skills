@@ -20,6 +20,7 @@ Load fonts via Google Fonts `<link>` or `@import`. Use CSS custom properties, `r
   --success: #4A9E5C;
   --warning: #D4A843;
   --interactive: #5B9BF6;
+  --space-2xs: 2px;
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;

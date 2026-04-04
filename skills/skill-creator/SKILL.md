@@ -29,7 +29,7 @@ Create a skill when:
 
 ## Skill Structure
 
-```
+```text
 skills/{skill-name}/
 ├── SKILL.md              # Required - main skill file
 ├── assets/               # Optional - templates, schemas, examples
@@ -43,7 +43,7 @@ skills/{skill-name}/
 
 ## SKILL.md Template
 
-```
+```markdown
 ---
 name: {skill-name}
 description: >
@@ -134,6 +134,7 @@ Only include `compatibility`, `metadata`, `license`, or `allowed-tools` when the
 ## Content Guidelines
 
 ### DO
+
 - Start with the most critical patterns
 - Keep code examples minimal and focused
 - Keep the main `SKILL.md` at 500 lines or fewer
@@ -141,6 +142,7 @@ Only include `compatibility`, `metadata`, `license`, or `allowed-tools` when the
 - Tell the agent when to read an extra file instead of dumping everything into `SKILL.md`
 
 ### DON'T
+
 - Add Keywords section (agent searches frontmatter, not body)
 - Duplicate content from existing docs (reference instead)
 - Include lengthy explanations the agent already knows

@@ -1,6 +1,6 @@
 # Code quality
 
-### Valid HTML
+## Valid HTML
 
 ```html
 <!-- ❌ Invalid HTML -->
@@ -24,7 +24,7 @@
 <a href="/" class="button">Click</a>
 ```
 
-### Semantic HTML
+## Semantic HTML
 
 ```html
 <!-- ❌ Non-semantic -->
@@ -52,7 +52,7 @@
 </main>
 ```
 
-### Image aspect ratios
+## Image aspect ratios
 
 ```html
 <!-- ❌ Distorted images -->

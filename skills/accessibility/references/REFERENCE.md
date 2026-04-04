@@ -1,6 +1,6 @@
 # Testing checklist
 
-### Automated testing
+## Automated testing
 
 ```bash
 # Lighthouse accessibility audit
@@ -11,7 +11,7 @@ npm install @axe-core/cli -g
 axe https://example.com
 ```
 
-### Manual testing
+## Manual testing
 
 - [ ] **Keyboard navigation:** Tab through entire page, use Enter/Space to activate
 - [ ] **Screen reader:** Test with VoiceOver (Mac), NVDA (Windows), or TalkBack (Android)
@@ -20,7 +20,7 @@ axe https://example.com
 - [ ] **Reduced motion:** Test with `prefers-reduced-motion: reduce`
 - [ ] **Focus order:** Logical and follows visual order
 
-### Screen reader commands
+## Screen reader commands
 
 | Action | VoiceOver (Mac) | NVDA (Windows) |
 |--------|-----------------|----------------|

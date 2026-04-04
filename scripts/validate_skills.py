@@ -35,7 +35,7 @@ def extract_frontmatter(text: str) -> tuple[list[str], str]:
 def top_level_keys(frontmatter_lines: list[str]) -> list[str]:
     keys: list[str] = []
     for line in frontmatter_lines:
-        if not line or line.startswith(" ") or line.startswith("\t"):
+        if not line or line.startswith((" ", "\t")):
             continue
         if ":" not in line:
             continue
@@ -68,7 +68,10 @@ def extract_description(frontmatter_lines: list[str]) -> str:
 def validate_skill(skill_dir: Path) -> list[str]:
     problems: list[str] = []
     skill_file = skill_dir / "SKILL.md"
-    text = skill_file.read_text()
+    try:
+        text = skill_file.read_text()
+    except (OSError, UnicodeDecodeError) as exc:
+        return [f"unable to read {skill_file}: {exc}"]
 
     try:
         frontmatter_lines, body = extract_frontmatter(text)
