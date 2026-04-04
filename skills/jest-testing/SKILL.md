@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Writing or refactoring unit and integration tests with Jest.
@@ -20,11 +21,16 @@ metadata:
 
 ## Critical Patterns
 
-- **Arrange-Act-Assert:** Every test follows three clear phases — set up state, perform the action, verify the outcome. No mixing.
-- **Test Behavior, Not Implementation:** Assert on observable outcomes (return values, DOM changes, thrown errors), not internal function calls.
-- **Isolate with Mocking:** Mock external dependencies (APIs, databases, file system) but NOT the unit under test. Over-mocking hides real bugs.
-- **One Assertion Focus Per Test:** Each `it` block should test one logical behavior. Multiple assertions are fine if they verify the same behavior.
-- **Deterministic Tests:** No reliance on real time, network, or random values. Use fake timers, mocked fetch, and seeded data.
+- **Arrange-Act-Assert:** Every test follows three clear phases — set up state, perform the action,
+  verify the outcome. No mixing.
+- **Test Behavior, Not Implementation:** Assert on observable outcomes (return values, DOM changes,
+  thrown errors), not internal function calls.
+- **Isolate with Mocking:** Mock external dependencies (APIs, databases, file system) but NOT the
+  unit under test. Over-mocking hides real bugs.
+- **One Assertion Focus Per Test:** Each `it` block should test one logical behavior. Multiple
+  assertions are fine if they verify the same behavior.
+- **Deterministic Tests:** No reliance on real time, network, or random values. Use fake timers,
+  mocked fetch, and seeded data.
 - **Clean Up After Yourself:** Reset mocks in `afterEach`. Avoid shared mutable state between tests.
 
 ## Code Examples
@@ -250,17 +256,21 @@ export default config;
 
 - Use `describe` blocks to group related tests by function or feature.
 - Name tests as complete sentences: `it("returns null when user is not found")`.
-- Use `beforeEach` for setup that every test in a `describe` needs — never rely on test execution order.
+- Use `beforeEach` for setup that every test in a `describe` needs — never rely on test execution
+  order.
 - Run tests in watch mode during development: `jest --watch`.
 - Use `jest.requireActual()` when partially mocking a module to preserve unmocked exports.
 - Run `--detectOpenHandles` to debug tests that won't exit.
 
 ### DON'T
 
-- DON'T use `toBeTruthy()` when you can be specific — use `toBe(true)`, `toEqual(value)`, or `toBeNull()`.
+- DON'T use `toBeTruthy()` when you can be specific — use `toBe(true)`, `toEqual(value)`, or
+  `toBeNull()`.
 - DON'T mock the module under test — only mock its dependencies.
 - DON'T write tests that depend on execution order or shared mutable state.
 - DON'T snapshot large component trees — snapshots become noise that nobody reviews.
 - DON'T use `test.only` or `describe.only` in committed code — they silently skip other tests.
-- DON'T suppress errors with `try/catch` inside tests — let Jest catch and report them with `rejects.toThrow`.
-- DON'T use arbitrary `setTimeout` or `sleep` for async tests — use `waitFor`, fake timers, or resolved promises.
+- DON'T suppress errors with `try/catch` inside tests — let Jest catch and report them with
+  `rejects.toThrow`.
+- DON'T use arbitrary `setTimeout` or `sleep` for async tests — use `waitFor`, fake timers, or
+  resolved promises.
