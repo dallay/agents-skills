@@ -9,13 +9,15 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Grafana Dashboards
 
 Create and manage production-ready Grafana dashboards for comprehensive system observability.
 
 ## Purpose
 
-Design effective Grafana dashboards for monitoring applications, infrastructure, and business metrics.
+Design effective Grafana dashboards for monitoring applications, infrastructure, and business
+metrics.
 
 ## When to Use
 

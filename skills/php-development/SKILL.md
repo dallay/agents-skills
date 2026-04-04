@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # PHP Development
 
 Production patterns for modern PHP (8.x+), covering Composer, PSR standards, type safety,
@@ -59,13 +60,13 @@ myapp/
 
 ### 2. Key Standards
 
-| Standard | Purpose                                |
-|----------|----------------------------------------|
-| PSR-4    | Autoloading: namespace ↔ directory map |
+| Standard | Purpose                                      |
+|----------|----------------------------------------------|
+| PSR-4    | Autoloading: namespace ↔ directory map       |
 | PSR-12   | Extended coding style (superseded by PER-CS) |
-| PSR-7    | HTTP message interfaces                |
-| PSR-11   | Container interface (DI)               |
-| PSR-3    | Logger interface                       |
+| PSR-7    | HTTP message interfaces                      |
+| PSR-11   | Container interface (DI)                     |
+| PSR-3    | Logger interface                             |
 
 ## Quick Start
 

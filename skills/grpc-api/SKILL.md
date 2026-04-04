@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # gRPC API Development
 
 Build efficient gRPC services using Protocol Buffers for contract-first API design, with support for
@@ -24,13 +25,19 @@ unary calls, server streaming, client streaming, and bidirectional streaming.
 
 ## Critical Patterns
 
-- **Contract First:** Always define your `.proto` file before writing any server or client code. The proto IS your API contract.
-- **Use Proper Status Codes:** Map domain errors to gRPC status codes (`NOT_FOUND`, `ALREADY_EXISTS`, `INVALID_ARGUMENT`, etc.). Never return raw exceptions.
-- **Field Numbering is Forever:** Once a proto field number is assigned and released, NEVER reuse it. Add new fields with new numbers; deprecate old ones.
-- **Streaming for Large Data:** Use server streaming for large result sets and client streaming for bulk uploads. Avoid sending massive unary payloads.
-- **Deadlines Over Timeouts:** Always set deadlines on client calls. A missing deadline can hang forever in production.
+- **Contract First:** Always define your `.proto` file before writing any server or client code. The
+  proto IS your API contract.
+- **Use Proper Status Codes:** Map domain errors to gRPC status codes (`NOT_FOUND`,
+  `ALREADY_EXISTS`, `INVALID_ARGUMENT`, etc.). Never return raw exceptions.
+- **Field Numbering is Forever:** Once a proto field number is assigned and released, NEVER reuse
+  it. Add new fields with new numbers; deprecate old ones.
+- **Streaming for Large Data:** Use server streaming for large result sets and client streaming for
+  bulk uploads. Avoid sending massive unary payloads.
+- **Deadlines Over Timeouts:** Always set deadlines on client calls. A missing deadline can hang
+  forever in production.
 - **TLS in Production:** Never use `createInsecure()` credentials outside of local development.
-- **Keep Messages Flat:** Avoid deeply nested message types. Flatten where possible for better wire efficiency and readability.
+- **Keep Messages Flat:** Avoid deeply nested message types. Flatten where possible for better wire
+  efficiency and readability.
 
 ## Proto Definition Patterns
 
@@ -310,16 +317,16 @@ client.getUser({ id: "123" }, metadata, { deadline }, (err, user) => {
 
 ## gRPC Status Codes Reference
 
-| Code | Name | When to Use |
-|------|------|-------------|
-| 0 | `OK` | Success |
-| 3 | `INVALID_ARGUMENT` | Bad input from client |
-| 5 | `NOT_FOUND` | Resource does not exist |
-| 6 | `ALREADY_EXISTS` | Duplicate creation attempt |
-| 7 | `PERMISSION_DENIED` | Authenticated but not authorized |
-| 13 | `INTERNAL` | Unexpected server error |
-| 14 | `UNAVAILABLE` | Transient failure, client should retry |
-| 16 | `UNAUTHENTICATED` | Missing or invalid credentials |
+| Code | Name                | When to Use                            |
+|------|---------------------|----------------------------------------|
+| 0    | `OK`                | Success                                |
+| 3    | `INVALID_ARGUMENT`  | Bad input from client                  |
+| 5    | `NOT_FOUND`         | Resource does not exist                |
+| 6    | `ALREADY_EXISTS`    | Duplicate creation attempt             |
+| 7    | `PERMISSION_DENIED` | Authenticated but not authorized       |
+| 13   | `INTERNAL`          | Unexpected server error                |
+| 14   | `UNAVAILABLE`       | Transient failure, client should retry |
+| 16   | `UNAUTHENTICATED`   | Missing or invalid credentials         |
 
 ## Best Practices
 

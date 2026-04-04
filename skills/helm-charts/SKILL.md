@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Creating a new Helm chart for a Kubernetes application.
@@ -19,12 +20,18 @@ metadata:
 
 ## Critical Patterns
 
-- **Named Templates in `_helpers.tpl`:** ALWAYS extract reusable label sets, selectors, and name logic into named templates. Duplicating labels across resources is a maintenance trap.
-- **Values Schema Validation:** Provide a `values.schema.json` to catch misconfiguration early, before templates render invalid YAML.
-- **Immutable Selectors:** NEVER change `matchLabels` selectors after initial deployment — Kubernetes rejects updates to immutable fields and the release breaks.
-- **Quote All Strings in Templates:** Use `{{ .Values.foo | quote }}` for string values to prevent YAML type coercion (`"true"` becomes boolean `true` without quotes).
-- **Resource Naming Conventions:** Include release name in resource names via `{{ include "mychart.fullname" . }}` to support multiple installations in the same namespace.
-- **Hook Weight and Delete Policy:** Always set `helm.sh/hook-weight` for ordering and `helm.sh/hook-delete-policy` to clean up completed hook resources.
+- **Named Templates in `_helpers.tpl`:** ALWAYS extract reusable label sets, selectors, and name
+  logic into named templates. Duplicating labels across resources is a maintenance trap.
+- **Values Schema Validation:** Provide a `values.schema.json` to catch misconfiguration early,
+  before templates render invalid YAML.
+- **Immutable Selectors:** NEVER change `matchLabels` selectors after initial deployment —
+  Kubernetes rejects updates to immutable fields and the release breaks.
+- **Quote All Strings in Templates:** Use `{{ .Values.foo | quote }}` for string values to prevent
+  YAML type coercion (`"true"` becomes boolean `true` without quotes).
+- **Resource Naming Conventions:** Include release name in resource names via
+  `{{ include "mychart.fullname" . }}` to support multiple installations in the same namespace.
+- **Hook Weight and Delete Policy:** Always set `helm.sh/hook-weight` for ordering and
+  `helm.sh/hook-delete-policy` to clean up completed hook resources.
 
 ## Code Examples
 
@@ -76,54 +83,54 @@ dependencies:
 ### _helpers.tpl — Named Templates
 
 ```yaml
-{{/*
-Chart name, truncated to 63 chars (K8s label limit).
-*/}}
-{{- define "mychart.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{ { /*
+  Chart name, truncated to 63 chars (K8s label limit).
+  */ } }
+  { { - define "mychart.name" - } }
+  { { - default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" } }
+  { { - end } }
 
-{{/*
-Fully qualified app name: release-chartname, truncated.
-*/}}
-{{- define "mychart.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
+  { { /*
+    Fully qualified app name: release-chartname, truncated.
+    */ } }
+  { { - define "mychart.fullname" - } }
+  { { - if .Values.fullnameOverride } }
+  { { - .Values.fullnameOverride | trunc 63 | trimSuffix "-" } }
+  { { - else } }
+  { { - $name := default .Chart.Name .Values.nameOverride } }
+  { { - if contains $name .Release.Name } }
+  { { - .Release.Name | trunc 63 | trimSuffix "-" } }
+  { { - else } }
+  { { - printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" } }
+  { { - end } }
+  { { - end } }
+  { { - end } }
 
-{{/*
-Common labels applied to every resource.
-*/}}
-{{- define "mychart.labels" -}}
-helm.sh/chart: {{ include "mychart.chart" . }}
-{{ include "mychart.selectorLabels" . }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
+  { { /*
+    Common labels applied to every resource.
+    */ } }
+  { { - define "mychart.labels" - } }
+helm.sh/chart: { { include "mychart.chart" . } }
+  { { include "mychart.selectorLabels" . } }
+app.kubernetes.io/version: { { .Chart.AppVersion | quote } }
+app.kubernetes.io/managed-by: { { .Release.Service } }
+  { { - end } }
 
-{{/*
-Selector labels — used in both Deployment and Service.
-NEVER change these after first install.
-*/}}
-{{- define "mychart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "mychart.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
+  { { /*
+    Selector labels — used in both Deployment and Service.
+    NEVER change these after first install.
+    */ } }
+  { { - define "mychart.selectorLabels" - } }
+app.kubernetes.io/name: { { include "mychart.name" . } }
+app.kubernetes.io/instance: { { .Release.Name } }
+  { { - end } }
 
-{{/*
-Chart label: name-version.
-*/}}
-{{- define "mychart.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
+  { { /*
+    Chart label: name-version.
+      */ } }
+  { { - define "mychart.chart" - } }
+  { { - printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" } }
+  { { - end } }
 ```
 
 ### Deployment Template
@@ -132,51 +139,51 @@ Chart label: name-version.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mychart.fullname" . }}
+  name: { { include "mychart.fullname" . } }
   labels:
-    {{- include "mychart.labels" . | nindent 4 }}
+    { { - include "mychart.labels" . | nindent 4 } }
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  { { - if not .Values.autoscaling.enabled } }
+  replicas: { { .Values.replicaCount } }
+  { { - end } }
   selector:
     matchLabels:
-      {{- include "mychart.selectorLabels" . | nindent 6 }}
+      { { - include "mychart.selectorLabels" . | nindent 6 } }
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config: { { include (print $.Template.BasePath "/configmap.yaml") . | sha256sum } }
       labels:
-        {{- include "mychart.labels" . | nindent 8 }}
+        { { - include "mychart.labels" . | nindent 8 } }
     spec:
-      serviceAccountName: {{ include "mychart.fullname" . }}
+      serviceAccountName: { { include "mychart.fullname" . } }
       containers:
-        - name: {{ .Chart.Name }}
+        - name: { { .Chart.Name } }
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: { { .Values.image.pullPolicy } }
           ports:
             - name: http
-              containerPort: {{ .Values.service.targetPort }}
+              containerPort: { { .Values.service.targetPort } }
               protocol: TCP
-          {{- with .Values.resources }}
+          { { - with .Values.resources } }
           resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.livenessProbe }}
+            { { - toYaml . | nindent 12 } }
+          { { - end } }
+          { { - with .Values.livenessProbe } }
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.readinessProbe }}
+            { { - toYaml . | nindent 12 } }
+          { { - end } }
+          { { - with .Values.readinessProbe } }
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            { { - toYaml . | nindent 12 } }
+          { { - end } }
           env:
             - name: APP_ENV
-              value: {{ .Values.environment | quote }}
-            {{- range $key, $value := .Values.extraEnv }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
+              value: { { .Values.environment | quote } }
+            { { - range $key, $value := .Values.extraEnv } }
+            - name: { { $key } }
+              value: { { $value | quote } }
+            { { - end } }
 ```
 
 ### values.yaml
@@ -197,13 +204,13 @@ service:
 ingress:
   enabled: false
   className: nginx
-  annotations: {}
+  annotations: { }
   hosts:
     - host: api.example.com
       paths:
         - path: /
           pathType: Prefix
-  tls: []
+  tls: [ ]
 
 resources:
   requests:
@@ -220,7 +227,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 
 environment: production
-extraEnv: {}
+extraEnv: { }
 
 livenessProbe:
   httpGet:
@@ -249,7 +256,7 @@ redis:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "mychart.fullname" . }}-migrate
+  name: { { include "mychart.fullname" . } }-migrate
   labels:
     {{- include "mychart.labels" . | nindent 4 }}
   annotations:
@@ -264,12 +271,12 @@ spec:
       containers:
         - name: migrate
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ["./migrate", "--direction", "up"]
+          command: [ "./migrate", "--direction", "up" ]
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "mychart.fullname" . }}-db
+                  name: { { include "mychart.fullname" . } }-db
                   key: url
 ```
 
@@ -280,7 +287,7 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ include "mychart.fullname" . }}-test
+  name: { { include "mychart.fullname" . } }-test
   labels:
     {{- include "mychart.labels" . | nindent 4 }}
   annotations:
@@ -344,7 +351,8 @@ helm install my-release ./mychart --dry-run --debug
 - Set `helm.sh/hook-delete-policy` on every hook to avoid resource buildup.
 - Use `--wait` and `--timeout` on `helm upgrade` in CI/CD pipelines.
 - Run `helm lint` and `helm template` in CI before deploying.
-- Version `Chart.yaml` independently from `appVersion` — chart structure changes need their own version.
+- Version `Chart.yaml` independently from `appVersion` — chart structure changes need their own
+  version.
 - Use `condition` fields in dependencies to allow toggling sub-charts via values.
 - Provide sensible defaults in `values.yaml` that work for local development.
 - Use `helm diff` plugin (`helm diff upgrade ...`) to preview changes before applying.
@@ -358,4 +366,5 @@ helm install my-release ./mychart --dry-run --debug
 - Commit `charts/` directory contents — commit `Chart.lock` and run `helm dep update` in CI.
 - Use `lookup` function without fallback — it returns empty during `helm template` (no cluster).
 - Nest `{{ toYaml }}` without `nindent` — produces broken indentation in rendered manifests.
-- Override values with `--set` in production — use versioned `-f values-prod.yaml` files for auditability.
+- Override values with `--set` in production — use versioned `-f values-prod.yaml` files for
+  auditability.

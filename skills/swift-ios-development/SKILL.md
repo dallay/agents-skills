@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Building iOS, iPadOS, macOS, watchOS, or tvOS applications.
@@ -342,10 +343,12 @@ let package = Package(
 ### DO
 
 - **Use `guard let` for early returns** — keeps the happy path unindented and readable.
-- **Use `async/await`** over completion handlers — cleaner, safer, integrates with structured concurrency.
+- **Use `async/await`** over completion handlers — cleaner, safer, integrates with structured
+  concurrency.
 - **Use `@MainActor`** for view models and UI code — prevents data races on the main thread.
 - **Use protocols for dependencies** — enables testing via mock/stub injection.
-- **Use value types (structs/enums)** by default — classes only for reference semantics or inheritance.
+- **Use value types (structs/enums)** by default — classes only for reference semantics or
+  inheritance.
 - **Use `[weak self]` in escaping closures** to prevent retain cycles.
 - **Use `Codable`** for JSON — built-in, type-safe serialization.
 - **Use `@Observable` (iOS 17+)** over `ObservableObject` — simpler and more efficient.
@@ -362,7 +365,8 @@ let package = Package(
 - **DON'T use `NotificationCenter` for everything** — prefer delegates, closures, or Combine.
 - **DON'T skip `setUp`/`tearDown`** in XCTest — fresh state per test prevents flaky tests.
 - **DON'T catch errors silently** — at minimum log them; surface to user when appropriate.
-- **DON'T ignore App Store Review Guidelines** — validate entitlements, Info.plist privacy keys, and prohibited APIs.
+- **DON'T ignore App Store Review Guidelines** — validate entitlements, Info.plist privacy keys, and
+  prohibited APIs.
 
 ## Commands
 

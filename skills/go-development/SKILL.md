@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Go Development
 
 Production patterns and idioms for Go programming, covering project structure, error handling,
@@ -50,13 +51,13 @@ myapp/
 
 ### 2. Key Principles
 
-| Principle              | Go Idiom                                           |
-|------------------------|----------------------------------------------------|
-| Error handling         | Return `error` as last value, check immediately    |
-| Composition            | Embed interfaces, not structs                      |
-| Concurrency            | Share memory by communicating (channels)            |
-| Simplicity             | Fewer abstractions, explicit over implicit          |
-| Zero values            | Design types so zero value is useful                |
+| Principle      | Go Idiom                                        |
+|----------------|-------------------------------------------------|
+| Error handling | Return `error` as last value, check immediately |
+| Composition    | Embed interfaces, not structs                   |
+| Concurrency    | Share memory by communicating (channels)        |
+| Simplicity     | Fewer abstractions, explicit over implicit      |
+| Zero values    | Design types so zero value is useful            |
 
 ## Quick Start
 

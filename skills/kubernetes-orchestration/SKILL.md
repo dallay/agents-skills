@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Deploying containerized applications to Kubernetes clusters.
@@ -19,13 +20,21 @@ metadata:
 
 ## Critical Patterns
 
-- **Resource Limits Are Mandatory:** ALWAYS set both `requests` and `limits` for CPU and memory. Without them, a single pod can starve the entire node.
-- **Health Probes on Every Workload:** ALWAYS define `readinessProbe` and `livenessProbe`. Without readiness probes, traffic routes to unready pods. Without liveness probes, stuck containers are never restarted.
-- **Startup Probes for Slow Init:** Use `startupProbe` for applications with long initialization (JVM, large model loading) to avoid premature liveness kills.
-- **Never Use `latest` Tag:** Pin image tags to immutable versions or digests. `latest` causes unpredictable deployments and breaks rollback.
-- **Namespaces for Isolation:** Separate workloads by team, environment, or domain using namespaces. Apply ResourceQuotas per namespace.
-- **Secrets Are Not Encrypted at Rest by Default:** Enable encryption at rest or use external secret managers (Vault, Sealed Secrets, External Secrets Operator).
-- **Pod Disruption Budgets:** Always set PDBs for production workloads to prevent all replicas from being evicted during node maintenance.
+- **Resource Limits Are Mandatory:** ALWAYS set both `requests` and `limits` for CPU and memory.
+  Without them, a single pod can starve the entire node.
+- **Health Probes on Every Workload:** ALWAYS define `readinessProbe` and `livenessProbe`. Without
+  readiness probes, traffic routes to unready pods. Without liveness probes, stuck containers are
+  never restarted.
+- **Startup Probes for Slow Init:** Use `startupProbe` for applications with long initialization (
+  JVM, large model loading) to avoid premature liveness kills.
+- **Never Use `latest` Tag:** Pin image tags to immutable versions or digests. `latest` causes
+  unpredictable deployments and breaks rollback.
+- **Namespaces for Isolation:** Separate workloads by team, environment, or domain using namespaces.
+  Apply ResourceQuotas per namespace.
+- **Secrets Are Not Encrypted at Rest by Default:** Enable encryption at rest or use external secret
+  managers (Vault, Sealed Secrets, External Secrets Operator).
+- **Pod Disruption Budgets:** Always set PDBs for production workloads to prevent all replicas from
+  being evicted during node maintenance.
 
 ## Code Examples
 

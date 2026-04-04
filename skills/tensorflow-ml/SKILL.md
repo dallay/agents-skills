@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Building neural network models with Keras Sequential or Functional API.
@@ -22,13 +23,22 @@ metadata:
 
 ## Critical Patterns
 
-- **Keras Is THE API:** Use `tf.keras` for all model building. Raw `tf.Module` and `tf.GradientTape` are only for advanced custom training loops. Start with the high-level API.
-- **Functional API Over Sequential:** Use Functional API for anything beyond a simple linear stack. It supports multi-input, multi-output, shared layers, and residual connections.
-- **tf.data for Everything:** Never use Python generators or `numpy` loading for training data in production. `tf.data.Dataset` handles prefetching, parallel mapping, and memory-efficient streaming.
-- **Callbacks Are Your Safety Net:** Always use `EarlyStopping` (patience-based), `ModelCheckpoint` (save best weights), and `ReduceLROnPlateau`. Never train blind without them.
-- **Validate on Held-Out Data:** Always split data into train/validation/test. Use validation loss (not training loss) for all tuning decisions. Test set is touched exactly once.
-- **Mixed Precision for Speed:** Enable `tf.keras.mixed_precision.set_global_policy("mixed_float16")` on modern GPUs (Volta+) for ~2x speedup with minimal accuracy impact.
-- **SavedModel for Deployment:** Always export as SavedModel format (not H5) for production serving. SavedModel preserves the computation graph and is framework-agnostic.
+- **Keras Is THE API:** Use `tf.keras` for all model building. Raw `tf.Module` and `tf.GradientTape`
+  are only for advanced custom training loops. Start with the high-level API.
+- **Functional API Over Sequential:** Use Functional API for anything beyond a simple linear stack.
+  It supports multi-input, multi-output, shared layers, and residual connections.
+- **tf.data for Everything:** Never use Python generators or `numpy` loading for training data in
+  production. `tf.data.Dataset` handles prefetching, parallel mapping, and memory-efficient
+  streaming.
+- **Callbacks Are Your Safety Net:** Always use `EarlyStopping` (patience-based),
+  `ModelCheckpoint` (save best weights), and `ReduceLROnPlateau`. Never train blind without them.
+- **Validate on Held-Out Data:** Always split data into train/validation/test. Use validation loss (
+  not training loss) for all tuning decisions. Test set is touched exactly once.
+- **Mixed Precision for Speed:** Enable
+  `tf.keras.mixed_precision.set_global_policy("mixed_float16")` on modern GPUs (Volta+) for ~2x
+  speedup with minimal accuracy impact.
+- **SavedModel for Deployment:** Always export as SavedModel format (not H5) for production serving.
+  SavedModel preserves the computation graph and is framework-agnostic.
 
 ## Code Examples
 
@@ -279,21 +289,33 @@ tf.profiler.experimental.stop()
 
 ### DO
 
-- Use `tf.data.AUTOTUNE` for `num_parallel_calls` and `prefetch` — let TensorFlow optimize throughput automatically.
-- Always set `restore_best_weights=True` in `EarlyStopping` — otherwise you keep the last epoch's weights, not the best.
-- Use `training=False` when calling a base model during transfer learning — this keeps BatchNormalization in inference mode.
+- Use `tf.data.AUTOTUNE` for `num_parallel_calls` and `prefetch` — let TensorFlow optimize
+  throughput automatically.
+- Always set `restore_best_weights=True` in `EarlyStopping` — otherwise you keep the last epoch's
+  weights, not the best.
+- Use `training=False` when calling a base model during transfer learning — this keeps
+  BatchNormalization in inference mode.
 - Use the `.keras` format (or SavedModel) for saving — avoid legacy H5 for new projects.
-- Set `tf.config.experimental.set_memory_growth(gpu, True)` to prevent TF from grabbing all GPU memory upfront.
+- Set `tf.config.experimental.set_memory_growth(gpu, True)` to prevent TF from grabbing all GPU
+  memory upfront.
 - Use `tf.keras.mixed_precision` on Volta+ GPUs for significant training speedup.
-- Monitor `val_loss` (not `val_accuracy`) for `EarlyStopping` and `ModelCheckpoint` — loss is a smoother signal.
+- Monitor `val_loss` (not `val_accuracy`) for `EarlyStopping` and `ModelCheckpoint` — loss is a
+  smoother signal.
 
 ### DON'T
 
-- Don't use Python lists or NumPy arrays as training input for large datasets — use `tf.data.Dataset` with prefetching and parallel mapping.
-- Don't train without a validation split — you'll have no way to detect overfitting until it's too late.
-- Don't fine-tune a pre-trained model at a high learning rate — use 10-100x lower LR (e.g., 1e-5) than the initial head training rate.
-- Don't forget `model.compile()` after changing `layer.trainable` — the trainability changes only take effect after recompilation.
-- Don't use `accuracy` as the only metric for imbalanced datasets — add `tf.keras.metrics.AUC`, `Precision`, and `Recall`.
-- Don't save models with `model.save_weights()` alone — it loses the architecture. Use `model.save()` for full portability.
+- Don't use Python lists or NumPy arrays as training input for large datasets — use
+  `tf.data.Dataset` with prefetching and parallel mapping.
+- Don't train without a validation split — you'll have no way to detect overfitting until it's too
+  late.
+- Don't fine-tune a pre-trained model at a high learning rate — use 10-100x lower LR (e.g., 1e-5)
+  than the initial head training rate.
+- Don't forget `model.compile()` after changing `layer.trainable` — the trainability changes only
+  take effect after recompilation.
+- Don't use `accuracy` as the only metric for imbalanced datasets — add `tf.keras.metrics.AUC`,
+  `Precision`, and `Recall`.
+- Don't save models with `model.save_weights()` alone — it loses the architecture. Use
+  `model.save()` for full portability.
 - Don't skip data augmentation for image tasks — it's the cheapest form of regularization.
-- Don't ignore the output dtype with mixed precision — always set the final classification layer to `dtype="float32"` to avoid numerical instability.
+- Don't ignore the output dtype with mixed precision — always set the final classification layer to
+  `dtype="float32"` to avoid numerical instability.

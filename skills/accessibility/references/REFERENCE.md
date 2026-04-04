@@ -22,14 +22,14 @@ axe https://example.com
 
 ## Screen reader commands
 
-| Action | VoiceOver (Mac) | NVDA (Windows) |
-|--------|-----------------|----------------|
-| Start/Stop | ⌘ + F5 | Ctrl + Alt + N |
-| Next item | VO + → | ↓ |
-| Previous item | VO + ← | ↑ |
-| Activate | VO + Space | Enter |
-| Headings list | VO + U, then arrows | H / Shift + H |
-| Links list | VO + U | K / Shift + K |
+| Action        | VoiceOver (Mac)     | NVDA (Windows) |
+|---------------|---------------------|----------------|
+| Start/Stop    | ⌘ + F5              | Ctrl + Alt + N |
+| Next item     | VO + →              | ↓              |
+| Previous item | VO + ←              | ↑              |
+| Activate      | VO + Space          | Enter          |
+| Headings list | VO + U, then arrows | H / Shift + H  |
+| Links list    | VO + U              | K / Shift + K  |
 
 ---
 

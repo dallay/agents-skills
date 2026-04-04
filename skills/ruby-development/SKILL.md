@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Ruby Development
 
 Production patterns and idioms for Ruby programming, covering project structure, gems, blocks,
@@ -53,13 +54,13 @@ myapp/
 
 ### 2. Key Principles
 
-| Principle          | Ruby Idiom                                          |
-|--------------------|-----------------------------------------------------|
-| Duck typing        | Respond to methods, not check class                 |
-| Convention         | `snake_case` methods, `PascalCase` classes           |
-| Blocks everywhere  | Yield to blocks for callbacks and iteration          |
-| Open classes       | Extend existing classes carefully                    |
-| POLA               | Principle of Least Astonishment                      |
+| Principle         | Ruby Idiom                                  |
+|-------------------|---------------------------------------------|
+| Duck typing       | Respond to methods, not check class         |
+| Convention        | `snake_case` methods, `PascalCase` classes  |
+| Blocks everywhere | Yield to blocks for callbacks and iteration |
+| Open classes      | Extend existing classes carefully           |
+| POLA              | Principle of Least Astonishment             |
 
 ## Quick Start
 
@@ -382,7 +383,8 @@ end
 
 ### Don'ts
 
-- **Don't rescue `Exception`** — Catches `SignalException`, `SystemExit`; rescue `StandardError` instead
+- **Don't rescue `Exception`** — Catches `SignalException`, `SystemExit`; rescue `StandardError`
+  instead
 - **Don't monkey-patch in production** — Open classes are powerful but dangerous
 - **Don't use `eval` with user input** — Security risk
 - **Don't ignore `Rubocop` warnings** — Fix or explicitly disable with comments

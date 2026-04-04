@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Building web applications with Qwik or QwikCity.
@@ -21,7 +22,8 @@ metadata:
 
 ### Resumability vs Hydration
 
-Qwik does NOT hydrate. The server serializes the application state and event handlers into HTML. The browser resumes where the server left off — no re-execution of component code needed.
+Qwik does NOT hydrate. The server serializes the application state and event handlers into HTML. The
+browser resumes where the server left off — no re-execution of component code needed.
 
 ```
 Traditional SPA:  Server renders HTML → Client downloads JS → Hydration replays all components
@@ -30,7 +32,8 @@ Qwik:             Server renders HTML → Client resumes → JS loaded ONLY when
 
 ### The `$` Suffix — Lazy Loading Boundaries
 
-The `$` marks a lazy-loading boundary. Any function with `$` can be independently loaded by the optimizer. This is Qwik's key mechanism for splitting code.
+The `$` marks a lazy-loading boundary. Any function with `$` can be independently loaded by the
+optimizer. This is Qwik's key mechanism for splitting code.
 
 ```tsx
 import { component$, useSignal, $ } from "@builder.io/qwik";
@@ -277,7 +280,8 @@ const handler = $(() => console.log("hi")); // QRL functions ($ suffix)
 - **Use `component$`** for all components — it enables lazy loading and resumability.
 - **Use `$` suffix** on event handlers and callbacks — `onClick$`, `onInput$`, `$(() => ...)`.
 - **Use `routeLoader$`** for server-side data fetching — data is available before component renders.
-- **Use `routeAction$`** with `Form` for mutations — works without JavaScript for progressive enhancement.
+- **Use `routeAction$`** with `Form` for mutations — works without JavaScript for progressive
+  enhancement.
 - **Use `useTask$`** for reactive side effects — it tracks dependencies automatically.
 - **Use `bind:value`** for two-way binding on inputs — cleaner than manual `onInput$` + value.
 - **Use `preventdefault:submit`** on forms — Qwik's declarative way to prevent default behavior.
@@ -286,12 +290,17 @@ const handler = $(() => console.log("hi")); // QRL functions ($ suffix)
 ### DON'T
 
 - **DON'T forget the `$`** on event handlers — `onClick` won't work, must be `onClick$`.
-- **DON'T use `useVisibleTask$` for data fetching** — use `routeLoader$` instead; `useVisibleTask$` runs client-only and hurts performance.
-- **DON'T capture non-serializable values** in `$()` closures — the optimizer needs to serialize them.
+- **DON'T use `useVisibleTask$` for data fetching** — use `routeLoader$` instead; `useVisibleTask$`
+  runs client-only and hurts performance.
+- **DON'T capture non-serializable values** in `$()` closures — the optimizer needs to serialize
+  them.
 - **DON'T use `useEffect`/`useState`** — those are React; Qwik uses `useTask$`/`useSignal`.
-- **DON'T import heavy libraries at the top level** — use dynamic `import()` inside `$()` functions to keep bundles lean.
-- **DON'T use `useVisibleTask$` when `useTask$` works** — `useTask$` runs on both server and client and is more efficient.
-- **DON'T mutate signal values directly** — use `.value = newValue` for signals; for stores, mutate properties directly.
+- **DON'T import heavy libraries at the top level** — use dynamic `import()` inside `$()` functions
+  to keep bundles lean.
+- **DON'T use `useVisibleTask$` when `useTask$` works** — `useTask$` runs on both server and client
+  and is more efficient.
+- **DON'T mutate signal values directly** — use `.value = newValue` for signals; for stores, mutate
+  properties directly.
 
 ## Commands
 

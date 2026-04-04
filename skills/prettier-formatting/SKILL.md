@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Setting up Prettier in a new or existing project for consistent formatting.
@@ -20,12 +21,19 @@ metadata:
 
 ## Critical Patterns
 
-- **Prettier Decides, You Don't Argue:** Prettier is intentionally opinionated. Configure only the options it exposes — do NOT fight its AST-based formatting decisions with hacks.
-- **ESLint Separation:** Use `eslint-config-prettier` to disable ESLint formatting rules. Do NOT use `eslint-plugin-prettier` — it's slow and mixes concerns. Run Prettier and ESLint as separate steps.
-- **Ignore Correctly:** Always create `.prettierignore` to skip generated files, build output, and lock files. Prettier reads `.gitignore` by default, but explicit ignores prevent accidents.
-- **Pin the Version:** Lock the Prettier version in `package.json` to avoid formatting churn across developer machines and CI.
-- **Format All or Nothing:** When adding Prettier to an existing project, do one full format commit. Never mix formatting changes with logic changes in the same commit.
-- **Pre-Commit Enforcement:** Use `lint-staged` + `husky` (or `lefthook`) to format only staged files. Running Prettier on the entire repo per commit is wasteful.
+- **Prettier Decides, You Don't Argue:** Prettier is intentionally opinionated. Configure only the
+  options it exposes — do NOT fight its AST-based formatting decisions with hacks.
+- **ESLint Separation:** Use `eslint-config-prettier` to disable ESLint formatting rules. Do NOT use
+  `eslint-plugin-prettier` — it's slow and mixes concerns. Run Prettier and ESLint as separate
+  steps.
+- **Ignore Correctly:** Always create `.prettierignore` to skip generated files, build output, and
+  lock files. Prettier reads `.gitignore` by default, but explicit ignores prevent accidents.
+- **Pin the Version:** Lock the Prettier version in `package.json` to avoid formatting churn across
+  developer machines and CI.
+- **Format All or Nothing:** When adding Prettier to an existing project, do one full format commit.
+  Never mix formatting changes with logic changes in the same commit.
+- **Pre-Commit Enforcement:** Use `lint-staged` + `husky` (or `lefthook`) to format only staged
+  files. Running Prettier on the entire repo per commit is wasteful.
 
 ## Code Examples
 
@@ -196,7 +204,8 @@ npx prettier --file-info src/index.ts
 
 ### DO
 
-- Create a `.prettierrc.json` (or `.prettierrc`) at the project root — explicit config prevents editor-level settings from causing inconsistency.
+- Create a `.prettierrc.json` (or `.prettierrc`) at the project root — explicit config prevents
+  editor-level settings from causing inconsistency.
 - Run `prettier --check .` in CI to catch unformatted code before merge.
 - Use `overrides` for file types that need different settings (Markdown prose, YAML indentation).
 - Add `.vscode/settings.json` with `formatOnSave: true` to the repo so all contributors get it.
@@ -204,8 +213,12 @@ npx prettier --file-info src/index.ts
 
 ### DON'T
 
-- Don't install `eslint-plugin-prettier` — it runs Prettier inside ESLint, doubling execution time and mixing formatting with linting concerns.
+- Don't install `eslint-plugin-prettier` — it runs Prettier inside ESLint, doubling execution time
+  and mixing formatting with linting concerns.
 - Don't format lock files (`pnpm-lock.yaml`, `package-lock.json`) — it breaks integrity checksums.
-- Don't customize every option — Prettier's defaults are battle-tested. Only change what your team truly needs.
-- Don't skip `.prettierignore` — without it, Prettier will try to format generated files, SVGs, and build output, causing noise and errors.
-- Don't mix formatting changes with logic changes in pull requests — reviewers can't distinguish what actually changed.
+- Don't customize every option — Prettier's defaults are battle-tested. Only change what your team
+  truly needs.
+- Don't skip `.prettierignore` — without it, Prettier will try to format generated files, SVGs, and
+  build output, causing noise and errors.
+- Don't mix formatting changes with logic changes in pull requests — reviewers can't distinguish
+  what actually changed.

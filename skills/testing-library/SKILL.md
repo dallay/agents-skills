@@ -10,9 +10,11 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
-- Testing UI components with `@testing-library/react`, `@testing-library/vue`, or `@testing-library/dom`.
+- Testing UI components with `@testing-library/react`, `@testing-library/vue`, or
+  `@testing-library/dom`.
 - Choosing the right query method for elements.
 - Simulating user interactions (typing, clicking, selecting).
 - Testing async behavior (data fetching, loading states, debounced input).
@@ -20,19 +22,24 @@ metadata:
 
 ## Critical Patterns
 
-- **Test User Behavior, Not Implementation:** Your tests should resemble how users interact with your app. Query by role, label, and text — not by class, test ID, or component internals.
+- **Test User Behavior, Not Implementation:** Your tests should resemble how users interact with
+  your app. Query by role, label, and text — not by class, test ID, or component internals.
 - **Query Priority:** Follow this order strictly — it maps to accessibility:
-  1. `getByRole` — accessible roles (button, textbox, heading)
-  2. `getByLabelText` — form fields with labels
-  3. `getByPlaceholderText` — when no label exists
-  4. `getByText` — visible text content
-  5. `getByDisplayValue` — current input values
-  6. `getByAltText` — images
-  7. `getByTitle` — title attribute
-  8. `getByTestId` — LAST RESORT only
-- **userEvent Over fireEvent:** Always use `@testing-library/user-event` for interactions. It simulates real browser behavior (focus, keydown, keyup, input) while `fireEvent` dispatches a single synthetic event.
-- **No Implementation Details:** NEVER assert on component state, props, or internal methods. NEVER query by class name or component structure.
-- **Async by Default:** Use `findBy` queries (which return Promises) or wrap assertions in `waitFor` for any UI that updates asynchronously.
+    1. `getByRole` — accessible roles (button, textbox, heading)
+    2. `getByLabelText` — form fields with labels
+    3. `getByPlaceholderText` — when no label exists
+    4. `getByText` — visible text content
+    5. `getByDisplayValue` — current input values
+    6. `getByAltText` — images
+    7. `getByTitle` — title attribute
+    8. `getByTestId` — LAST RESORT only
+- **userEvent Over fireEvent:** Always use `@testing-library/user-event` for interactions. It
+  simulates real browser behavior (focus, keydown, keyup, input) while `fireEvent` dispatches a
+  single synthetic event.
+- **No Implementation Details:** NEVER assert on component state, props, or internal methods. NEVER
+  query by class name or component structure.
+- **Async by Default:** Use `findBy` queries (which return Promises) or wrap assertions in `waitFor`
+  for any UI that updates asynchronously.
 
 ## Code Examples
 
@@ -266,19 +273,28 @@ export { renderWithProviders as render };
 
 ### DO
 
-- Use `screen` for all queries — it's always scoped to `document.body` and requires no destructuring.
+- Use `screen` for all queries — it's always scoped to `document.body` and requires no
+  destructuring.
 - Use `within()` to scope queries to a specific container (dialog, list item, section).
 - Use `getByRole` as your default query — it verifies accessibility and finds elements reliably.
-- Use regex with case-insensitive flag (`/submit/i`) for text matching — it's resilient to casing changes.
-- Create a custom `render` function that includes your app's providers (theme, router, query client).
-- Use MSW (Mock Service Worker) for API mocking — it works at the network level and shares mocks between tests and development.
+- Use regex with case-insensitive flag (`/submit/i`) for text matching — it's resilient to casing
+  changes.
+- Create a custom `render` function that includes your app's providers (theme, router, query
+  client).
+- Use MSW (Mock Service Worker) for API mocking — it works at the network level and shares mocks
+  between tests and development.
 
 ### DON'T
 
-- DON'T use `container.querySelector(".my-class")` — it tests implementation details, not user behavior.
-- DON'T use `fireEvent` when `userEvent` is available — `fireEvent` doesn't simulate real browser behavior.
-- DON'T use `getByTestId` as your first choice — it means the element lacks proper accessible roles or labels. Fix the component first.
+- DON'T use `container.querySelector(".my-class")` — it tests implementation details, not user
+  behavior.
+- DON'T use `fireEvent` when `userEvent` is available — `fireEvent` doesn't simulate real browser
+  behavior.
+- DON'T use `getByTestId` as your first choice — it means the element lacks proper accessible roles
+  or labels. Fix the component first.
 - DON'T assert on component state or hooks directly — test what the user sees and interacts with.
 - DON'T use `act()` manually in most cases — `userEvent` and `findBy` handle it internally.
-- DON'T use `waitFor` with `getBy` inside — use `findBy` instead, which is `getBy` + `waitFor` combined.
-- DON'T wrap non-async operations in `waitFor` — it adds unnecessary complexity and hides synchronous bugs.
+- DON'T use `waitFor` with `getBy` inside — use `findBy` instead, which is `getBy` + `waitFor`
+  combined.
+- DON'T wrap non-async operations in `waitFor` — it adds unnecessary complexity and hides
+  synchronous bugs.

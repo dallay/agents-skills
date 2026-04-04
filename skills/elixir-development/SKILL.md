@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Elixir Development
 
 Production patterns for Elixir/OTP programming, covering Mix projects, GenServer, Supervisors,
@@ -57,13 +58,13 @@ myapp/
 
 ### 2. Key Principles
 
-| Principle          | Elixir Idiom                                        |
-|--------------------|-----------------------------------------------------|
-| Immutability       | All data is immutable; transform, don't mutate      |
-| Pattern matching   | Destructure and branch in function heads             |
-| Pipe operator      | Chain transformations with `|>`                      |
-| Let it crash       | Supervisors restart failed processes automatically   |
-| Processes          | Lightweight, isolated; communicate via messages      |
+| Principle        | Elixir Idiom                                       |
+|------------------|----------------------------------------------------|
+| Immutability     | All data is immutable; transform, don't mutate     |
+| Pattern matching | Destructure and branch in function heads           |
+| Pipe operator    | Chain transformations with `                       |>`                      |
+| Let it crash     | Supervisors restart failed processes automatically |
+| Processes        | Lightweight, isolated; communicate via messages    |
 
 ## Quick Start
 

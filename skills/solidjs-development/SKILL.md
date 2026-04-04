@@ -10,6 +10,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Building web applications with Solid.js or SolidStart.
@@ -22,7 +23,9 @@ metadata:
 
 ### Fine-Grained Reactivity (NOT Virtual DOM)
 
-Solid does NOT re-render components. Components run ONCE to set up the reactive graph. Only the specific DOM nodes that depend on changed signals update. This is the fundamental difference from React.
+Solid does NOT re-render components. Components run ONCE to set up the reactive graph. Only the
+specific DOM nodes that depend on changed signals update. This is the fundamental difference from
+React.
 
 ```
 React model:    State changes → component re-executes → virtual DOM diff → DOM update
@@ -124,7 +127,8 @@ function TodoApp() {
 
 ### Control Flow Components
 
-Solid uses dedicated components instead of inline JS for conditional/list rendering. This enables fine-grained DOM updates.
+Solid uses dedicated components instead of inline JS for conditional/list rendering. This enables
+fine-grained DOM updates.
 
 ```tsx
 import { Show, For, Switch, Match } from "solid-js";
@@ -285,7 +289,8 @@ const Card: ParentComponent<CardProps> = (props) => {
 
 ### DO
 
-- **Call signal getters** in JSX or inside tracking scopes (`createEffect`, `createMemo`) — this is how Solid tracks dependencies.
+- **Call signal getters** in JSX or inside tracking scopes (`createEffect`, `createMemo`) — this is
+  how Solid tracks dependencies.
 - **Use `<For>`** for list rendering — it efficiently handles keyed updates without reconciliation.
 - **Use `<Show>`** for conditionals — it avoids unnecessary DOM creation.
 - **Use stores** for complex nested state — path-based setters avoid deep cloning.
@@ -296,14 +301,22 @@ const Card: ParentComponent<CardProps> = (props) => {
 
 ### DON'T
 
-- **DON'T destructure props** — `const { name } = props` breaks reactivity. Access `props.name` directly or use `splitProps`.
-- **DON'T call signals outside tracking scopes** and expect reactivity — reading `count()` in the component body but outside JSX/effects won't track.
-- **DON'T use `.map()` for lists** — use `<For>` instead; `.map()` recreates all DOM nodes on every change.
-- **DON'T think in re-renders** — Solid components run once. If you write code expecting the whole function to re-run, it won't work.
-- **DON'T use `createEffect` for derived state** — use `createMemo` instead; effects are for side effects, not computations.
-- **DON'T wrap primitives in stores** — use `createSignal` for simple values; stores are for objects/arrays.
-- **DON'T forget the `()` on signal getters** — `{count}` passes the function, `{count()}` reads the value.
-- **DON'T use React hooks patterns** — there's no rules-of-hooks in Solid; signals can be created anywhere, conditionally, in loops.
+- **DON'T destructure props** — `const { name } = props` breaks reactivity. Access `props.name`
+  directly or use `splitProps`.
+- **DON'T call signals outside tracking scopes** and expect reactivity — reading `count()` in the
+  component body but outside JSX/effects won't track.
+- **DON'T use `.map()` for lists** — use `<For>` instead; `.map()` recreates all DOM nodes on every
+  change.
+- **DON'T think in re-renders** — Solid components run once. If you write code expecting the whole
+  function to re-run, it won't work.
+- **DON'T use `createEffect` for derived state** — use `createMemo` instead; effects are for side
+  effects, not computations.
+- **DON'T wrap primitives in stores** — use `createSignal` for simple values; stores are for
+  objects/arrays.
+- **DON'T forget the `()` on signal getters** — `{count}` passes the function, `{count()}` reads the
+  value.
+- **DON'T use React hooks patterns** — there's no rules-of-hooks in Solid; signals can be created
+  anywhere, conditionally, in loops.
 
 ## Commands
 

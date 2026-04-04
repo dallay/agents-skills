@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Building or refactoring a Ruby on Rails application.
@@ -20,12 +21,19 @@ metadata:
 
 ## Critical Patterns
 
-- **Convention Over Configuration:** Follow Rails naming conventions strictly. Model `User` maps to table `users`, controller `UsersController` in `users_controller.rb`. Fighting conventions creates maintenance nightmares.
-- **Fat Model, Skinny Controller:** Controllers handle HTTP flow only — delegate business logic to models, service objects, or concerns.
-- **Prevent N+1 Queries:** ALWAYS use `includes`, `preload`, or `eager_load` when accessing associations in collections. Use `bullet` gem in development to detect violations.
-- **Strong Parameters:** NEVER trust user input. Whitelist permitted params in every controller action.
-- **Database-Level Constraints:** Add validations in the model AND enforce them at the database level with migration constraints (`null: false`, unique indexes, foreign keys).
-- **Background Jobs for Slow Work:** Anything over 100ms that isn't the core response (emails, file processing, API calls) goes into a background job.
+- **Convention Over Configuration:** Follow Rails naming conventions strictly. Model `User` maps to
+  table `users`, controller `UsersController` in `users_controller.rb`. Fighting conventions creates
+  maintenance nightmares.
+- **Fat Model, Skinny Controller:** Controllers handle HTTP flow only — delegate business logic to
+  models, service objects, or concerns.
+- **Prevent N+1 Queries:** ALWAYS use `includes`, `preload`, or `eager_load` when accessing
+  associations in collections. Use `bullet` gem in development to detect violations.
+- **Strong Parameters:** NEVER trust user input. Whitelist permitted params in every controller
+  action.
+- **Database-Level Constraints:** Add validations in the model AND enforce them at the database
+  level with migration constraints (`null: false`, unique indexes, foreign keys).
+- **Background Jobs for Slow Work:** Anything over 100ms that isn't the core response (emails, file
+  processing, API calls) goes into a background job.
 
 ## Code Examples
 
@@ -325,10 +333,14 @@ ExportUsersJob.perform_later(current_user.id, format: "csv")
 - DON'T use `update_all` or `delete_all` without understanding they skip callbacks and validations.
 - DON'T put query logic in views or controllers — use scopes or query objects.
 - DON'T use `default_scope` — it's global and nearly impossible to override cleanly.
-- DON'T call `.count` on preloaded associations — use `.size` (which uses the preloaded data) or `.length`.
-- DON'T use `after_save` callbacks for side effects like sending emails — use service objects or jobs.
-- DON'T write migrations that are not reversible — always provide `up` and `down` or use reversible methods.
-- DON'T skip `null: false` constraints in migrations when the model validates presence — the DB is the last line of defense.
+- DON'T call `.count` on preloaded associations — use `.size` (which uses the preloaded data) or
+  `.length`.
+- DON'T use `after_save` callbacks for side effects like sending emails — use service objects or
+  jobs.
+- DON'T write migrations that are not reversible — always provide `up` and `down` or use reversible
+  methods.
+- DON'T skip `null: false` constraints in migrations when the model validates presence — the DB is
+  the last line of defense.
 
 ## Rails Console Tips
 

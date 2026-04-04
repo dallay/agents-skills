@@ -1,6 +1,7 @@
 # Contributing to Agent Skills
 
-Thank you for your interest in contributing! This guide explains how to create, test, and submit AI agent skills to this repository.
+Thank you for your interest in contributing! This guide explains how to create, test, and submit AI
+agent skills to this repository.
 
 ## Table of Contents
 
@@ -70,16 +71,18 @@ metadata:
 
 ### Frontmatter Fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | **Yes** | Kebab-case identifier. Must match the directory name exactly. |
-| `description` | **Yes** | What the skill does and when to use it. Put activation cues here. |
-| `license` | No | License name or reference to a bundled license file. |
-| `compatibility` | No | Environment requirements, if the skill has any. |
-| `metadata` | No | Additional string metadata such as author or version. |
-| `allowed-tools` | No | Space-delimited list of pre-approved tools. Experimental. |
+| Field           | Required | Description                                                       |
+|-----------------|----------|-------------------------------------------------------------------|
+| `name`          | **Yes**  | Kebab-case identifier. Must match the directory name exactly.     |
+| `description`   | **Yes**  | What the skill does and when to use it. Put activation cues here. |
+| `license`       | No       | License name or reference to a bundled license file.              |
+| `compatibility` | No       | Environment requirements, if the skill has any.                   |
+| `metadata`      | No       | Additional string metadata such as author or version.             |
+| `allowed-tools` | No       | Space-delimited list of pre-approved tools. Experimental.         |
 
-Do not add non-standard top-level fields such as `version` or `triggers`. If you want version metadata, put it under `metadata`. If you want to describe activation cues, include them directly in `description`.
+Do not add non-standard top-level fields such as `version` or `triggers`. If you want version
+metadata, put it under `metadata`. If you want to describe activation cues, include them directly in
+`description`.
 
 ### Validation Rules
 
@@ -100,40 +103,48 @@ Skill names follow these conventions:
 
 ### Good Examples
 
-| Name | Why It Works |
-|------|-------------|
-| `docker-expert` | Technology + expertise level |
-| `github-actions` | Specific technology |
-| `rust-async-patterns` | Language + specific topic |
-| `sql-optimization-patterns` | Domain + specific focus |
-| `core-web-vitals` | Well-known industry term |
+| Name                        | Why It Works                 |
+|-----------------------------|------------------------------|
+| `docker-expert`             | Technology + expertise level |
+| `github-actions`            | Specific technology          |
+| `rust-async-patterns`       | Language + specific topic    |
+| `sql-optimization-patterns` | Domain + specific focus      |
+| `core-web-vitals`           | Well-known industry term     |
 
 ### Avoid
 
-| Name | Issue |
-|------|-------|
-| `docker` | Too generic |
-| `my-awesome-skill` | Not descriptive |
-| `Docker_Expert` | Wrong case (use kebab-case) |
-| `skill.docker` | No dots allowed |
+| Name               | Issue                       |
+|--------------------|-----------------------------|
+| `docker`           | Too generic                 |
+| `my-awesome-skill` | Not descriptive             |
+| `Docker_Expert`    | Wrong case (use kebab-case) |
+| `skill.docker`     | No dots allowed             |
 
 ## Quality Expectations
 
 Every skill submitted to this repository must meet these standards:
 
-1. **Useful content** — The skill must provide actionable instructions that genuinely help an AI agent perform a specific task better. No placeholder text or vague guidance.
+1. **Useful content** — The skill must provide actionable instructions that genuinely help an AI
+   agent perform a specific task better. No placeholder text or vague guidance.
 
-2. **Strong description** — The `description` should carry the activation cues. Be specific about user intent and nearby phrases, without making the skill so broad that it activates everywhere.
+2. **Strong description** — The `description` should carry the activation cues. Be specific about
+   user intent and nearby phrases, without making the skill so broad that it activates everywhere.
 
-3. **Focused instructions** — Keep `SKILL.md` concise and action-oriented. Prefer the core workflow, defaults, and gotchas over long background material.
+3. **Focused instructions** — Keep `SKILL.md` concise and action-oriented. Prefer the core workflow,
+   defaults, and gotchas over long background material.
 
-4. **Well-structured Markdown** — Use headings, lists, code blocks, and tables to organize content. Make it scannable.
+4. **Well-structured Markdown** — Use headings, lists, code blocks, and tables to organize content.
+   Make it scannable.
 
-5. **Progressive disclosure** — Keep the main `SKILL.md` under 500 lines when possible. Move detailed reference material to `references/`, `assets/`, or `scripts/`, and tell the agent when to load those files.
+5. **Progressive disclosure** — Keep the main `SKILL.md` under 500 lines when possible. Move
+   detailed reference material to `references/`, `assets/`, or `scripts/`, and tell the agent when
+   to load those files.
 
-6. **No sensitive data** — Do not include API keys, credentials, personal information, or proprietary code in skill content.
+6. **No sensitive data** — Do not include API keys, credentials, personal information, or
+   proprietary code in skill content.
 
-7. **Accurate information** — Technical guidance must be correct and up-to-date. Cite sources when referencing specific standards (e.g., WCAG 2.1).
+7. **Accurate information** — Technical guidance must be correct and up-to-date. Cite sources when
+   referencing specific standards (e.g., WCAG 2.1).
 
 ## Testing Locally
 
@@ -147,13 +158,15 @@ Use the reference validator:
 skills-ref validate skills/your-skill-name
 ```
 
-If you do not have `skills-ref` installed yet, this repository can bootstrap a pinned local copy for you:
+If you do not have `skills-ref` installed yet, this repository can bootstrap a pinned local copy for
+you:
 
 ```bash
 ./scripts/install-skills-ref.sh
 ```
 
 Verify:
+
 - `name` matches the directory name
 - `description` is present and includes activation cues
 - Optional fields use official top-level names
@@ -172,6 +185,7 @@ ln -s /path/to/agents-skills/skills/your-skill-name ~/.config/opencode/skills/yo
 ### 3. Verify the skill activates
 
 Open your AI coding assistant and test that the skill:
+
 - Activates when prompts match the cues in `description`
 - Provides relevant and accurate guidance
 - Does not activate in unrelated contexts
@@ -200,7 +214,8 @@ lefthook install
 1. **Valid manifest** — Frontmatter is well-formed with all required fields
 2. **Name consistency** — Directory name matches the `name` field in frontmatter
 3. **Content quality** — Instructions are substantive, accurate, and well-organized
-4. **Description quality** — `description` clearly communicates both the capability and when the skill should activate
+4. **Description quality** — `description` clearly communicates both the capability and when the
+   skill should activate
 5. **No conflicts** — Skill does not duplicate an existing skill's purpose
 6. **Clean PR** — One skill per PR (unless related), clear description
 

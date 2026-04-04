@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Designing PostgreSQL schemas with proper constraints, types, and indexes.
@@ -22,13 +23,25 @@ metadata:
 
 ## Critical Patterns
 
-- **Constraints at the Database Level:** Enforce NOT NULL, CHECK, UNIQUE, and foreign keys in the schema — never rely solely on application-level validation. The database is the last line of defense.
-- **Index Deliberately:** Every index has a write cost. Create indexes based on actual query patterns from `EXPLAIN ANALYZE`, not speculation. Monitor with `pg_stat_user_indexes` to find unused ones.
-- **Use Appropriate Types:** Use `uuid` (not VARCHAR) for identifiers, `timestamptz` (not `timestamp`) for times, `text` (not VARCHAR(n)) for variable strings, `numeric` for money, and `jsonb` (not `json`) for document data.
-- **CTEs Are Not Optimization Barriers (since PG 12):** PostgreSQL can inline CTEs. Use them freely for readability. Add `MATERIALIZED` only when you explicitly need to force a single evaluation.
-- **Connection Pooling Is Mandatory:** PostgreSQL forks a process per connection. Always use PgBouncer (or Supavisor, pgcat) in front of PostgreSQL in production. Target max 100-200 actual connections.
-- **Transactions Should Be Short:** Long-running transactions hold locks and block autovacuum. Keep transactions under a few seconds. For bulk operations, use batched commits.
-- **Always EXPLAIN ANALYZE:** Never guess at query performance. Use `EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)` to see actual row counts, buffer hits, and execution time.
+- **Constraints at the Database Level:** Enforce NOT NULL, CHECK, UNIQUE, and foreign keys in the
+  schema — never rely solely on application-level validation. The database is the last line of
+  defense.
+- **Index Deliberately:** Every index has a write cost. Create indexes based on actual query
+  patterns from `EXPLAIN ANALYZE`, not speculation. Monitor with `pg_stat_user_indexes` to find
+  unused ones.
+- **Use Appropriate Types:** Use `uuid` (not VARCHAR) for identifiers, `timestamptz` (not
+  `timestamp`) for times, `text` (not VARCHAR(n)) for variable strings, `numeric` for money, and
+  `jsonb` (not `json`) for document data.
+- **CTEs Are Not Optimization Barriers (since PG 12):** PostgreSQL can inline CTEs. Use them freely
+  for readability. Add `MATERIALIZED` only when you explicitly need to force a single evaluation.
+- **Connection Pooling Is Mandatory:** PostgreSQL forks a process per connection. Always use
+  PgBouncer (or Supavisor, pgcat) in front of PostgreSQL in production. Target max 100-200 actual
+  connections.
+- **Transactions Should Be Short:** Long-running transactions hold locks and block autovacuum. Keep
+  transactions under a few seconds. For bulk operations, use batched commits.
+- **Always EXPLAIN ANALYZE:** Never guess at query performance. Use
+  `EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)` to see actual row counts, buffer hits, and execution
+  time.
 
 ## Code Examples
 
@@ -278,8 +291,10 @@ psql -c "SELECT client_addr, state, sent_lsn, write_lsn, replay_lsn,
 
 ### DO
 
-- Use `timestamptz` everywhere — `timestamp` silently drops timezone info and causes bugs across regions.
-- Use `text` over `varchar(n)` — PostgreSQL stores them identically, and `varchar(n)` just adds a CHECK constraint that's painful to change later.
+- Use `timestamptz` everywhere — `timestamp` silently drops timezone info and causes bugs across
+  regions.
+- Use `text` over `varchar(n)` — PostgreSQL stores them identically, and `varchar(n)` just adds a
+  CHECK constraint that's painful to change later.
 - Run `EXPLAIN (ANALYZE, BUFFERS)` on every slow query before adding indexes.
 - Use `CREATE INDEX CONCURRENTLY` in production — regular `CREATE INDEX` locks the table for writes.
 - Use transactions for multi-statement operations: `BEGIN; ... COMMIT;`.
@@ -291,8 +306,11 @@ psql -c "SELECT client_addr, state, sent_lsn, write_lsn, replay_lsn,
 - Don't use `SERIAL` — use `GENERATED ALWAYS AS IDENTITY` or `uuid` for primary keys.
 - Don't create indexes on every column "just in case" — each index slows writes and consumes disk.
 - Don't use `SELECT *` in application queries — fetch only the columns you need.
-- Don't run `VACUUM FULL` routinely — it locks the table exclusively. Regular `VACUUM` (via autovacuum) is sufficient.
+- Don't run `VACUUM FULL` routinely — it locks the table exclusively. Regular `VACUUM` (via
+  autovacuum) is sufficient.
 - Don't store large blobs in PostgreSQL — use object storage (S3) and store the URL/reference.
-- Don't use `timestamp` without timezone — timezone-unaware timestamps are a common source of production bugs.
-- Don't disable autovacuum — tune it instead. Disabled autovacuum leads to transaction ID wraparound and table bloat.
+- Don't use `timestamp` without timezone — timezone-unaware timestamps are a common source of
+  production bugs.
+- Don't disable autovacuum — tune it instead. Disabled autovacuum leads to transaction ID wraparound
+  and table bloat.
 - Don't connect directly from application servers without a connection pooler in production.

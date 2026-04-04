@@ -6,9 +6,11 @@ description: >-
   reusable AI workflows and instructions.
 license: MIT
 ---
+
 # Skill Creator Guide
 
-This guide covers when to create a skill, how to structure it, and how to keep it aligned with the official Agent Skills specification.
+This guide covers when to create a skill, how to structure it, and how to keep it aligned with the
+official Agent Skills specification.
 
 ## When to Create a Skill
 
@@ -77,12 +79,12 @@ metadata:
 
 ## Naming Conventions
 
-| Type | Pattern | Examples |
-|------|---------|----------|
-| Generic skill | `{technology}` | `pytest`, `playwright`, `typescript` |
-| Repo-specific | `{repo}-{component}` | `repo-api`, `repo-ui`, `repo-sdk-check` |
-| Testing skill | `test-{component}` | `test-sdk`, `test-api` |
-| Workflow skill | `{action}-{target}` | `skill-creator`, `jira-task` |
+| Type           | Pattern              | Examples                                |
+|----------------|----------------------|-----------------------------------------|
+| Generic skill  | `{technology}`       | `pytest`, `playwright`, `typescript`    |
+| Repo-specific  | `{repo}-{component}` | `repo-api`, `repo-ui`, `repo-sdk-check` |
+| Testing skill  | `test-{component}`   | `test-sdk`, `test-api`                  |
+| Workflow skill | `{action}-{target}`  | `skill-creator`, `jira-task`            |
 
 ---
 
@@ -98,7 +100,8 @@ Link to external guides?    → references/ (with local path)
 
 ```
 
-**Key Rule**: `references/` should point to LOCAL files (`docs/developer-guide/*.mdx`), not web URLs.
+**Key Rule**: `references/` should point to LOCAL files (`docs/developer-guide/*.mdx`), not web
+URLs.
 
 ---
 
@@ -116,16 +119,17 @@ Generic skill needs repo info?     → Add references/ pointing to repo docs
 
 ## Frontmatter Fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | Yes | Skill identifier (lowercase, hyphens) |
-| `description` | Yes | What the skill does and when it should activate |
-| `license` | No | Recommended when you want to declare reuse terms |
-| `compatibility` | No | Environment requirements, only when needed |
-| `metadata` | No | Additional string metadata such as author or version |
-| `allowed-tools` | No | Experimental pre-approved tool list |
+| Field           | Required | Description                                          |
+|-----------------|----------|------------------------------------------------------|
+| `name`          | Yes      | Skill identifier (lowercase, hyphens)                |
+| `description`   | Yes      | What the skill does and when it should activate      |
+| `license`       | No       | Recommended when you want to declare reuse terms     |
+| `compatibility` | No       | Environment requirements, only when needed           |
+| `metadata`      | No       | Additional string metadata such as author or version |
+| `allowed-tools` | No       | Experimental pre-approved tool list                  |
 
-Do not add top-level `version` or `triggers`. Put activation cues in `description`. Put extra metadata, including versions, under `metadata`.
+Do not add top-level `version` or `triggers`. Put activation cues in `description`. Put extra
+metadata, including versions, under `metadata`.
 
 Only include `compatibility`, `metadata`, `license`, or `allowed-tools` when they add real value.
 
@@ -157,7 +161,8 @@ Validate each new skill before opening a PR:
 ./scripts/validate-skills.sh
 ```
 
-Use the shared validator for frontmatter, naming rules, and repo-specific checks. Then do a quick manual check to confirm the description activates in the right situations.
+Use the shared validator for frontmatter, naming rules, and repo-specific checks. Then do a quick
+manual check to confirm the description activates in the right situations.
 
 ---
 

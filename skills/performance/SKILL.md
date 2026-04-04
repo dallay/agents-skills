@@ -8,9 +8,11 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Performance optimization
 
-Deep performance optimization based on Lighthouse performance audits. Focuses on loading speed, runtime efficiency, and resource optimization.
+Deep performance optimization based on Lighthouse performance audits. Focuses on loading speed,
+runtime efficiency, and resource optimization.
 
 ## How it works
 
@@ -21,18 +23,19 @@ Deep performance optimization based on Lighthouse performance audits. Focuses on
 
 ## Performance budget
 
-| Resource | Budget | Rationale |
-|----------|--------|-----------|
-| Total page weight | < 1.5 MB | 3G loads in ~4s |
+| Resource                | Budget   | Rationale                |
+|-------------------------|----------|--------------------------|
+| Total page weight       | < 1.5 MB | 3G loads in ~4s          |
 | JavaScript (compressed) | < 300 KB | Parsing + execution time |
-| CSS (compressed) | < 100 KB | Render blocking |
-| Images (above-fold) | < 500 KB | LCP impact |
-| Fonts | < 100 KB | FOIT/FOUT prevention |
-| Third-party | < 200 KB | Uncontrolled latency |
+| CSS (compressed)        | < 100 KB | Render blocking          |
+| Images (above-fold)     | < 500 KB | LCP impact               |
+| Fonts                   | < 100 KB | FOIT/FOUT prevention     |
+| Third-party             | < 200 KB | Uncontrolled latency     |
 
 ## Critical rendering path
 
 ### Server response
+
 * **TTFB < 800ms.** Time to First Byte should be fast. Use CDN, caching, and efficient backends.
 * **Enable compression.** Gzip or Brotli for text assets. Brotli preferred (15-20% smaller).
 * **HTTP/2 or HTTP/3.** Multiplexing reduces connection overhead.
@@ -41,12 +44,14 @@ Deep performance optimization based on Lighthouse performance audits. Focuses on
 ### Resource loading
 
 **Preconnect to required origins:**
+
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://cdn.example.com" crossorigin>
 ```
 
 **Preload critical resources:**
+
 ```html
 <!-- LCP image -->
 <link rel="preload" href="/hero.webp" as="image" fetchpriority="high">
@@ -56,6 +61,7 @@ Deep performance optimization based on Lighthouse performance audits. Focuses on
 ```
 
 **Defer non-critical CSS:**
+
 ```html
 <!-- Critical CSS inlined -->
 <style>/* Above-fold styles */</style>
@@ -68,6 +74,7 @@ Deep performance optimization based on Lighthouse performance audits. Focuses on
 ### JavaScript optimization
 
 **Defer non-essential scripts:**
+
 ```html
 <!-- Parser-blocking (avoid) -->
 <script src="/critical.js"></script>
@@ -83,6 +90,7 @@ Deep performance optimization based on Lighthouse performance audits. Focuses on
 ```
 
 **Code splitting patterns:**
+
 ```javascript
 // Route-based splitting
 const Dashboard = lazy(() => import('./Dashboard'));
@@ -97,6 +105,7 @@ if (user.isPremium) {
 ```
 
 **Tree shaking best practices:**
+
 ```javascript
 // ❌ Imports entire library
 import _ from 'lodash';
@@ -110,14 +119,16 @@ debounce(fn, 300);
 ## Image optimization
 
 ### Format selection
-| Format | Use case | Browser support |
-|--------|----------|-----------------|
-| AVIF | Photos, best compression | 92%+ |
-| WebP | Photos, good fallback | 97%+ |
-| PNG | Graphics with transparency | Universal |
-| SVG | Icons, logos, illustrations | Universal |
+
+| Format | Use case                    | Browser support |
+|--------|-----------------------------|-----------------|
+| AVIF   | Photos, best compression    | 92%+            |
+| WebP   | Photos, good fallback       | 97%+            |
+| PNG    | Graphics with transparency  | Universal       |
+| SVG    | Icons, logos, illustrations | Universal       |
 
 ### Responsive images
+
 ```html
 <picture>
   <!-- AVIF for modern browsers -->
@@ -152,6 +163,7 @@ debounce(fn, 300);
 ```
 
 ### LCP image priority
+
 ```html
 <!-- Above-fold LCP image: eager loading, high priority -->
 <img 
@@ -172,6 +184,7 @@ debounce(fn, 300);
 ## Font optimization
 
 ### Loading strategy
+
 ```css
 /* System font stack as fallback */
 body {
@@ -191,11 +204,13 @@ body {
 ```
 
 ### Preloading critical fonts
+
 ```html
 <link rel="preload" href="/fonts/heading.woff2" as="font" type="font/woff2" crossorigin>
 ```
 
 ### Variable fonts
+
 ```css
 /* One file instead of multiple weights */
 @font-face {
@@ -209,6 +224,7 @@ body {
 ## Caching strategy
 
 ### Cache-Control headers
+
 ```
 # HTML (short or no cache)
 Cache-Control: no-cache, must-revalidate
@@ -224,6 +240,7 @@ Cache-Control: private, max-age=0, must-revalidate
 ```
 
 ### Service worker caching
+
 ```javascript
 // Cache-first for static assets
 self.addEventListener('fetch', (event) => {
@@ -246,6 +263,7 @@ self.addEventListener('fetch', (event) => {
 ## Runtime performance
 
 ### Avoid layout thrashing
+
 ```javascript
 // ❌ Forces multiple reflows
 elements.forEach(el => {
@@ -261,6 +279,7 @@ elements.forEach((el, i) => {
 ```
 
 ### Debounce expensive operations
+
 ```javascript
 function debounce(fn, delay) {
   let timeout;
@@ -275,6 +294,7 @@ window.addEventListener('scroll', debounce(handleScroll, 100));
 ```
 
 ### Use requestAnimationFrame
+
 ```javascript
 // ❌ May cause jank
 setInterval(animate, 16);
@@ -288,6 +308,7 @@ requestAnimationFrame(animate);
 ```
 
 ### Virtualize long lists
+
 ```javascript
 // For lists > 100 items, render only visible items
 // Use libraries like react-window, vue-virtual-scroller, or native CSS:
@@ -300,6 +321,7 @@ requestAnimationFrame(animate);
 ## Third-party scripts
 
 ### Load strategies
+
 ```javascript
 // ❌ Blocks main thread
 <script src="https://analytics.example.com/script.js"></script>
@@ -324,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ```
 
 ### Facade pattern
+
 ```html
 <!-- Show static placeholder until interaction -->
 <div class="youtube-facade" 
@@ -337,15 +360,17 @@ document.addEventListener('DOMContentLoaded', () => {
 ## Measurement
 
 ### Key metrics
-| Metric | Target | Tool |
-|--------|--------|------|
-| LCP | < 2.5s | Lighthouse, CrUX |
-| FCP | < 1.8s | Lighthouse |
-| Speed Index | < 3.4s | Lighthouse |
-| TBT | < 200ms | Lighthouse |
-| TTI | < 3.8s | Lighthouse |
+
+| Metric      | Target  | Tool             |
+|-------------|---------|------------------|
+| LCP         | < 2.5s  | Lighthouse, CrUX |
+| FCP         | < 1.8s  | Lighthouse       |
+| Speed Index | < 3.4s  | Lighthouse       |
+| TBT         | < 200ms | Lighthouse       |
+| TTI         | < 3.8s  | Lighthouse       |
 
 ### Testing commands
+
 ```bash
 # Lighthouse CLI
 npx lighthouse https://example.com --output html --output-path report.html

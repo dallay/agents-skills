@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Building or refactoring a REST API with Express.js.
@@ -19,12 +20,19 @@ metadata:
 
 ## Critical Patterns
 
-- **Layered Architecture:** Separate routes → controllers → services → repositories. Routes define endpoints, controllers handle HTTP concerns, services contain business logic, repositories handle data access.
-- **Centralized Error Handling:** NEVER scatter `try/catch` in every route. Use an async wrapper and a single error-handling middleware at the end of the middleware chain.
-- **Validate at the Edge:** Validate ALL incoming data (body, params, query) at the route level using Zod or Joi BEFORE it reaches the controller.
-- **Security by Default:** Always use `helmet`, configure `cors` explicitly (never `*` in production), and apply rate limiting to public endpoints.
-- **Environment Config:** Use a validated config module. NEVER access `process.env` directly throughout the codebase.
-- **Consistent Response Shape:** Every API response should follow the same envelope: `{ data, error, meta }`.
+- **Layered Architecture:** Separate routes → controllers → services → repositories. Routes define
+  endpoints, controllers handle HTTP concerns, services contain business logic, repositories handle
+  data access.
+- **Centralized Error Handling:** NEVER scatter `try/catch` in every route. Use an async wrapper and
+  a single error-handling middleware at the end of the middleware chain.
+- **Validate at the Edge:** Validate ALL incoming data (body, params, query) at the route level
+  using Zod or Joi BEFORE it reaches the controller.
+- **Security by Default:** Always use `helmet`, configure `cors` explicitly (never `*` in
+  production), and apply rate limiting to public endpoints.
+- **Environment Config:** Use a validated config module. NEVER access `process.env` directly
+  throughout the codebase.
+- **Consistent Response Shape:** Every API response should follow the same envelope:
+  `{ data, error, meta }`.
 
 ## Project Structure
 
@@ -273,11 +281,13 @@ export const env = envSchema.parse(process.env);
 ### DO
 
 - Use `express.Router()` to modularize routes by domain.
-- Return appropriate HTTP status codes: `201` for created, `204` for no-content, `404` for not found.
+- Return appropriate HTTP status codes: `201` for created, `204` for no-content, `404` for not
+  found.
 - Use API versioning in the URL path (`/api/v1/...`).
 - Set `trust proxy` if behind a reverse proxy (for rate limiting and IP detection).
 - Add request ID middleware for tracing across logs.
-- Gracefully shut down: listen for `SIGTERM`/`SIGINT`, stop accepting new connections, drain existing ones.
+- Gracefully shut down: listen for `SIGTERM`/`SIGINT`, stop accepting new connections, drain
+  existing ones.
 
 ### DON'T
 
@@ -286,5 +296,6 @@ export const env = envSchema.parse(process.env);
 - DON'T return stack traces or internal error details in production responses.
 - DON'T use `express.static` for user-uploaded files without path sanitization.
 - DON'T use synchronous file operations (`fs.readFileSync`) in request handlers.
-- DON'T call `res.json()` or `res.send()` more than once per request — it causes "headers already sent" errors.
+- DON'T call `res.json()` or `res.send()` more than once per request — it causes "headers already
+  sent" errors.
 - DON'T forget to call `next()` in non-terminal middleware — the request will hang.

@@ -8,26 +8,28 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Accessibility (a11y)
 
-Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessibility audits. Goal: make content usable by everyone, including people with disabilities.
+Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessibility audits. Goal:
+make content usable by everyone, including people with disabilities.
 
 ## WCAG Principles: POUR
 
-| Principle | Description |
-|-----------|-------------|
-| **P**erceivable | Content can be perceived through different senses |
-| **O**perable | Interface can be operated by all users |
-| **U**nderstandable | Content and interface are understandable |
-| **R**obust | Content works with assistive technologies |
+| Principle          | Description                                       |
+|--------------------|---------------------------------------------------|
+| **P**erceivable    | Content can be perceived through different senses |
+| **O**perable       | Interface can be operated by all users            |
+| **U**nderstandable | Content and interface are understandable          |
+| **R**obust         | Content works with assistive technologies         |
 
 ## Conformance levels
 
-| Level | Requirement | Target |
-|-------|-------------|--------|
-| **A** | Minimum accessibility | Must pass |
-| **AA** | Standard compliance | Should pass (legal requirement in many jurisdictions) |
-| **AAA** | Enhanced accessibility | Nice to have |
+| Level   | Requirement            | Target                                                |
+|---------|------------------------|-------------------------------------------------------|
+| **A**   | Minimum accessibility  | Must pass                                             |
+| **AA**  | Standard compliance    | Should pass (legal requirement in many jurisdictions) |
+| **AAA** | Enhanced accessibility | Nice to have                                          |
 
 ---
 
@@ -36,6 +38,7 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 ### Text alternatives (1.1)
 
 **Images require alt text:**
+
 ```html
 <!-- ❌ Missing alt -->
 <img src="chart.png">
@@ -57,6 +60,7 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 ```
 
 **Icon buttons need accessible names:**
+
 ```html
 <!-- ❌ No accessible name -->
 <button><svg><!-- menu icon --></svg></button>
@@ -74,6 +78,7 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 ```
 
 **Visually hidden class:**
+
 ```css
 .visually-hidden {
   position: absolute;
@@ -90,11 +95,11 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 
 ### Color contrast (1.4.3, 1.4.6)
 
-| Text Size | AA minimum | AAA enhanced |
-|-----------|------------|--------------|
-| Normal text (< 18px / < 14px bold) | 4.5:1 | 7:1 |
-| Large text (≥ 18px / ≥ 14px bold) | 3:1 | 4.5:1 |
-| UI components & graphics | 3:1 | 3:1 |
+| Text Size                          | AA minimum | AAA enhanced |
+|------------------------------------|------------|--------------|
+| Normal text (< 18px / < 14px bold) | 4.5:1      | 7:1          |
+| Large text (≥ 18px / ≥ 14px bold)  | 3:1        | 4.5:1        |
+| UI components & graphics           | 3:1        | 3:1          |
 
 ```css
 /* ❌ Low contrast (2.5:1) */
@@ -117,6 +122,7 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 ```
 
 **Don't rely on color alone:**
+
 ```html
 <!-- ❌ Only color indicates error -->
 <input class="error-border">
@@ -159,6 +165,7 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 ### Keyboard accessible (2.1)
 
 **All functionality must be keyboard accessible:**
+
 ```javascript
 // ❌ Only handles click
 element.addEventListener('click', handleAction);
@@ -174,6 +181,7 @@ element.addEventListener('keydown', (e) => {
 ```
 
 **No keyboard traps:**
+
 ```javascript
 // Modal focus management
 function openModal(modal) {
@@ -400,6 +408,7 @@ form.addEventListener('submit', (e) => {
 ### ARIA usage (4.1.2)
 
 **Prefer native elements:**
+
 ```html
 <!-- ❌ ARIA role on div -->
 <div role="button" tabindex="0">Click me</div>
@@ -415,6 +424,7 @@ form.addEventListener('submit', (e) => {
 ```
 
 **When ARIA is needed:**
+
 ```html
 <!-- Custom tabs component -->
 <div role="tablist" aria-label="Product information">
@@ -460,4 +470,5 @@ function showNotification(message, type = 'polite') {
 
 ## Additional References
 
-- Read [references/REFERENCE.md](references/REFERENCE.md) when you need the testing checklist, issue triage, or external accessibility references.
+- Read [references/REFERENCE.md](references/REFERENCE.md) when you need the testing checklist, issue
+  triage, or external accessibility references.

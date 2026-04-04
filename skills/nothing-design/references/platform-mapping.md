@@ -2,7 +2,8 @@
 
 ## 1. HTML / CSS / WEB
 
-Load fonts via Google Fonts `<link>` or `@import`. Use CSS custom properties, `rem` for type, `px` for spacing/borders. Dark/light via `prefers-color-scheme` or class toggle.
+Load fonts via Google Fonts `<link>` or `@import`. Use CSS custom properties, `rem` for type, `px`
+for spacing/borders. Dark/light via `prefers-color-scheme` or class toggle.
 
 ```css
 :root {
@@ -36,7 +37,8 @@ Load fonts via Google Fonts `<link>` or `@import`. Use CSS custom properties, `r
 
 ## 2. SWIFTUI / iOS
 
-Register fonts in Info.plist, bundle `.ttf` files. Use `@Environment(\.colorScheme)` for mode switching.
+Register fonts in Info.plist, bundle `.ttf` files. Use `@Environment(\.colorScheme)` for mode
+switching.
 
 ```swift
 import Foundation
@@ -71,13 +73,16 @@ extension Color {
 }
 ```
 
-Light mode values in tokens.md Dark/Light table. Derive Font extension from font stack table (trivial: `.custom("Doto"/"SpaceGrotesk-Regular"/"SpaceMono-Regular", size:)`).
+Light mode values in tokens.md Dark/Light table. Derive Font extension from font stack table (
+trivial: `.custom("Doto"/"SpaceGrotesk-Regular"/"SpaceMono-Regular", size:)`).
 
 ---
 
 ## 3. REACT / TAILWIND
 
-Load fonts through `next/font`, a Google Fonts `<link>`, or CSS `@import`. Map design tokens into `theme.extend` or project-level CSS variables. Prefer utility classes for spacing/layout and CSS variables for color + typography consistency.
+Load fonts through `next/font`, a Google Fonts `<link>`, or CSS `@import`. Map design tokens into
+`theme.extend` or project-level CSS variables. Prefer utility classes for spacing/layout and CSS
+variables for color + typography consistency.
 
 ```tsx
 import { Space_Grotesk, Space_Mono } from 'next/font/google'
@@ -96,9 +101,12 @@ const spaceMono = Space_Mono({
 export const nothingFonts = `${spaceGrotesk.variable} ${spaceMono.variable}`
 ```
 
-For Doto, declare the font source explicitly before implementation; if Google Fonts is unavailable in the target stack, use the documented fallback (`Space Mono`) for display moments and state that tradeoff clearly.
+For Doto, declare the font source explicitly before implementation; if Google Fonts is unavailable
+in the target stack, use the documented fallback (`Space Mono`) for display moments and state that
+tradeoff clearly.
 
 Recommended mapping:
+
 - `font-[var(--font-space-grotesk)]` → body/UI
 - `font-[var(--font-space-mono)]` → labels/data
 - CSS variables on `:root` / `[data-theme="light"]` → color and spacing tokens
@@ -109,4 +117,5 @@ Recommended mapping:
 
 ## 4. PAPER (DESIGN TOOL)
 
-Declare the font families up front and verify availability inside the design tool before styling. Direct hex values (no CSS variables). Dark mode as default canvas, light mode as separate artboard.
+Declare the font families up front and verify availability inside the design tool before styling.
+Direct hex values (no CSS variables). Dark mode as default canvas, light mode as separate artboard.

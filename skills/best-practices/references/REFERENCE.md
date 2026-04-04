@@ -88,7 +88,8 @@ findNearbyButton.addEventListener('click', async () => {
 
 ### Permissions policy
 
-Set `Permissions-Policy` as an **HTTP response header**, not a meta tag. Browsers enforce this policy from server responses.
+Set `Permissions-Policy` as an **HTTP response header**, not a meta tag. Browsers enforce this
+policy from server responses.
 
 ```nginx
 # Restrict powerful features
@@ -146,13 +147,13 @@ app.use((_req, res, next) => {
 
 ## Tools
 
-| Tool | Purpose |
-|------|---------|
-| `npm audit` | Dependency vulnerabilities |
-| [SecurityHeaders.com](https://securityheaders.com) | Header analysis |
-| [W3C Validator](https://validator.w3.org) | HTML validation |
-| Lighthouse | Best practices audit |
-| [Observatory](https://observatory.mozilla.org) | Security scan |
+| Tool                                               | Purpose                    |
+|----------------------------------------------------|----------------------------|
+| `npm audit`                                        | Dependency vulnerabilities |
+| [SecurityHeaders.com](https://securityheaders.com) | Header analysis            |
+| [W3C Validator](https://validator.w3.org)          | HTML validation            |
+| Lighthouse                                         | Best practices audit       |
+| [Observatory](https://observatory.mozilla.org)     | Security scan              |
 
 ## References
 

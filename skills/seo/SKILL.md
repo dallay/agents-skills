@@ -8,21 +8,23 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # SEO optimization
 
-Search engine optimization based on Lighthouse SEO audits and Google Search guidelines. Focus on technical SEO, on-page optimization, and structured data.
+Search engine optimization based on Lighthouse SEO audits and Google Search guidelines. Focus on
+technical SEO, on-page optimization, and structured data.
 
 ## SEO fundamentals
 
 Search ranking factors (approximate influence):
 
-| Factor | Influence | This Skill |
-|--------|-----------|------------|
-| Content quality & relevance | ~40% | Partial (structure) |
-| Backlinks & authority | ~25% | ✗ |
-| Technical SEO | ~15% | ✓ |
-| Page experience (Core Web Vitals) | ~10% | See [Core Web Vitals](../core-web-vitals/SKILL.md) |
-| On-page SEO | ~10% | ✓ |
+| Factor                            | Influence | This Skill                                         |
+|-----------------------------------|-----------|----------------------------------------------------|
+| Content quality & relevance       | ~40%      | Partial (structure)                                |
+| Backlinks & authority             | ~25%      | ✗                                                  |
+| Technical SEO                     | ~15%      | ✓                                                  |
+| Page experience (Core Web Vitals) | ~10%      | See [Core Web Vitals](../core-web-vitals/SKILL.md) |
+| On-page SEO                       | ~10%      | ✓                                                  |
 
 ---
 
@@ -31,6 +33,7 @@ Search ranking factors (approximate influence):
 ### Crawlability
 
 **robots.txt:**
+
 ```text
 # /robots.txt
 User-agent: *
@@ -48,6 +51,7 @@ Sitemap: https://example.com/sitemap.xml
 ```
 
 **Meta robots:**
+
 ```html
 <!-- Default: indexable, followable -->
 <meta name="robots" content="index, follow">
@@ -63,6 +67,7 @@ Sitemap: https://example.com/sitemap.xml
 ```
 
 **Canonical URLs:**
+
 ```html
 <!-- Prevent duplicate content issues -->
 <link rel="canonical" href="https://example.com/page">
@@ -96,6 +101,7 @@ Sitemap: https://example.com/sitemap.xml
 ```
 
 **Sitemap best practices:**
+
 - Maximum 50,000 URLs or 50MB per sitemap
 - Use sitemap index for larger sites
 - Include only canonical, indexable URLs
@@ -115,6 +121,7 @@ https://example.com/products/item/category/subcategory/blue-widget-2024-sale-dis
 ```
 
 **URL guidelines:**
+
 - Use hyphens, not underscores
 - Lowercase only
 - Keep short (< 75 characters)
@@ -133,6 +140,7 @@ https://example.com/products/item/category/subcategory/blue-widget-2024-sale-dis
 ```
 
 **Security headers for SEO trust signals:**
+
 ```
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 X-Content-Type-Options: nosniff
@@ -155,6 +163,7 @@ X-Frame-Options: DENY
 ```
 
 **Title tag guidelines:**
+
 - 50-60 characters (Google truncates ~60)
 - Primary keyword near the beginning
 - Unique for every page
@@ -168,10 +177,12 @@ X-Frame-Options: DENY
 <meta name="description" content="">
 
 <!-- ✅ Compelling and unique -->
-<meta name="description" content="Shop premium blue widgets with free shipping. 30-day returns. Rated 4.9/5 by 10,000+ customers. Order today and save 20%.">
+<meta name="description"
+      content="Shop premium blue widgets with free shipping. 30-day returns. Rated 4.9/5 by 10,000+ customers. Order today and save 20%.">
 ```
 
 **Meta description guidelines:**
+
 - 150-160 characters
 - Include primary keyword naturally
 - Compelling call-to-action
@@ -188,14 +199,15 @@ X-Frame-Options: DENY
 
 <!-- ✅ Proper hierarchy -->
 <h1>Blue Widgets - Premium Quality</h1>
-  <h2>Product Features</h2>
-    <h3>Durability</h3>
-    <h3>Design</h3>
-  <h2>Customer Reviews</h2>
-  <h2>Pricing</h2>
+<h2>Product Features</h2>
+<h3>Durability</h3>
+<h3>Design</h3>
+<h2>Customer Reviews</h2>
+<h2>Pricing</h2>
 ```
 
 **Heading guidelines:**
+
 - Single `<h1>` per page (the main topic)
 - Logical hierarchy (don't skip levels)
 - Include keywords naturally
@@ -216,6 +228,7 @@ X-Frame-Options: DENY
 ```
 
 **Image guidelines:**
+
 - Descriptive filenames with keywords
 - Alt text describes the image content
 - Compressed and properly sized
@@ -235,6 +248,7 @@ X-Frame-Options: DENY
 ```
 
 **Linking guidelines:**
+
 - Descriptive anchor text with keywords
 - Link to relevant internal pages
 - Reasonable number of links per page
@@ -248,148 +262,154 @@ X-Frame-Options: DENY
 ### Organization
 
 ```html
+
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Example Company",
-  "url": "https://example.com",
-  "logo": "https://example.com/logo.png",
-  "sameAs": [
-    "https://twitter.com/example",
-    "https://linkedin.com/company/example"
-  ],
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+1-555-123-4567",
-    "contactType": "customer service"
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Example Company",
+    "url": "https://example.com",
+    "logo": "https://example.com/logo.png",
+    "sameAs": [
+      "https://twitter.com/example",
+      "https://linkedin.com/company/example"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-555-123-4567",
+      "contactType": "customer service"
+    }
   }
-}
 </script>
 ```
 
 ### Article
 
 ```html
+
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "How to Choose the Right Widget",
-  "description": "Complete guide to selecting widgets for your needs.",
-  "image": "https://example.com/article-image.jpg",
-  "author": {
-    "@type": "Person",
-    "name": "Jane Smith",
-    "url": "https://example.com/authors/jane-smith"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Example Blog",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://example.com/logo.png"
-    }
-  },
-  "datePublished": "2024-01-15",
-  "dateModified": "2024-01-20"
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Choose the Right Widget",
+    "description": "Complete guide to selecting widgets for your needs.",
+    "image": "https://example.com/article-image.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "Jane Smith",
+      "url": "https://example.com/authors/jane-smith"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Example Blog",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://example.com/logo.png"
+      }
+    },
+    "datePublished": "2024-01-15",
+    "dateModified": "2024-01-20"
+  }
 </script>
 ```
 
 ### Product
 
 ```html
+
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "Blue Widget Pro",
-  "image": "https://example.com/blue-widget.jpg",
-  "description": "Premium blue widget with advanced features.",
-  "brand": {
-    "@type": "Brand",
-    "name": "WidgetCo"
-  },
-  "offers": {
-    "@type": "Offer",
-    "price": "49.99",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock",
-    "url": "https://example.com/products/blue-widget"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "1250"
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Blue Widget Pro",
+    "image": "https://example.com/blue-widget.jpg",
+    "description": "Premium blue widget with advanced features.",
+    "brand": {
+      "@type": "Brand",
+      "name": "WidgetCo"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "49.99",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "url": "https://example.com/products/blue-widget"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "1250"
+    }
   }
-}
 </script>
 ```
 
 ### FAQ
 
 ```html
+
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What colors are available?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Our widgets come in blue, red, and green."
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What colors are available?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our widgets come in blue, red, and green."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the warranty?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "All widgets include a 2-year warranty."
+        }
       }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the warranty?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "All widgets include a 2-year warranty."
-      }
-    }
-  ]
-}
+    ]
+  }
 </script>
 ```
 
 ### Breadcrumbs
 
 ```html
+
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://example.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Products",
-      "item": "https://example.com/products"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Blue Widgets",
-      "item": "https://example.com/products/blue-widgets"
-    }
-  ]
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://example.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Products",
+        "item": "https://example.com/products"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Blue Widgets",
+        "item": "https://example.com/products/blue-widgets"
+      }
+    ]
+  }
 </script>
 ```
 
 ### Validation
 
 Test structured data at:
+
 - [Google Rich Results Test](https://search.google.com/test/rich-results)
 - [Schema.org Validator](https://validator.schema.org/)
 
@@ -397,4 +417,5 @@ Test structured data at:
 
 ## Additional References
 
-- Read [references/REFERENCE.md](references/REFERENCE.md) when the task needs mobile SEO, international SEO, the audit checklist, or SEO tools and references.
+- Read [references/REFERENCE.md](references/REFERENCE.md) when the task needs mobile SEO,
+  international SEO, the audit checklist, or SEO tools and references.

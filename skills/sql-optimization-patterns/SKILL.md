@@ -9,9 +9,11 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # SQL Optimization Patterns
 
-Transform slow database queries into lightning-fast operations through systematic optimization, proper indexing, and query plan analysis.
+Transform slow database queries into lightning-fast operations through systematic optimization,
+proper indexing, and query plan analysis.
 
 ## When to Use This Skill
 
@@ -438,4 +440,5 @@ SET enable_nestloop = OFF;  -- Force hash or merge join
 
 ## Additional References
 
-- Read [references/REFERENCE.md](references/REFERENCE.md) when you need database maintenance guidance, common pitfalls, monitoring queries, or the bundled optimization resources.
+- Read [references/REFERENCE.md](references/REFERENCE.md) when you need database maintenance
+  guidance, common pitfalls, monitoring queries, or the bundled optimization resources.

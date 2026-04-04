@@ -20,11 +20,17 @@ metadata:
 
 ## Critical Patterns
 
-- **Use `data-cy` Attributes:** NEVER select elements by class name, tag, or content that changes with design or i18n. Use dedicated `data-cy` attributes that exist solely for testing.
-- **No Arbitrary Waits:** NEVER use `cy.wait(5000)`. Always wait for specific conditions: route aliases, DOM elements, or assertions that Cypress retries automatically.
-- **Test User Flows, Not Units:** E2E tests validate complete workflows (login → navigate → perform action → verify result). For isolated logic, use unit tests.
-- **API-First Setup:** Use `cy.request()` or API calls to set up test state (create users, seed data) instead of navigating through the UI. Reserve UI interactions for what you're actually testing.
-- **Each Test Stands Alone:** Tests must not depend on previous tests or shared state. Use `beforeEach` to set up and clean state for each test.
+- **Use `data-cy` Attributes:** NEVER select elements by class name, tag, or content that changes
+  with design or i18n. Use dedicated `data-cy` attributes that exist solely for testing.
+- **No Arbitrary Waits:** NEVER use `cy.wait(5000)`. Always wait for specific conditions: route
+  aliases, DOM elements, or assertions that Cypress retries automatically.
+- **Test User Flows, Not Units:** E2E tests validate complete workflows (login → navigate → perform
+  action → verify result). For isolated logic, use unit tests.
+- **API-First Setup:** Use `cy.request()` or API calls to set up test state (create users, seed
+  data) instead of navigating through the UI. Reserve UI interactions for what you're actually
+  testing.
+- **Each Test Stands Alone:** Tests must not depend on previous tests or shared state. Use
+  `beforeEach` to set up and clean state for each test.
 
 ## Code Examples
 
@@ -35,7 +41,7 @@ metadata:
 describe("Dashboard", () => {
   beforeEach(() => {
     // Set up state via API — fast and reliable
-    cy.request("POST", "/api/test/seed", { fixture: "dashboard" });
+    cy.request("POST", "/api/test/seed", {fixture: "dashboard"});
     cy.loginByApi("admin@test.com", "password123");
     cy.visit("/dashboard");
   });
@@ -73,6 +79,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       loginByApi(email: string, password: string): Chainable<void>;
+
       getByDataCy(selector: string): Chainable<JQuery<HTMLElement>>;
     }
   }
@@ -80,7 +87,7 @@ declare global {
 
 // Login via API — skip the UI for non-login tests
 Cypress.Commands.add("loginByApi", (email: string, password: string) => {
-  cy.request("POST", "/api/auth/login", { email, password }).then((resp) => {
+  cy.request("POST", "/api/auth/login", {email, password}).then((resp) => {
     window.localStorage.setItem("auth_token", resp.body.token);
   });
 });
@@ -117,7 +124,7 @@ describe("User Profile", () => {
   it("handles API errors gracefully", () => {
     cy.intercept("GET", "/api/users/me", {
       statusCode: 500,
-      body: { error: "Internal server error" },
+      body: {error: "Internal server error"},
     }).as("getProfileError");
 
     cy.visit("/profile");
@@ -131,7 +138,7 @@ describe("User Profile", () => {
     cy.intercept("GET", "/api/users/me", (req) => {
       req.reply({
         delay: 1000,
-        body: { id: "1", name: "Alice" },
+        body: {id: "1", name: "Alice"},
       });
     }).as("getProfileSlow");
 
@@ -148,19 +155,19 @@ describe("User Profile", () => {
 ```typescript
 // cypress/fixtures/users.json
 [
-  { "id": "1", "name": "Alice", "role": "admin" },
-  { "id": "2", "name": "Bob", "role": "user" }
+  {"id": "1", "name": "Alice", "role": "admin"},
+  {"id": "2", "name": "Bob", "role": "user"}
 ]
 
 // In test
-cy.intercept("GET", "/api/users", { fixture: "users.json" }).as("getUsers");
+cy.intercept("GET", "/api/users", {fixture: "users.json"}).as("getUsers");
 ```
 
 ### Cypress Configuration
 
 ```typescript
 // cypress.config.ts
-import { defineConfig } from "cypress";
+import {defineConfig} from "cypress";
 
 export default defineConfig({
   e2e: {
@@ -241,9 +248,13 @@ describe("Responsive Navigation", () => {
 
 ### DON'T
 
-- DON'T use `cy.wait(3000)` — it makes tests slow and flaky. Wait for assertions or route aliases instead.
-- DON'T select elements by CSS class (`.btn-primary`) or tag (`button`) — they change with redesigns.
+- DON'T use `cy.wait(3000)` — it makes tests slow and flaky. Wait for assertions or route aliases
+  instead.
+- DON'T select elements by CSS class (`.btn-primary`) or tag (`button`) — they change with
+  redesigns.
 - DON'T write tests that depend on execution order or data from previous tests.
 - DON'T test third-party UI (OAuth login pages, payment forms) — mock them at the API boundary.
-- DON'T use `cy.get().then()` for simple assertions — Cypress commands retry automatically. Use `.should()` instead.
-- DON'T navigate through the UI to set up test state — use API calls. Test the flow you're verifying, not the setup.
+- DON'T use `cy.get().then()` for simple assertions — Cypress commands retry automatically. Use
+  `.should()` instead.
+- DON'T navigate through the UI to set up test state — use API calls. Test the flow you're
+  verifying, not the setup.

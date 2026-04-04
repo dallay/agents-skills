@@ -10,9 +10,11 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Web Application Testing
 
-This skill enables comprehensive testing and debugging of local web applications using Playwright automation.
+This skill enables comprehensive testing and debugging of local web applications using Playwright
+automation.
 
 ## When to Use This Skill
 
@@ -87,7 +89,8 @@ await page.screenshot({ path: 'debug.png', fullPage: true });
 
 ## Guidelines
 
-1. **Always verify the app is running** - Check that the local server is accessible before running tests
+1. **Always verify the app is running** - Check that the local server is accessible before running
+   tests
 2. **Use explicit waits** - Wait for elements or navigation to complete before interacting
 3. **Capture screenshots on failure** - Take screenshots to help debug issues
 4. **Clean up resources** - Always close the browser when done

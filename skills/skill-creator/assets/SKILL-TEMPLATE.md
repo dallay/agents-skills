@@ -9,7 +9,8 @@ metadata:
   version: "1.0"
 ---
 
-> **REPLACE PLACEHOLDERS:** Replace every `{...}` token in this template before submission. PRs containing unreplaced placeholders will be rejected.
+> **REPLACE PLACEHOLDERS:** Replace every `{...}` token in this template before submission. PRs
+> containing unreplaced placeholders will be rejected.
 
 # {Skill Name}
 
@@ -41,7 +42,8 @@ Use this skill when:
 
 ## Code Examples
 
-> **REPLACE PLACEHOLDERS:** Update every remaining `{...}` token in headings, examples, and resource text before you submit the skill.
+> **REPLACE PLACEHOLDERS:** Update every remaining `{...}` token in headings, examples, and resource
+> text before you submit the skill.
 
 ### Example 1: {Description}
 

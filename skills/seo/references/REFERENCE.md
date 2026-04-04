@@ -105,13 +105,13 @@ body {
 
 ## Tools
 
-| Tool | Use |
-|------|-----|
-| Google Search Console | Monitor indexing, fix issues |
+| Tool                      | Use                           |
+|---------------------------|-------------------------------|
+| Google Search Console     | Monitor indexing, fix issues  |
 | Google PageSpeed Insights | Performance + Core Web Vitals |
-| Rich Results Test | Validate structured data |
-| Lighthouse | Full SEO audit |
-| Screaming Frog | Crawl analysis |
+| Rich Results Test         | Validate structured data      |
+| Lighthouse                | Full SEO audit                |
+| Screaming Frog            | Crawl analysis                |
 
 ## References
 

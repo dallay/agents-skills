@@ -8,15 +8,18 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Best practices
 
-Modern web development standards based on Lighthouse best practices audits. Covers security, browser compatibility, and code quality patterns.
+Modern web development standards based on Lighthouse best practices audits. Covers security, browser
+compatibility, and code quality patterns.
 
 ## Security
 
 ### HTTPS everywhere
 
 **Enforce HTTPS:**
+
 ```html
 <!-- ❌ Mixed content -->
 <img src="http://example.com/image.jpg">
@@ -31,6 +34,7 @@ Modern web development standards based on Lighthouse best practices audits. Cove
 ```
 
 **HSTS Header:**
+
 ```
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 ```
@@ -39,7 +43,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 ```html
 <!-- Basic CSP via meta tag -->
-<meta http-equiv="Content-Security-Policy" 
+<meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; 
                script-src 'self' https://trusted-cdn.com; 
                style-src 'self' 'unsafe-inline';
@@ -50,6 +54,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 ```
 
 **CSP Header (recommended):**
+
 ```
 Content-Security-Policy: 
   default-src 'self';
@@ -63,7 +68,9 @@ Content-Security-Policy:
 ```
 
 **Using nonces for inline scripts:**
+
 ```html
+
 <script nonce="abc123">
   // This inline script is allowed
 </script>
@@ -103,6 +110,7 @@ npm ls lodash
 ```
 
 **Keep dependencies updated:**
+
 ```json
 // package.json
 {
@@ -114,6 +122,7 @@ npm ls lodash
 ```
 
 **Known vulnerable patterns to avoid:**
+
 ```javascript
 // ❌ Prototype pollution vulnerable patterns
 Object.assign(target, userInput);
@@ -135,6 +144,7 @@ element.textContent = userInput;
 
 // ✅ If HTML needed, sanitize
 import DOMPurify from 'dompurify';
+
 element.innerHTML = DOMPurify.sanitize(userInput);
 ```
 
@@ -145,7 +155,14 @@ element.innerHTML = DOMPurify.sanitize(userInput);
 document.cookie = "session=abc123";
 
 // ✅ Secure cookie (server-side)
-Set-Cookie: session=abc123; Secure; HttpOnly; SameSite=Strict; Path=/
+Set - Cookie
+:
+session = abc123;
+Secure;
+HttpOnly;
+SameSite = Strict;
+Path =
+/
 ```
 
 ---
@@ -214,14 +231,26 @@ if ('IntersectionObserver' in window) {
 }
 
 // ✅ Using @supports in CSS
-@supports (display: grid) {
-  .container {
+@supports(display:
+grid
+)
+{
+.
+  container
+  {
     display: grid;
   }
 }
 
-@supports not (display: grid) {
-  .container {
+@supports
+not(display
+:
+grid
+)
+{
+.
+  container
+  {
     display: flex;
   }
 }
@@ -280,11 +309,11 @@ element.addEventListener('touchstart', handler);
 element.addEventListener('wheel', handler);
 
 // ✅ Passive listeners (allows smooth scrolling)
-element.addEventListener('touchstart', handler, { passive: true });
-element.addEventListener('wheel', handler, { passive: true });
+element.addEventListener('touchstart', handler, {passive: true});
+element.addEventListener('wheel', handler, {passive: true});
 
 // ✅ If you need preventDefault, be explicit
-element.addEventListener('touchstart', handler, { passive: false });
+element.addEventListener('touchstart', handler, {passive: false});
 ```
 
 ---
@@ -313,19 +342,19 @@ try {
 
 ```jsx
 class ErrorBoundary extends React.Component {
-  state = { hasError: false };
-  
+  state = {hasError: false};
+
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return {hasError: true};
   }
-  
+
   componentDidCatch(error, info) {
-    errorTracker.captureException(error, { extra: info });
+    errorTracker.captureException(error, {extra: info});
   }
-  
+
   render() {
     if (this.state.hasError) {
-      return <FallbackUI />;
+      return <FallbackUI/>;
     }
     return this.props.children;
   }
@@ -333,7 +362,7 @@ class ErrorBoundary extends React.Component {
 
 // Usage
 <ErrorBoundary>
-  <App />
+  <App/>
 </ErrorBoundary>
 ```
 
@@ -389,11 +418,14 @@ module.exports = {
 <script defer src="heavy-library.js"></script>
 
 // ❌ Blocking CSS import
-@import url('other-styles.css');
+@
+import url
+
+('other-styles.css');
 
 // ✅ Link tags (parallel loading)
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="other-styles.css">
+  <link rel="stylesheet" href="other-styles.css">
 ```
 
 ### Efficient event handlers
@@ -416,11 +448,13 @@ container.addEventListener('click', (e) => {
 
 ```javascript
 // ❌ Memory leak (never removed)
-const handler = () => { /* ... */ };
+const handler = () => { /* ... */
+};
 window.addEventListener('resize', handler);
 
 // ✅ Cleanup when done
-const handler = () => { /* ... */ };
+const handler = () => { /* ... */
+};
 window.addEventListener('resize', handler);
 
 // Later, when component unmounts:
@@ -428,7 +462,7 @@ window.removeEventListener('resize', handler);
 
 // ✅ Using AbortController
 const controller = new AbortController();
-window.addEventListener('resize', handler, { signal: controller.signal });
+window.addEventListener('resize', handler, {signal: controller.signal});
 
 // Cleanup:
 controller.abort();
@@ -438,4 +472,5 @@ controller.abort();
 
 ## Additional References
 
-- Read [references/REFERENCE.md](references/REFERENCE.md) when you need code quality checks, permissions and privacy guidance, the audit checklist, or supporting tools.
+- Read [references/REFERENCE.md](references/REFERENCE.md) when you need code quality checks,
+  permissions and privacy guidance, the audit checklist, or supporting tools.

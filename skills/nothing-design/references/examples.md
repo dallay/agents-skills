@@ -1,42 +1,50 @@
 # Nothing Design System — Output Examples
 
-Use these as **response-shape examples**, not rigid templates. Preserve the design language while adapting to user goals, platform constraints, and accessibility needs.
+Use these as **response-shape examples**, not rigid templates. Preserve the design language while
+adapting to user goals, platform constraints, and accessibility needs.
 
 ---
 
 ## 1. DASHBOARD HERO METRIC (WEB)
 
 ### Fonts required
+
 - `Space Grotesk`
 - `Space Mono`
 - `Doto` for the hero metric
 
 ### Mode
+
 - Start in **dark mode**
 
 ### Three-layer hierarchy
+
 - **Primary:** Main throughput value (`36GB/s`)
 - **Secondary:** Supporting module label and short explanatory context
 - **Tertiary:** Timestamp, status, and navigation metadata
 
 ### Layout strategy
+
 - Left-heavy composition
 - Vast top spacing, tight label-to-metric spacing
 - Single expressive break: oversized Doto metric floating without a card container
 
 ### Component mapping
+
 - Hero metric block
 - Stat rows
 - Segmented progress bar
 - Top metadata strip
 
 ### Token mapping
+
 - Metric: `--display-xl`, `--text-display`, `Doto`
 - Labels: `--label`, `--text-secondary`, `Space Mono`
 - Body: `--body`, `--text-primary`, `Space Grotesk`
 - Spacing: `--space-sm`, `--space-md`, `--space-2xl`, `--space-4xl`
 
 ### Example implementation direction
+
 ```html
 <section class="nd-panel">
   <div class="nd-meta">[ NETWORK ] <span>UPDATED 09:41 UTC</span></div>
@@ -61,6 +69,7 @@ Use these as **response-shape examples**, not rigid templates. Preserve the desi
 ```
 
 ### Why this works
+
 - The primary value dominates immediately
 - Secondary support stays close and readable
 - Tertiary metadata stays out of competition by size, casing, and placement
@@ -70,23 +79,28 @@ Use these as **response-shape examples**, not rigid templates. Preserve the desi
 ## 2. SETTINGS SCREEN (MOBILE)
 
 ### Fonts required
+
 - `Space Grotesk`
 - `Space Mono`
 
 ### Mode
+
 - Start in **light mode**
 
 ### Three-layer hierarchy
+
 - **Primary:** Section title
 - **Secondary:** Setting names and active values
 - **Tertiary:** Explanatory captions and navigation hints
 
 ### Layout strategy
+
 - Top-heavy stack
 - Consistent row rhythm with dividers
 - Single expressive break: one inverted segmented control near the top
 
 ### Component mapping
+
 - Back button
 - Section header
 - Segmented control
@@ -94,12 +108,14 @@ Use these as **response-shape examples**, not rigid templates. Preserve the desi
 - Inline status text
 
 ### Token mapping
+
 - Title: `--display-md`
 - Rows: `--body` + `--label`
 - Dividers: `--border`
 - Controls: 44px minimum touch target
 
 ### Example response shape
+
 ```md
 Fonts required: Space Grotesk, Space Mono
 Mode: Light
@@ -123,6 +139,7 @@ Components:
 ```
 
 ### Why this works
+
 - The page feels technical and calm, not app-store generic
 - The segmented control provides the one high-contrast moment
 - Rows stay highly scannable without cards or shadows
@@ -132,28 +149,34 @@ Components:
 ## 3. EMPTY STATE (WEB APP)
 
 ### Fonts required
+
 - `Space Grotesk`
 - `Space Mono`
 
 ### Mode
+
 - Start in **dark mode**
 
 ### Three-layer hierarchy
+
 - **Primary:** Empty-state headline
 - **Secondary:** One-sentence explanation
 - **Tertiary:** Action label or system hint
 
 ### Layout strategy
+
 - Centered composition only because the page has no data yet
 - 96px+ surrounding whitespace
 - Single expressive break: subtle dot-grid illustration behind the headline
 
 ### Component mapping
+
 - Empty state text stack
 - Ghost action button
 - Dot-grid motif
 
 ### Example copy
+
 ```text
 [ ARCHIVE ]
 NO CAPTURES YET
@@ -162,6 +185,7 @@ Your first synced capture will appear here once the device completes its next tr
 ```
 
 ### Why this works
+
 - It stays sparse without becoming vague
 - One sentence explains the state without onboarding theater
 - The bracketed action matches the mechanical voice of the system
@@ -171,6 +195,7 @@ Your first synced capture will appear here once the device completes its next tr
 ## 4. WHEN TO USE / WHEN NOT TO USE
 
 ### Good fit
+
 - Dashboards
 - Device interfaces
 - Settings panels
@@ -178,6 +203,7 @@ Your first synced capture will appear here once the device completes its next tr
 - Technical product marketing sections
 
 ### Poor fit
+
 - Child-oriented products
 - Highly expressive brand campaigns needing multiple colors
 - Dense enterprise CRUD screens that depend on many simultaneous emphasis cues

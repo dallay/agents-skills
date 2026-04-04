@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Zig Development
 
 Production patterns for Zig systems programming, covering the build system, comptime, error
@@ -45,11 +46,11 @@ myapp/
 
 | Principle         | Zig Idiom                                          |
 |-------------------|----------------------------------------------------|
-| No hidden control | No hidden allocations, no operator overloading      |
-| Explicit errors   | Error unions force handling at every call site       |
-| Comptime          | Generics and metaprogramming via compile-time eval   |
-| Manual memory     | Choose allocator per context; no GC                  |
-| C interop         | Direct `@cImport` with zero overhead                 |
+| No hidden control | No hidden allocations, no operator overloading     |
+| Explicit errors   | Error unions force handling at every call site     |
+| Comptime          | Generics and metaprogramming via compile-time eval |
+| Manual memory     | Choose allocator per context; no GC                |
+| C interop         | Direct `@cImport` with zero overhead               |
 
 ## Quick Start
 

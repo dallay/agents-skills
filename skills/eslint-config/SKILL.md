@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Setting up ESLint from scratch using the modern flat config format (`eslint.config.js`).
@@ -20,13 +21,21 @@ metadata:
 
 ## Critical Patterns
 
-- **Flat Config Only:** Always use `eslint.config.js` (or `.mjs`/`.mts`). The legacy `.eslintrc.*` format is deprecated since ESLint v9. Do NOT create new projects with `.eslintrc`.
-- **Explicit Over Implicit:** Flat config has no implicit inheritance. Every config object in the array is applied in order — later entries override earlier ones.
-- **TypeScript Requires Parser:** Always pair `@typescript-eslint/parser` with `@typescript-eslint/eslint-plugin`. Use type-checked rules (`strictTypeChecked`) for maximum safety.
-- **Severity Consistency:** Use `"error"` for rules that must block CI, `"warn"` for progressive adoption, and `"off"` to explicitly disable inherited rules. Never leave rules ambiguous.
-- **Ignore via Config:** Use the `ignores` property in flat config instead of `.eslintignore` files. Global ignores go in a config object with *only* the `ignores` key.
-- **Plugin Namespacing:** In flat config, plugins are objects, not strings. Import the plugin and assign it to a namespace key to avoid collisions.
-- **Performance:** Use `--cache` in CI and locally. For monorepos, scope linting to changed files with `--no-error-on-unmatched-pattern`.
+- **Flat Config Only:** Always use `eslint.config.js` (or `.mjs`/`.mts`). The legacy `.eslintrc.*`
+  format is deprecated since ESLint v9. Do NOT create new projects with `.eslintrc`.
+- **Explicit Over Implicit:** Flat config has no implicit inheritance. Every config object in the
+  array is applied in order — later entries override earlier ones.
+- **TypeScript Requires Parser:** Always pair `@typescript-eslint/parser` with
+  `@typescript-eslint/eslint-plugin`. Use type-checked rules (`strictTypeChecked`) for maximum
+  safety.
+- **Severity Consistency:** Use `"error"` for rules that must block CI, `"warn"` for progressive
+  adoption, and `"off"` to explicitly disable inherited rules. Never leave rules ambiguous.
+- **Ignore via Config:** Use the `ignores` property in flat config instead of `.eslintignore` files.
+  Global ignores go in a config object with *only* the `ignores` key.
+- **Plugin Namespacing:** In flat config, plugins are objects, not strings. Import the plugin and
+  assign it to a namespace key to avoid collisions.
+- **Performance:** Use `--cache` in CI and locally. For monorepos, scope linting to changed files
+  with `--no-error-on-unmatched-pattern`.
 
 ## Code Examples
 
@@ -201,16 +210,21 @@ npx eslint --inspect-config
 ### DO
 
 - Use `typescript-eslint.config()` helper — it provides type-safe config composition.
-- Place Prettier config (`eslint-config-prettier`) as the **last** entry to disable conflicting format rules.
+- Place Prettier config (`eslint-config-prettier`) as the **last** entry to disable conflicting
+  format rules.
 - Enable `projectService: true` instead of manually listing `tsconfig.json` paths.
 - Use `--cache` in every environment — it reduces re-lint time by 60-80%.
 - Pin plugin versions in `package.json` to avoid surprise rule changes.
 
 ### DON'T
 
-- Don't mix `.eslintrc.*` files with `eslint.config.js` — flat config ignores legacy files completely.
-- Don't use `eslint-plugin-prettier` (runs Prettier inside ESLint) — it's slow. Run Prettier separately.
-- Don't set `"no-unused-vars": "error"` when using TypeScript — use `@typescript-eslint/no-unused-vars` instead to avoid false positives.
-- Don't apply type-checked rules to plain `.js` files — they require a `tsconfig.json` and will error without one.
+- Don't mix `.eslintrc.*` files with `eslint.config.js` — flat config ignores legacy files
+  completely.
+- Don't use `eslint-plugin-prettier` (runs Prettier inside ESLint) — it's slow. Run Prettier
+  separately.
+- Don't set `"no-unused-vars": "error"` when using TypeScript — use
+  `@typescript-eslint/no-unused-vars` instead to avoid false positives.
+- Don't apply type-checked rules to plain `.js` files — they require a `tsconfig.json` and will
+  error without one.
 - Don't suppress rules with `// eslint-disable` without a justification comment explaining *why*.
 - Don't create `.eslintignore` with flat config — use the `ignores` property in the config array.

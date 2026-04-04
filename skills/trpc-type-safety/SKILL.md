@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # tRPC — End-to-End Type Safety
 
 Build type-safe APIs where TypeScript types flow automatically from server to client with zero code
@@ -247,15 +248,15 @@ const router = t.router({
 
 ### Error Codes Reference
 
-| Code | HTTP | Use Case |
-|------|------|----------|
-| `BAD_REQUEST` | 400 | Invalid input |
-| `UNAUTHORIZED` | 401 | Not authenticated |
-| `FORBIDDEN` | 403 | Not authorized |
-| `NOT_FOUND` | 404 | Resource missing |
-| `CONFLICT` | 409 | Resource conflict |
-| `TOO_MANY_REQUESTS` | 429 | Rate limit exceeded |
-| `INTERNAL_SERVER_ERROR` | 500 | Server error |
+| Code                    | HTTP | Use Case            |
+|-------------------------|------|---------------------|
+| `BAD_REQUEST`           | 400  | Invalid input       |
+| `UNAUTHORIZED`          | 401  | Not authenticated   |
+| `FORBIDDEN`             | 403  | Not authorized      |
+| `NOT_FOUND`             | 404  | Resource missing    |
+| `CONFLICT`              | 409  | Resource conflict   |
+| `TOO_MANY_REQUESTS`     | 429  | Rate limit exceeded |
+| `INTERNAL_SERVER_ERROR` | 500  | Server error        |
 
 ### Error Formatter (Zod Integration)
 
@@ -476,5 +477,6 @@ function UserCard({ user }: { user: User }) {
 - Use tRPC for public APIs consumed by non-TypeScript clients.
 - Nest routers more than 2 levels deep — it hurts discoverability.
 - Forget cache invalidation after mutations — stale data is a common bug.
-- Use `.output()` validation on every procedure — it adds runtime overhead. Reserve for critical data.
+- Use `.output()` validation on every procedure — it adds runtime overhead. Reserve for critical
+  data.
 - Expose internal error details in production — sanitize with `errorFormatter`.

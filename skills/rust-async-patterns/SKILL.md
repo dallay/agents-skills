@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 # Rust Async Patterns
 
 Production patterns for async Rust programming with Tokio runtime, including tasks, channels,
@@ -480,4 +481,5 @@ impl Drop for PooledConnection<'_> {
 
 ## Additional References
 
-- Read [references/REFERENCE.md](references/REFERENCE.md) when you need async debugging tips, condensed do and don't guidance, or external Rust async resources.
+- Read [references/REFERENCE.md](references/REFERENCE.md) when you need async debugging tips,
+  condensed do and don't guidance, or external Rust async resources.
