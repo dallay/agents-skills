@@ -8,6 +8,9 @@ metadata:
   author: {author}
   version: "1.0"
 ---
+
+> **REPLACE PLACEHOLDERS:** Replace every `{...}` token in this template before submission. PRs containing unreplaced placeholders will be rejected.
+
 # {Skill Name}
 
 ## When to Use
@@ -38,6 +41,8 @@ Use this skill when:
 
 ## Code Examples
 
+> **REPLACE PLACEHOLDERS:** Update every remaining `{...}` token in headings, examples, and resource text before you submit the skill.
+
 ### Example 1: {Description}
 
 ```{language}
@@ -60,6 +65,6 @@ Notes:
 - Use only official top-level fields in frontmatter.
 - Put activation cues in `description`; do not add a separate `triggers` field.
 - Remove optional fields you do not need, such as `license` or `metadata`.
-- Keep `SKILL.md` under 500 lines when possible and move detailed material to referenced files.
-- Validate with: skills-ref validate skills/{skill-name}
+- `SKILL.md` must be 500 lines or fewer; move detailed material to referenced files.
+- Validate with: ./scripts/validate-skills.sh
 -->

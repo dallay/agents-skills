@@ -1,4 +1,4 @@
-## Mobile SEO
+# Mobile SEO
 
 ### Responsive design
 
@@ -70,6 +70,7 @@ body {
 ## SEO audit checklist
 
 ### Critical
+
 - [ ] HTTPS enabled
 - [ ] robots.txt allows crawling
 - [ ] No `noindex` on important pages
@@ -77,6 +78,7 @@ body {
 - [ ] Single `<h1>` per page
 
 ### High priority
+
 - [ ] Meta descriptions present
 - [ ] Sitemap submitted
 - [ ] Canonical URLs set
@@ -84,6 +86,7 @@ body {
 - [ ] Core Web Vitals passing
 
 ### Medium priority
+
 - [ ] Structured data implemented
 - [ ] Internal linking strategy
 - [ ] Image alt text
@@ -91,6 +94,7 @@ body {
 - [ ] Breadcrumb navigation
 
 ### Ongoing
+
 - [ ] Fix crawl errors in Search Console
 - [ ] Update sitemap when content changes
 - [ ] Monitor ranking changes
@@ -113,5 +117,5 @@ body {
 
 - [Google Search Central](https://developers.google.com/search)
 - [Schema.org](https://schema.org/)
-- [Core Web Vitals](../core-web-vitals/SKILL.md)
-- [Web Quality Audit](../web-quality-audit/SKILL.md)
+- [Core Web Vitals](../../core-web-vitals/SKILL.md)
+- [Web Quality Audit](../../web-quality-audit/SKILL.md)

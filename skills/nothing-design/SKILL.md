@@ -69,7 +69,7 @@ Think of it as a budget. Every additional size/weight costs visual coherence. Be
 
 Spacing is the primary tool for communicating relationships.
 
-```
+```text
 Tight (4–8px)   = "These belong together" (icon + label, number + unit)
 Medium (16px)    = "Same group, different items" (list items, form fields)
 Wide (32–48px)   = "New group starts here" (section breaks)
@@ -91,7 +91,7 @@ Each step down adds visual weight. Use the lightest tool that works. Never box t
 
 In a monochrome system, the gray scale IS the hierarchy. Max 4 levels per screen:
 
-```
+```text
 --text-display (100%) → Hero numbers. One per screen.
 --text-primary (90%)  → Body text, primary content.
 --text-secondary (60%) → Labels, captions, metadata.

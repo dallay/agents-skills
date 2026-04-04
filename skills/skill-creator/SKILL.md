@@ -29,7 +29,7 @@ Create a skill when:
 
 ## Skill Structure
 
-```markdown
+```
 skills/{skill-name}/
 ├── SKILL.md              # Required - main skill file
 ├── assets/               # Optional - templates, schemas, examples
@@ -43,7 +43,7 @@ skills/{skill-name}/
 
 ## SKILL.md Template
 
-```markdown
+```
 ---
 name: {skill-name}
 description: >
@@ -71,7 +71,7 @@ metadata:
 - **Templates**: See [assets/](assets/) for {description}
 - **Documentation**: See [references/](references/) for local docs
 
-```markdown
+```
 
 ---
 
@@ -96,7 +96,7 @@ Need example configs?       → assets/
 Link to existing docs?      → references/
 Link to external guides?    → references/ (with local path)
 
-```markdown
+```
 
 **Key Rule**: `references/` should point to LOCAL files (`docs/developer-guide/*.mdx`), not web URLs.
 
@@ -110,7 +110,7 @@ Patterns apply to ANY project?     → Generic skill (e.g., pytest, typescript)
 Patterns are repo-specific?        → {repo}-{name} skill
 Generic skill needs repo info?     → Add references/ pointing to repo docs
 
-```markdown
+```
 
 ---
 
@@ -136,7 +136,7 @@ Only include `compatibility`, `metadata`, `license`, or `allowed-tools` when the
 ### DO
 - Start with the most critical patterns
 - Keep code examples minimal and focused
-- Keep the main `SKILL.md` under 500 lines when possible
+- Keep the main `SKILL.md` at 500 lines or fewer
 - Use `references/`, `assets/`, or `scripts/` for detail the agent only needs on demand
 - Tell the agent when to read an extra file instead of dumping everything into `SKILL.md`
 
@@ -152,10 +152,10 @@ Only include `compatibility`, `metadata`, `license`, or `allowed-tools` when the
 Validate each new skill before opening a PR:
 
 ```bash
-skills-ref validate skills/{skill-name}
+./scripts/validate-skills.sh
 ```
 
-Use the validator for frontmatter and naming rules. Use a quick manual check to confirm the description activates in the right situations.
+Use the shared validator for frontmatter, naming rules, and repo-specific checks. Then do a quick manual check to confirm the description activates in the right situations.
 
 ---
 
@@ -179,7 +179,7 @@ After creating the skill, add it to `AGENTS.md`:
 - [ ] Critical patterns are clear
 - [ ] Code examples are minimal
 - [ ] Main `SKILL.md` stays concise; detail moves to other files when needed
-- [ ] `skills-ref validate skills/{skill-name}` passes
+- [ ] `./scripts/validate-skills.sh` passes
 - [ ] Added to AGENTS.md
 
 ## Resources - Assets and References

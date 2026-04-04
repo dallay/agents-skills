@@ -128,6 +128,7 @@
 **When to use:** Hero typography (Doto), decorative grid backgrounds, dot-grid data viz, loading indicators, empty state illustrations.
 
 ### CSS Implementation
+
 ```css
 .dot-grid {
   background-image: radial-gradient(circle, var(--border-visible) 1px, transparent 1px);

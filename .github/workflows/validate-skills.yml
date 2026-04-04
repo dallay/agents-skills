@@ -9,6 +9,7 @@ on:
       - 'scripts/**'
       - '.github/workflows/validate-skills.yml'
       - 'lefthook.yml'
+      - 'Makefile'
       - 'CONTRIBUTING.md'
       - 'README.md'
   pull_request:
@@ -17,6 +18,7 @@ on:
       - 'scripts/**'
       - '.github/workflows/validate-skills.yml'
       - 'lefthook.yml'
+      - 'Makefile'
       - 'CONTRIBUTING.md'
       - 'README.md'
   workflow_dispatch:

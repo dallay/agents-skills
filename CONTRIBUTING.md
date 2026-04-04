@@ -31,7 +31,7 @@ skills/
 4. Test the skill locally (see [Testing Locally](#testing-locally))
 5. Open a pull request
 
-## SKILL.md Format
+## SKILL.md Manifest Format
 
 Every `SKILL.md` file MUST begin with YAML frontmatter followed by Markdown instructions.
 

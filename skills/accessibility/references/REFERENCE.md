@@ -1,6 +1,7 @@
-## Testing checklist
+# Testing checklist
 
 ### Automated testing
+
 ```bash
 # Lighthouse accessibility audit
 npx lighthouse https://example.com --only-categories=accessibility

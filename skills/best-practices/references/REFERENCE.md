@@ -1,4 +1,4 @@
-## Code quality
+# Code quality
 
 ### Valid HTML
 
@@ -103,6 +103,7 @@ findNearbyButton.addEventListener('click', async () => {
 ## Audit checklist
 
 ### Security (critical)
+
 - [ ] HTTPS enabled, no mixed content
 - [ ] No vulnerable dependencies (`npm audit`)
 - [ ] CSP headers configured
@@ -110,6 +111,7 @@ findNearbyButton.addEventListener('click', async () => {
 - [ ] No exposed source maps
 
 ### Compatibility
+
 - [ ] Valid HTML5 doctype
 - [ ] Charset declared first in head
 - [ ] Viewport meta tag present
@@ -117,6 +119,7 @@ findNearbyButton.addEventListener('click', async () => {
 - [ ] Passive event listeners for scroll/touch
 
 ### Code quality
+
 - [ ] No console errors
 - [ ] Valid HTML (no duplicate IDs)
 - [ ] Semantic HTML elements used
@@ -124,6 +127,7 @@ findNearbyButton.addEventListener('click', async () => {
 - [ ] Memory cleanup in components
 
 ### UX
+
 - [ ] No intrusive interstitials
 - [ ] Permission requests in context
 - [ ] Clear error messages
@@ -143,4 +147,4 @@ findNearbyButton.addEventListener('click', async () => {
 
 - [MDN Web Security](https://developer.mozilla.org/en-US/docs/Web/Security)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [Web Quality Audit](../web-quality-audit/SKILL.md)
+- [Web Quality Audit skill](../../web-quality-audit/SKILL.md)

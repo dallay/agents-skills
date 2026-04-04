@@ -9,7 +9,7 @@ if [ ! -d "$SKILLS_DIR" ]; then
   exit 1
 fi
 
-SKILLS_REF_BIN="$($ROOT_DIR/scripts/install-skills-ref.sh)"
+SKILLS_REF_BIN="$("$ROOT_DIR/scripts/install-skills-ref.sh")"
 
 validated=0
 for skill_dir in "$SKILLS_DIR"/*; do

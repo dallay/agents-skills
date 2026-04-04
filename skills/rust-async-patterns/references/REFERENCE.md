@@ -1,4 +1,4 @@
-## Debugging Tips
+# Debugging Tips
 
 ```rust
 // Enable tokio-console for runtime debugging
@@ -7,7 +7,7 @@
 // Then: tokio-console
 
 // Instrument async functions
-use tracing::instrument;
+use tracing::{instrument, Instrument};
 
 #[instrument(skip(pool))]
 async fn fetch_user(pool: &PgPool, id: &str) -> Result<User> {

@@ -43,6 +43,28 @@ def top_level_keys(frontmatter_lines: list[str]) -> list[str]:
     return keys
 
 
+def extract_description(frontmatter_lines: list[str]) -> str:
+    for index, line in enumerate(frontmatter_lines):
+        if not line.startswith("description:"):
+            continue
+
+        value = line.split(":", 1)[1].strip()
+        if value and value not in {">", ">-", "|", "|-"}:
+            return value
+
+        collected: list[str] = []
+        for next_line in frontmatter_lines[index + 1 :]:
+            if next_line.startswith((" ", "\t")):
+                collected.append(next_line.strip())
+                continue
+            if next_line and not next_line.startswith((" ", "\t")):
+                break
+
+        return " ".join(part for part in collected if part)
+
+    return ""
+
+
 def validate_skill(skill_dir: Path) -> list[str]:
     problems: list[str] = []
     skill_file = skill_dir / "SKILL.md"
@@ -54,6 +76,7 @@ def validate_skill(skill_dir: Path) -> list[str]:
         return [str(exc)]
 
     keys = top_level_keys(frontmatter_lines)
+    description = extract_description(frontmatter_lines)
     extras = sorted(set(keys) - ALLOWED_TOP_LEVEL)
     if extras:
         problems.append(f"non-standard top-level fields: {', '.join(extras)}")
@@ -64,7 +87,7 @@ def validate_skill(skill_dir: Path) -> list[str]:
     if not body.strip():
         problems.append("SKILL.md body is empty")
 
-    if "Use when" not in text:
+    if "Use when" not in description:
         problems.append(
             "description should include an explicit 'Use when' activation cue"
         )

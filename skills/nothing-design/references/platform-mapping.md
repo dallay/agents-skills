@@ -38,7 +38,22 @@ Load fonts via Google Fonts `<link>` or `@import`. Use CSS custom properties, `r
 Register fonts in Info.plist, bundle `.ttf` files. Use `@Environment(\.colorScheme)` for mode switching.
 
 ```swift
+import Foundation
+import SwiftUI
+
 extension Color {
+    init(hex: String) {
+        let sanitized = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var value: UInt64 = 0
+        Scanner(string: sanitized).scanHexInt64(&value)
+
+        let red = Double((value >> 16) & 0xFF) / 255
+        let green = Double((value >> 8) & 0xFF) / 255
+        let blue = Double(value & 0xFF) / 255
+
+        self.init(.sRGB, red: red, green: green, blue: blue, opacity: 1)
+    }
+
     static let ndBlack = Color(hex: "000000")
     static let ndSurface = Color(hex: "111111")
     static let ndSurfaceRaised = Color(hex: "1A1A1A")

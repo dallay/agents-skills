@@ -1,4 +1,4 @@
-## Best Practices
+# Best Practices
 
 1. **Index Selectively**: Too many indexes slow down writes
 2. **Monitor Query Performance**: Use slow query logs
@@ -70,10 +70,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 
 ## Resources
 
-- **references/postgres-optimization-guide.md**: PostgreSQL-specific optimization
-- **references/mysql-optimization-guide.md**: MySQL/MariaDB optimization
-- **references/query-plan-analysis.md**: Deep dive into EXPLAIN plans
-- **assets/index-strategy-checklist.md**: When and how to create indexes
-- **assets/query-optimization-checklist.md**: Step-by-step optimization guide
-- **scripts/analyze-slow-queries.sql**: Identify slow queries in your database
-- **scripts/index-recommendations.sql**: Generate index recommendations
+- [Main skill guide](../SKILL.md): Query optimization patterns and examples
+- [Best Practices](./REFERENCE.md#best-practices): Indexing, maintenance, and tuning guidance
+- [Common Pitfalls](./REFERENCE.md#common-pitfalls): Anti-patterns to avoid
+- [Monitoring Queries](./REFERENCE.md#monitoring-queries): Operational SQL snippets

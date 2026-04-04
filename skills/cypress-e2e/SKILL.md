@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: "1.0.0"
 ---
+
 ## When to Use
 
 - Writing end-to-end tests for web applications with Cypress.
