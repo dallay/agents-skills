@@ -122,8 +122,9 @@ def main() -> int:
             failures.append((skill_dir.name, "missing SKILL.md"))
             continue
 
-        for problem in validate_skill(skill_dir):
-            failures.append((skill_dir.name, problem))
+        failures.extend(
+            (skill_dir.name, problem) for problem in validate_skill(skill_dir)
+        )
 
     if failures:
         for skill_name, problem in failures:

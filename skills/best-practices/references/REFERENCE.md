@@ -88,14 +88,25 @@ findNearbyButton.addEventListener('click', async () => {
 
 ### Permissions policy
 
-```html
-<!-- Restrict powerful features -->
-<meta http-equiv="Permissions-Policy" 
-      content="geolocation=(), camera=(), microphone=()">
+Set `Permissions-Policy` as an **HTTP response header**, not a meta tag. Browsers enforce this policy from server responses.
 
-<!-- Or allow for specific origins -->
-<meta http-equiv="Permissions-Policy" 
-      content="geolocation=(self 'https://maps.example.com')">
+```nginx
+# Restrict powerful features
+add_header Permissions-Policy "geolocation=(), camera=(), microphone=()" always;
+
+# Or allow a specific origin
+add_header Permissions-Policy "geolocation=(self \"https://maps.example.com\")" always;
+```
+
+```javascript
+// Express / Node example
+app.use((_req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    'geolocation=(), camera=(), microphone=()'
+  );
+  next();
+});
 ```
 
 ---

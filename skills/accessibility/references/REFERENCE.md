@@ -36,6 +36,7 @@ axe https://example.com
 ## Common issues by impact
 
 ### Critical (fix immediately)
+
 1. Missing form labels
 2. Missing image alt text
 3. Insufficient color contrast
@@ -43,6 +44,7 @@ axe https://example.com
 5. No focus indicators
 
 ### Serious (fix before launch)
+
 1. Missing page language
 2. Missing heading structure
 3. Non-descriptive link text
@@ -50,6 +52,7 @@ axe https://example.com
 5. Missing skip links
 
 ### Moderate (fix soon)
+
 1. Missing ARIA labels on icons
 2. Inconsistent navigation
 3. Missing error identification
