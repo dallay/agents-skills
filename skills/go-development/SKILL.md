@@ -1,16 +1,13 @@
 ---
 name: go-development
-version: 1.0.0
-description: >
-  Go (Golang) best practices, patterns, and idioms for building reliable, performant applications.
-triggers:
-  - "Go project"
-  - "Golang"
-  - "go.mod"
-  - "goroutines"
-  - "Go error handling"
+description: >-
+  Go (Golang) best practices, patterns, and idioms for building reliable, performant
+  applications. Use when the task involves `Go project`, `Golang`, `go.mod`, `goroutines`,
+  or `Go error handling`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Go Development
 
 Production patterns and idioms for Go programming, covering project structure, error handling,

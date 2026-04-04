@@ -1,19 +1,13 @@
 ---
 name: makefile
-version: 1.0.0
-description: >
-  Best practices for authoring clean, maintainable, and portable GNU Make Makefiles.
-triggers:
-  - "creating or editing Makefiles"
-  - "Makefile"
-  - "makefile"
-  - "*.mk"
-  - "GNUmakefile"
-  - "GNU Make patterns"
-  - "build automation"
-  - "makefile troubleshooting"
+description: >-
+  Best practices for authoring clean, maintainable, and portable GNU Make Makefiles. Use when
+  the task involves `creating or editing Makefiles`, `Makefile`, `makefile`, `*.mk`,
+  `GNUmakefile`, `GNU Make patterns`, `build automation`, or `makefile troubleshooting`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Creating a new `Makefile` for any project (C/C++, Go, Node.js, etc.)

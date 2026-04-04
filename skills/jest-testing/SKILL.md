@@ -1,18 +1,14 @@
 ---
 name: jest-testing
-version: 1.0.0
-description: >
-  Jest testing framework patterns for JavaScript and TypeScript projects, covering test structure,
-  mocking strategies, async testing, snapshot testing, React component testing with Testing Library,
-  and practical test organization.
-triggers:
-  - "Jest"
-  - "JavaScript testing"
-  - "React testing"
-  - "jest.config"
-  - "unit testing JS"
+description: >-
+  Jest testing framework patterns for JavaScript and TypeScript projects, covering test
+  structure, mocking strategies, async testing, snapshot testing, React component testing
+  with Testing Library, and practical test organization. Use when the task involves
+  `Jest`, `JavaScript testing`, `React testing`, `jest.config`, or `unit testing JS`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Writing or refactoring unit and integration tests with Jest.

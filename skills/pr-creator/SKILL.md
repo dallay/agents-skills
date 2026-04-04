@@ -1,16 +1,13 @@
 ---
 name: pr-creator
-version: 1.0.0
-description: >
-  Use this skill when asked to create a pull request (PR). It ensures all PRs follow the repository's established templates and standards.
-triggers:
-  - "create a pull request"
-  - "create PR"
-  - "open a PR"
-  - "pr creator"
-  - "pull request template"
+description: >-
+  Use this skill when asked to create a pull request (PR). It ensures all PRs follow the
+  repository's established templates and standards. Use when the task involves `create a
+  pull request`, `create PR`, `open a PR`, `pr creator`, or `pull request template`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Pull Request Creator
 
 This skill guides the creation of high-quality Pull Requests that adhere to the

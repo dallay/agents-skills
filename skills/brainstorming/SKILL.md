@@ -1,16 +1,14 @@
 ---
 name: brainstorming
-version: 1.0.0
-description: >
-  You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.
-triggers:
-  - "brainstorming"
-  - "brainstorm ideas"
-  - "explore design"
-  - "before creative work"
-  - "turn ideas into designs"
+description: >-
+  You MUST use this before any creative work - creating features, building components,
+  adding functionality, or modifying behavior. Explores user intent, requirements and
+  design before implementation. Use when the task involves `brainstorming`, `brainstorm
+  ideas`, `explore design`, `before creative work`, or `turn ideas into designs`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Brainstorming Ideas Into Designs
 
 ## Overview

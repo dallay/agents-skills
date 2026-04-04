@@ -1,16 +1,13 @@
 ---
 name: ruby-development
-version: 1.0.0
-description: >
-  Ruby best practices, patterns, and idioms for building elegant, maintainable applications.
-triggers:
-  - "Ruby project"
-  - "Gemfile"
-  - "Ruby on Rails"
-  - "RSpec"
-  - "Ruby gems"
+description: >-
+  Ruby best practices, patterns, and idioms for building elegant, maintainable
+  applications. Use when the task involves `Ruby project`, `Gemfile`, `Ruby on Rails`,
+  `RSpec`, or `Ruby gems`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Ruby Development
 
 Production patterns and idioms for Ruby programming, covering project structure, gems, blocks,

@@ -1,8 +1,12 @@
 ---
 name: {skill-name}
 description: >
-  {Brief description of what this skill enables}.
-  Trigger: {When the AI should load this skill - be specific}.
+  {Brief description of what this skill enables}. Use when {user intent,
+  nearby phrases, or task context that should activate the skill}.
+license: Apache-2.0
+metadata:
+  author: {author}
+  version: "1.0"
 ---
 # {Skill Name}
 
@@ -32,18 +36,6 @@ Use this skill when:
 {code example}
 ```
 
----
-
-## Decision Tree
-
-```markdown
-{Question 1}? → {Action A}
-{Question 2}? → {Action B}
-Otherwise    → {Default action}
-```
-
----
-
 ## Code Examples
 
 ### Example 1: {Description}
@@ -58,19 +50,16 @@ Otherwise    → {Default action}
 {minimal, focused example}
 ```
 
----
-
-## Commands
-
-```bash
-{command 1}  # {description}
-{command 2}  # {description}
-{command 3}  # {description}
-```
-
----
-
 ## Resources
 
 - **Templates**: See [assets/](assets/) for {description of templates}
 - **Documentation**: See [references/](references/) for local developer guide links
+
+<!--
+Notes:
+- Use only official top-level fields in frontmatter.
+- Put activation cues in `description`; do not add a separate `triggers` field.
+- Remove optional fields you do not need, such as `license` or `metadata`.
+- Keep `SKILL.md` under 500 lines when possible and move detailed material to referenced files.
+- Validate with: skills-ref validate skills/{skill-name}
+-->

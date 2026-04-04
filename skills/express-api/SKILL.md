@@ -1,17 +1,14 @@
 ---
 name: express-api
-version: 1.0.0
-description: >
-  Express.js server-side development patterns for building robust REST APIs with proper middleware
-  chains, error handling, request validation, security hardening, and scalable project structure.
-triggers:
-  - "Express.js"
-  - "Express server"
-  - "Express middleware"
-  - "Node.js REST API"
-  - "Express routing"
+description: >-
+  Express.js server-side development patterns for building robust REST APIs with proper
+  middleware chains, error handling, request validation, security hardening, and scalable
+  project structure. Use when the task involves `Express.js`, `Express server`, `Express
+  middleware`, `Node.js REST API`, or `Express routing`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Building or refactoring a REST API with Express.js.

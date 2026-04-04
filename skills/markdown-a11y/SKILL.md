@@ -1,16 +1,13 @@
 ---
 name: markdown-a11y
-version: 1.0.0
-description: >
-  Markdown accessibility review guidelines based on GitHub's 5 best practices for inclusive documentation.
-triggers:
-  - "review markdown accessibility"
-  - "make docs accessible"
-  - "a11y review"
-  - "markdown a11y"
-  - "accessible documentation"
+description: >-
+  Markdown accessibility review guidelines based on GitHub's 5 best practices for
+  inclusive documentation. Use when the task involves `review markdown accessibility`,
+  `make docs accessible`, `a11y review`, `markdown a11y`, or `accessible documentation`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Reviewing markdown files (READMEs, docs, blog posts, GitHub profiles) for accessibility

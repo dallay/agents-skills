@@ -37,6 +37,7 @@ agentsync skill suggest
 | [grafana-dashboards](skills/grafana-dashboards/) | Production Grafana dashboards for system metrics |
 | [makefile](skills/makefile/) | Clean, maintainable GNU Make Makefiles |
 | [markdown-a11y](skills/markdown-a11y/) | Markdown accessibility review guidelines |
+| [nothing-design](skills/nothing-design/) | Nothing-inspired UI system for deliberate monochrome, typographic interfaces |
 | [performance](skills/performance/) | Web performance optimization |
 | [pinned-tag](skills/pinned-tag/) | Pin GitHub Actions to commit SHAs for security |
 | [pr-creator](skills/pr-creator/) | Create PRs following repo templates and standards |
@@ -69,6 +70,57 @@ We welcome community contributions! Whether you want to improve an existing skil
 - SKILL.md manifest format
 - Naming conventions and quality expectations
 - How to test locally before submitting
+
+## Validation Tooling
+
+This repository validates skills with the official `skills-ref` reference tool plus a small set of repo-specific checks.
+
+### Install `skills-ref` locally
+
+```bash
+git clone https://github.com/agentskills/agentskills.git
+cd agentskills/skills-ref
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+Or use the repo helper, which installs a pinned `skills-ref` build into `.tools/skills-ref` automatically:
+
+```bash
+./scripts/install-skills-ref.sh
+```
+
+### Validate the whole repository
+
+```bash
+./scripts/validate-skills.sh
+```
+
+Or use the Makefile shortcut:
+
+```bash
+make validate
+```
+
+### Git hooks with Lefthook
+
+```bash
+brew install lefthook
+lefthook install
+```
+
+This repo runs full skill validation on `pre-push`.
+
+### Common maintenance commands
+
+```bash
+make help
+make install-skills-ref
+make validate
+make hooks-install
+make ci-validate
+```
 
 ## Related
 

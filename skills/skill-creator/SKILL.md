@@ -1,18 +1,14 @@
 ---
 name: skill-creator
-version: 1.0.0
-description: >
-  Creates new AI agent skills following a generic Agent Skills specification.
-triggers:
-  - "create a new skill"
-  - "add agent instructions"
-  - "document patterns for AI"
-  - "skill creator"
-  - "new skill template"
+description: >-
+  Create or update Agent Skills that follow the official specification and repository
+  guidance. Use when creating a new skill, refining an existing skill, or documenting
+  reusable AI workflows and instructions.
+license: MIT
 ---
 # Skill Creator Guide
 
-This guide outlines how to create new AI agent skills following a generic Agent Skills specification. It covers when to create a skill, the skill structure, naming conventions, frontmatter fields, content guidelines, and registration.
+This guide covers when to create a skill, how to structure it, and how to keep it aligned with the official Agent Skills specification.
 
 ## When to Create a Skill
 
@@ -51,8 +47,7 @@ skills/{skill-name}/
 ---
 name: {skill-name}
 description: >
-  {One-line description of what this skill does}.
-  Trigger: {When the AI should load this skill}.
+  {What the skill does}. Use when {user intent, nearby cues, or task context}.
 license: Apache-2.0
 metadata:
   author: generic-author
@@ -67,15 +62,9 @@ metadata:
 
 {The most important rules - what AI MUST know}
 
-## Code Examples
+## Examples
 
-{Minimal, focused examples}
-
-## Commands
-
-```bash
-{Common commands}
-```
+{Minimal, focused examples or workflows}
 
 ## Resources
 
@@ -130,10 +119,15 @@ Generic skill needs repo info?     → Add references/ pointing to repo docs
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | Yes | Skill identifier (lowercase, hyphens) |
-| `description` | Yes | What + Trigger in one block |
-| `license` | Yes | Always `Apache-2.0` |
-| `metadata.author` | Yes | `generic-author` |
-| `metadata.version` | Yes | Semantic version as string |
+| `description` | Yes | What the skill does and when it should activate |
+| `license` | No | Recommended when you want to declare reuse terms |
+| `compatibility` | No | Environment requirements, only when needed |
+| `metadata` | No | Additional string metadata such as author or version |
+| `allowed-tools` | No | Experimental pre-approved tool list |
+
+Do not add top-level `version` or `triggers`. Put activation cues in `description`. Put extra metadata, including versions, under `metadata`.
+
+Only include `compatibility`, `metadata`, `license`, or `allowed-tools` when they add real value.
 
 ---
 
@@ -141,16 +135,27 @@ Generic skill needs repo info?     → Add references/ pointing to repo docs
 
 ### DO
 - Start with the most critical patterns
-- Use tables for decision trees
 - Keep code examples minimal and focused
-- Include Commands section with copy-paste commands
+- Keep the main `SKILL.md` under 500 lines when possible
+- Use `references/`, `assets/`, or `scripts/` for detail the agent only needs on demand
+- Tell the agent when to read an extra file instead of dumping everything into `SKILL.md`
 
 ### DON'T
 - Add Keywords section (agent searches frontmatter, not body)
 - Duplicate content from existing docs (reference instead)
-- Include lengthy explanations (link to docs)
-- Add troubleshooting sections (keep focused)
+- Include lengthy explanations the agent already knows
+- Add non-standard top-level manifest fields
 - Use web URLs in references (use local paths)
+
+## Validation
+
+Validate each new skill before opening a PR:
+
+```bash
+skills-ref validate skills/{skill-name}
+```
+
+Use the validator for frontmatter and naming rules. Use a quick manual check to confirm the description activates in the right situations.
 
 ---
 
@@ -169,10 +174,12 @@ After creating the skill, add it to `AGENTS.md`:
 - [ ] Skill doesn't already exist (check `skills/`)
 - [ ] Pattern is reusable (not one-off)
 - [ ] Name follows conventions
-- [ ] Frontmatter is complete (description includes trigger keywords)
+- [ ] Frontmatter uses official top-level fields only
+- [ ] Description explains both capability and activation cues
 - [ ] Critical patterns are clear
 - [ ] Code examples are minimal
-- [ ] Commands section exists
+- [ ] Main `SKILL.md` stays concise; detail moves to other files when needed
+- [ ] `skills-ref validate skills/{skill-name}` passes
 - [ ] Added to AGENTS.md
 
 ## Resources - Assets and References

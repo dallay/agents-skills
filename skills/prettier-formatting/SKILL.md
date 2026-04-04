@@ -1,17 +1,14 @@
 ---
 name: prettier-formatting
-version: 1.0.0
-description: >
+description: >-
   Prettier code formatting setup, configuration, editor integration, ESLint coordination,
-  and pre-commit hook automation for consistent codebases.
-triggers:
-  - "Prettier"
-  - "code formatting"
-  - ".prettierrc"
-  - "Prettier configuration"
-  - "auto-formatting"
+  and pre-commit hook automation for consistent codebases. Use when the task involves
+  `Prettier`, `code formatting`, `.prettierrc`, `Prettier configuration`, or
+  `auto-formatting`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Setting up Prettier in a new or existing project for consistent formatting.

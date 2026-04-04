@@ -1,17 +1,13 @@
 ---
 name: core-web-vitals
-version: 1.0.0
-description: >
+description: >-
   Optimize Core Web Vitals (LCP, INP, CLS) for better page experience and search ranking.
-triggers:
-  - "improve Core Web Vitals"
-  - "fix LCP"
-  - "reduce CLS"
-  - "optimize INP"
-  - "page experience optimization"
-  - "fix layout shifts"
+  Use when the task involves `improve Core Web Vitals`, `fix LCP`, `reduce CLS`, `optimize
+  INP`, `page experience optimization`, or `fix layout shifts`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Core Web Vitals optimization
 
 Targeted optimization for the three Core Web Vitals metrics that affect Google Search ranking and user experience.

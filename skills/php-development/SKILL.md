@@ -1,16 +1,13 @@
 ---
 name: php-development
-version: 1.0.0
-description: >
-  Modern PHP 8.x+ best practices, patterns, and standards for building robust applications.
-triggers:
-  - "PHP project"
-  - "composer.json"
-  - "PHP development"
-  - "Laravel"
-  - "Symfony"
+description: >-
+  Modern PHP 8.x+ best practices, patterns, and standards for building robust
+  applications. Use when the task involves `PHP project`, `composer.json`, `PHP
+  development`, `Laravel`, or `Symfony`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # PHP Development
 
 Production patterns for modern PHP (8.x+), covering Composer, PSR standards, type safety,

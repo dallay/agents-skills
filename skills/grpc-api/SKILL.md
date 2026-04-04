@@ -1,18 +1,14 @@
 ---
 name: grpc-api
-version: 1.0.0
-description: >
-  Build high-performance gRPC services with Protocol Buffers, streaming patterns, and microservice
-  communication in Node.js and polyglot environments.
-triggers:
-  - "gRPC server or client"
-  - "Protocol Buffers"
-  - "protobuf service definition"
-  - "gRPC streaming"
-  - "microservice communication"
-  - "inter-service APIs"
+description: >-
+  Build high-performance gRPC services with Protocol Buffers, streaming patterns, and
+  microservice communication in Node.js and polyglot environments. Use when the task
+  involves `gRPC server or client`, `Protocol Buffers`, `protobuf service definition`,
+  `gRPC streaming`, `microservice communication`, or `inter-service APIs`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # gRPC API Development
 
 Build efficient gRPC services using Protocol Buffers for contract-first API design, with support for

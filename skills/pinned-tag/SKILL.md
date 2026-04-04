@@ -1,15 +1,14 @@
 ---
 name: pinned-tag
-version: 1.0.0
-description: >
-  Manage pinned tags and commit SHAs for GitHub Actions security, resolving mutable tags to immutable commit references.
-triggers:
-  - "Unpinned tag for a non-immutable Action"
-  - "pin GitHub Action to commit SHA"
-  - "resolve git tag to SHA"
-  - "GitHub Actions security hardening"
+description: >-
+  Manage pinned tags and commit SHAs for GitHub Actions security, resolving mutable tags
+  to immutable commit references. Use when the task involves `Unpinned tag for a
+  non-immutable Action`, `pin GitHub Action to commit SHA`, `resolve git tag to SHA`, or
+  `GitHub Actions security hardening`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Pinned Tag Management Skill
 
 Skill for managing "pinned tags" and commit SHAs, primarily for GitHub Actions security.

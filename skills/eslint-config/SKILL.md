@@ -1,17 +1,14 @@
 ---
 name: eslint-config
-version: 1.0.0
-description: >
+description: >-
   ESLint configuration expert for flat config setup, custom rules, TypeScript integration,
-  plugin management, and migration from legacy .eslintrc to modern eslint.config.js.
-triggers:
-  - "ESLint"
-  - "eslint.config"
-  - "linting JavaScript"
-  - "TypeScript linting"
-  - "ESLint rules"
+  plugin management, and migration from legacy .eslintrc to modern eslint.config.js. Use when
+  the task involves `ESLint`, `eslint.config`, `linting JavaScript`, `TypeScript linting`, or
+  `ESLint rules`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Setting up ESLint from scratch using the modern flat config format (`eslint.config.js`).

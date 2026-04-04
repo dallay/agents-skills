@@ -1,16 +1,14 @@
 ---
 name: docker-expert
-version: 1.0.0
-description: >
-  Advanced Docker containerization expert for multi-stage builds, image optimization, security hardening, and Compose orchestration.
-triggers:
-  - "working with Dockerfile"
-  - "docker-compose.yml"
-  - "containerization"
-  - "multi-stage builds"
-  - "optimizing Docker images"
+description: >-
+  Advanced Docker containerization expert for multi-stage builds, image optimization,
+  security hardening, and Compose orchestration. Use when the task involves `working with
+  Dockerfile`, `docker-compose.yml`, `containerization`, `multi-stage builds`, or
+  `optimizing Docker images`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Creating or optimizing a `Dockerfile` for any project.
