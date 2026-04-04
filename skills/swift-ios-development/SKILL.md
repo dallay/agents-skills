@@ -1,17 +1,14 @@
 ---
 name: swift-ios-development
-version: 1.0.0
-description: >
-  Swift and iOS development patterns covering language fundamentals, UIKit, SwiftUI, Combine,
-  async/await, testing with XCTest, project structure, and dependency management with SPM.
-triggers:
-  - "Swift"
-  - "iOS development"
-  - "Xcode project"
-  - "UIKit"
-  - "Swift programming"
+description: >-
+  Swift and iOS development patterns covering language fundamentals, UIKit, SwiftUI,
+  Combine, async/await, testing with XCTest, project structure, and dependency management
+  with SPM. Use when the task involves `Swift`, `iOS development`, `Xcode project`,
+  `UIKit`, or `Swift programming`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Building iOS, iPadOS, macOS, watchOS, or tvOS applications.

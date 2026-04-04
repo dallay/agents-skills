@@ -1,15 +1,13 @@
 ---
 name: zig-development
-version: 1.0.0
-description: >
-  Zig systems programming best practices, patterns, and idioms for safe, performant low-level code.
-triggers:
-  - "Zig project"
-  - "build.zig"
-  - "Zig programming"
-  - "systems programming with Zig"
+description: >-
+  Zig systems programming best practices, patterns, and idioms for safe, performant
+  low-level code. Use when the task involves `Zig project`, `build.zig`, `Zig
+  programming`, or `systems programming with Zig`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Zig Development
 
 Production patterns for Zig systems programming, covering the build system, comptime, error

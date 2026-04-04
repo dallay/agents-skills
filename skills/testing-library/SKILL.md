@@ -1,18 +1,15 @@
 ---
 name: testing-library
-version: 1.0.0
-description: >
-  Testing Library patterns for user-centric, accessibility-driven component testing. Covers
-  query priority, user events, async utilities, and practical patterns for testing React, Vue,
-  and DOM components the way users interact with them.
-triggers:
-  - "Testing Library"
-  - "@testing-library/react"
-  - "React component testing"
-  - "accessible testing"
-  - "user-centric testing"
+description: >-
+  Testing Library patterns for user-centric, accessibility-driven component testing.
+  Covers query priority, user events, async utilities, and practical patterns for testing
+  React, Vue, and DOM components the way users interact with them. Use when the task
+  involves `Testing Library`, `@testing-library/react`, `React component testing`,
+  `accessible testing`, or `user-centric testing`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Testing UI components with `@testing-library/react`, `@testing-library/vue`, or `@testing-library/dom`.

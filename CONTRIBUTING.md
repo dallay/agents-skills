@@ -33,67 +33,61 @@ skills/
 
 ## SKILL.md Manifest Format
 
-Every `SKILL.md` file MUST begin with YAML frontmatter followed by the skill instructions in Markdown.
+Every `SKILL.md` file MUST begin with YAML frontmatter followed by Markdown instructions.
 
-### Full Example
+### Minimal Example
 
 ```markdown
 ---
 name: docker-expert
-version: 1.0.0
 description: >
-  Advanced Docker containerization expert for multi-stage builds, image
-  optimization, security hardening, and Compose orchestration.
-triggers:
-  - "When working with Dockerfile"
-  - "When working with docker-compose.yml"
-  - "containerization"
-  - "multi-stage builds"
-  - "optimizing Docker images"
+  Advanced Docker containerization guidance for multi-stage builds, image
+  hardening, and Compose workflows. Use when working with `Dockerfile`,
+  `docker-compose.yml`, containerization, or image optimization.
 ---
 
-# Docker Expert
+## When to Use
 
-## Purpose
+- Creating or reviewing a `Dockerfile`
+- Hardening a container image
+- Troubleshooting Compose setup
+```
 
-You are an advanced Docker containerization expert...
+### Example With Optional Fields
 
-## Guidelines
-
-1. Always use multi-stage builds for production images
-2. Pin base image versions with SHA digests
-3. ...
-
-## Examples
-
-### Multi-stage Build
-
-\`\`\`dockerfile
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --production
-...
-\`\`\`
+```markdown
+---
+name: pdf-processing
+description: >
+  Extract PDF text, fill forms, and merge files. Use when handling PDFs,
+  document extraction, or PDF form workflows.
+license: Apache-2.0
+metadata:
+  author: example-org
+  version: "1.0"
+---
 ```
 
 ### Frontmatter Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `name` | **Yes** | Kebab-case identifier. **Must match the directory name exactly.** |
-| `version` | No | Semver format (e.g., `1.0.0`). Defaults to `1.0.0` if omitted. |
-| `description` | **Yes** | Short description of what the skill does. One or two sentences. |
-| `triggers` | **Yes** | List of phrases that indicate when this skill should be activated. Must be a non-empty array. |
+| `name` | **Yes** | Kebab-case identifier. Must match the directory name exactly. |
+| `description` | **Yes** | What the skill does and when to use it. Put activation cues here. |
+| `license` | No | License name or reference to a bundled license file. |
+| `compatibility` | No | Environment requirements, if the skill has any. |
+| `metadata` | No | Additional string metadata such as author or version. |
+| `allowed-tools` | No | Space-delimited list of pre-approved tools. Experimental. |
+
+Do not add non-standard top-level fields such as `version` or `triggers`. If you want version metadata, put it under `metadata`. If you want to describe activation cues, include them directly in `description`.
 
 ### Validation Rules
 
 - `name` MUST be kebab-case (lowercase letters, numbers, and hyphens only)
 - `name` MUST match the parent directory name exactly
 - `name` MUST NOT contain path separators, dots, or special characters
-- `version`, if present, MUST be valid semver
-- `description` MUST be non-empty
-- `triggers` MUST be a non-empty array of strings
+- `name` MUST NOT start or end with a hyphen or contain consecutive hyphens
+- `description` MUST be non-empty and describe both the capability and when to use it
 - Content after frontmatter MUST be non-empty and substantive
 
 ## Naming Conventions
@@ -129,34 +123,41 @@ Every skill submitted to this repository must meet these standards:
 
 1. **Useful content** — The skill must provide actionable instructions that genuinely help an AI agent perform a specific task better. No placeholder text or vague guidance.
 
-2. **Proper triggers** — Trigger phrases must be specific enough to activate the skill in the right context, without being so broad they activate inappropriately.
+2. **Strong description** — The `description` should carry the activation cues. Be specific about user intent and nearby phrases, without making the skill so broad that it activates everywhere.
 
-3. **Complete instructions** — The skill should cover the topic thoroughly. Include guidelines, best practices, examples, and common pitfalls.
+3. **Focused instructions** — Keep `SKILL.md` concise and action-oriented. Prefer the core workflow, defaults, and gotchas over long background material.
 
 4. **Well-structured Markdown** — Use headings, lists, code blocks, and tables to organize content. Make it scannable.
 
-5. **No sensitive data** — Do not include API keys, credentials, personal information, or proprietary code in skill content.
+5. **Progressive disclosure** — Keep the main `SKILL.md` under 500 lines when possible. Move detailed reference material to `references/`, `assets/`, or `scripts/`, and tell the agent when to load those files.
 
-6. **Accurate information** — Technical guidance must be correct and up-to-date. Cite sources when referencing specific standards (e.g., WCAG 2.1).
+6. **No sensitive data** — Do not include API keys, credentials, personal information, or proprietary code in skill content.
+
+7. **Accurate information** — Technical guidance must be correct and up-to-date. Cite sources when referencing specific standards (e.g., WCAG 2.1).
 
 ## Testing Locally
 
 Before submitting, test your skill to ensure it works correctly:
 
-### 1. Validate the manifest structure
+### 1. Validate the skill structure
 
-Check that your `SKILL.md` starts with valid YAML frontmatter:
+Use the reference validator:
 
 ```bash
-# Quick check: frontmatter exists and parses
-head -20 skills/your-skill-name/SKILL.md
+skills-ref validate skills/your-skill-name
+```
+
+If you do not have `skills-ref` installed yet, this repository can bootstrap a pinned local copy for you:
+
+```bash
+./scripts/install-skills-ref.sh
 ```
 
 Verify:
-- First line is `---`
-- Frontmatter closes with another `---`
-- `name` matches directory name
-- `description` and `triggers` are present and non-empty
+- `name` matches the directory name
+- `description` is present and includes activation cues
+- Optional fields use official top-level names
+- Content after frontmatter is substantive
 
 ### 2. Install locally with AgentSync
 
@@ -171,7 +172,7 @@ ln -s /path/to/agents-skills/skills/your-skill-name ~/.config/opencode/skills/yo
 ### 3. Verify the skill activates
 
 Open your AI coding assistant and test that the skill:
-- Activates when you use one of the trigger phrases
+- Activates when prompts match the cues in `description`
 - Provides relevant and accurate guidance
 - Does not activate in unrelated contexts
 
@@ -180,11 +181,16 @@ Open your AI coding assistant and test that the skill:
 The CI pipeline will run the same validation on your PR. You can run it locally:
 
 ```bash
-# Check frontmatter exists
-head -1 skills/your-skill-name/SKILL.md | grep -q '^---$'
+./scripts/validate-skills.sh
+```
 
-# Check name matches directory
-grep '^name:' skills/your-skill-name/SKILL.md
+### 5. Install local hooks
+
+Use Lefthook to catch issues before pushing:
+
+```bash
+brew install lefthook
+lefthook install
 ```
 
 ## Submitting a Pull Request
@@ -194,7 +200,7 @@ grep '^name:' skills/your-skill-name/SKILL.md
 1. **Valid manifest** — Frontmatter is well-formed with all required fields
 2. **Name consistency** — Directory name matches the `name` field in frontmatter
 3. **Content quality** — Instructions are substantive, accurate, and well-organized
-4. **Trigger relevance** — Triggers are specific and appropriate for the skill's domain
+4. **Description quality** — `description` clearly communicates both the capability and when the skill should activate
 5. **No conflicts** — Skill does not duplicate an existing skill's purpose
 6. **Clean PR** — One skill per PR (unless related), clear description
 
@@ -203,7 +209,7 @@ grep '^name:' skills/your-skill-name/SKILL.md
 Use conventional commit format:
 
 - `feat: add terraform skill` — for new skills
-- `fix: update docker-expert triggers` — for skill fixes
+- `fix: refine docker-expert description` — for skill fixes
 - `docs: improve contributing guide` — for documentation changes
 
 ## PR Checklist
@@ -211,11 +217,12 @@ Use conventional commit format:
 Before submitting, confirm:
 
 - [ ] Skill directory is under `skills/` with a kebab-case name
-- [ ] `SKILL.md` has valid YAML frontmatter (name, description, triggers)
+- [ ] `SKILL.md` has valid YAML frontmatter with official fields only
 - [ ] `name` in frontmatter matches the directory name exactly
-- [ ] `description` is a clear, non-empty summary
-- [ ] `triggers` is a non-empty array with specific activation phrases
+- [ ] `description` is a clear summary of what the skill does and when to use it
 - [ ] Content after frontmatter is substantive (not placeholder text)
+- [ ] Main `SKILL.md` stays concise; detailed material is moved to referenced files when needed
+- [ ] `skills-ref validate skills/your-skill-name` passes
 - [ ] Tested locally — skill installs and activates correctly
 - [ ] No sensitive data (API keys, credentials, personal info)
 - [ ] No duplicate of an existing skill's purpose

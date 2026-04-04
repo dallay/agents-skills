@@ -1,17 +1,14 @@
 ---
 name: tensorflow-ml
-version: 1.0.0
-description: >
-  TensorFlow and Keras machine learning patterns for model building, training, data pipelines,
-  evaluation, transfer learning, deployment, and GPU-accelerated deep learning.
-triggers:
-  - "TensorFlow"
-  - "Keras"
-  - "machine learning model"
-  - "deep learning"
-  - "neural network training"
+description: >-
+  TensorFlow and Keras machine learning patterns for model building, training, data
+  pipelines, evaluation, transfer learning, deployment, and GPU-accelerated deep learning.
+  Use when the task involves `TensorFlow`, `Keras`, `machine learning model`, `deep
+  learning`, or `neural network training`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Building neural network models with Keras Sequential or Functional API.

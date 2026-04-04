@@ -1,16 +1,13 @@
 ---
 name: elixir-development
-version: 1.0.0
-description: >
-  Elixir and OTP best practices, patterns, and idioms for building concurrent, fault-tolerant applications.
-triggers:
-  - "Elixir project"
-  - "mix.exs"
-  - "Phoenix framework"
-  - "GenServer"
-  - "OTP patterns"
+description: >-
+  Elixir and OTP best practices, patterns, and idioms for building concurrent,
+  fault-tolerant applications. Use when the task involves `Elixir project`, `mix.exs`,
+  `Phoenix framework`, `GenServer`, or `OTP patterns`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Elixir Development
 
 Production patterns for Elixir/OTP programming, covering Mix projects, GenServer, Supervisors,

@@ -1,16 +1,13 @@
 ---
 name: cypress-e2e
-version: 1.0.0
-description: >
-  Cypress end-to-end testing patterns for reliable browser-based testing, covering selectors,
-  custom commands, API mocking with cy.intercept, CI configuration, and best practices for
-  deterministic, maintainable E2E test suites.
-triggers:
-  - "Cypress"
-  - "E2E testing"
-  - "cypress.config"
-  - "end-to-end testing"
-  - "browser testing"
+description: >-
+  Cypress end-to-end testing patterns for reliable browser-based testing, covering
+  selectors, custom commands, API mocking with cy.intercept, CI configuration, and best
+  practices for deterministic, maintainable E2E test suites. Use when the task involves
+  `Cypress`, `E2E testing`, `cypress.config`, `end-to-end testing`, or `browser testing`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
 
 ## When to Use

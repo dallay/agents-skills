@@ -1,16 +1,14 @@
 ---
 name: github-actions
-version: 1.0.0
-description: >
-  Comprehensive guide for building robust, secure, and efficient CI/CD pipelines using GitHub Actions.
-triggers:
-  - "creating or editing GitHub Actions workflows"
-  - ".github/workflows/*.yml"
-  - "CI/CD pipelines"
-  - "GitHub Actions best practices"
-  - "workflow optimization"
+description: >-
+  Comprehensive guide for building robust, secure, and efficient CI/CD pipelines using
+  GitHub Actions. Use when the task involves `creating or editing GitHub Actions
+  workflows`, `.github/workflows/*.yml`, `CI/CD pipelines`, `GitHub Actions best
+  practices`, or `workflow optimization`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Creating or editing GitHub Actions workflow files (`.github/workflows/*.yml`)

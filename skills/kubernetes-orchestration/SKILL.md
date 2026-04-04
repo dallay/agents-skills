@@ -1,18 +1,14 @@
 ---
 name: kubernetes-orchestration
-version: 1.0.0
-description: >
-  Kubernetes container orchestration patterns for production workloads: Pod specs, Deployments,
-  Services, ConfigMaps, Secrets, Ingress, resource management, health probes, autoscaling,
-  and essential kubectl workflows.
-triggers:
-  - "Kubernetes"
-  - "k8s"
-  - "kubectl"
-  - "kustomization.yaml"
-  - "container orchestration"
+description: >-
+  Kubernetes container orchestration patterns for production workloads: Pod specs,
+  Deployments, Services, ConfigMaps, Secrets, Ingress, resource management, health probes,
+  autoscaling, and essential kubectl workflows. Use when the task involves `Kubernetes`,
+  `k8s`, `kubectl`, `kustomization.yaml`, or `container orchestration`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Deploying containerized applications to Kubernetes clusters.

@@ -1,18 +1,14 @@
 ---
 name: trpc-type-safety
-version: 1.0.0
-description: >
-  End-to-end type-safe APIs for TypeScript with tRPC, React Query integration, Zod validation,
-  and full-stack type inference without code generation.
-triggers:
-  - "tRPC router or procedure"
-  - "type-safe API"
-  - "tRPC with React Query"
-  - "tRPC middleware"
-  - "tRPC Next.js integration"
-  - "end-to-end TypeScript API"
+description: >-
+  End-to-end type-safe APIs for TypeScript with tRPC, React Query integration, Zod
+  validation, and full-stack type inference without code generation. Use when the task
+  involves `tRPC router or procedure`, `type-safe API`, `tRPC with React Query`, `tRPC
+  middleware`, `tRPC Next.js integration`, or `end-to-end TypeScript API`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # tRPC — End-to-End Type Safety
 
 Build type-safe APIs where TypeScript types flow automatically from server to client with zero code

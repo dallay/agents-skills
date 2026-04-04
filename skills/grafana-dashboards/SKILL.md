@@ -1,16 +1,14 @@
 ---
 name: grafana-dashboards
-version: 1.0.0
-description: >
-  Create and manage production Grafana dashboards for real-time visualization of system and application metrics.
-triggers:
-  - "building monitoring dashboards"
-  - "visualizing metrics"
-  - "creating operational observability interfaces"
-  - "Grafana dashboard"
-  - "Prometheus visualization"
+description: >-
+  Create and manage production Grafana dashboards for real-time visualization of system
+  and application metrics. Use when the task involves `building monitoring dashboards`,
+  `visualizing metrics`, `creating operational observability interfaces`, `Grafana
+  dashboard`, or `Prometheus visualization`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Grafana Dashboards
 
 Create and manage production-ready Grafana dashboards for comprehensive system observability.

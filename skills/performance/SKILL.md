@@ -1,17 +1,13 @@
 ---
 name: performance
-version: 1.0.0
-description: >
-  Optimize web performance for faster loading and better user experience.
-triggers:
-  - "speed up my site"
-  - "optimize performance"
-  - "reduce load time"
-  - "fix slow loading"
-  - "improve page speed"
-  - "performance audit"
+description: >-
+  Optimize web performance for faster loading and better user experience. Use when the
+  task involves `speed up my site`, `optimize performance`, `reduce load time`, `fix slow
+  loading`, `improve page speed`, or `performance audit`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Performance optimization
 
 Deep performance optimization based on Lighthouse performance audits. Focuses on loading speed, runtime efficiency, and resource optimization.

@@ -1,17 +1,14 @@
 ---
 name: rails-development
-version: 1.0.0
-description: >
+description: >-
   Ruby on Rails best practices and conventions covering MVC patterns, ActiveRecord,
-  RESTful routing, testing with RSpec, background jobs, and production-ready Rails development.
-triggers:
-  - "Ruby on Rails"
-  - "Rails project"
-  - "ActiveRecord"
-  - "Rails migrations"
-  - "Rails API"
+  RESTful routing, testing with RSpec, background jobs, and production-ready Rails
+  development. Use when the task involves `Ruby on Rails`, `Rails project`,
+  `ActiveRecord`, `Rails migrations`, or `Rails API`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Building or refactoring a Ruby on Rails application.

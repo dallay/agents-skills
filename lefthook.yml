@@ -1,0 +1,4 @@
+pre-push:
+  commands:
+    validate-skills:
+      run: ./scripts/validate-skills.sh

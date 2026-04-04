@@ -1,17 +1,14 @@
 ---
 name: postgresql-development
-version: 1.0.0
-description: >
-  PostgreSQL database development patterns covering schema design, advanced queries, indexing
-  strategies, performance tuning, migrations, and operational best practices.
-triggers:
-  - "PostgreSQL"
-  - "Postgres"
-  - "SQL optimization"
-  - "database schema design"
-  - "pg_dump"
+description: >-
+  PostgreSQL database development patterns covering schema design, advanced queries,
+  indexing strategies, performance tuning, migrations, and operational best practices. Use when
+  the task involves `PostgreSQL`, `Postgres`, `SQL optimization`, `database schema design`, or
+  `pg_dump`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Designing PostgreSQL schemas with proper constraints, types, and indexes.

@@ -1,16 +1,13 @@
 ---
 name: best-practices
-version: 1.0.0
-description: >
-  Apply modern web development best practices for security, compatibility, and code quality.
-triggers:
-  - "apply best practices"
-  - "security audit"
-  - "modernize code"
-  - "code quality review"
-  - "check for vulnerabilities"
+description: >-
+  Apply modern web development best practices for security, compatibility, and code
+  quality. Use when the task involves `apply best practices`, `security audit`, `modernize
+  code`, `code quality review`, or `check for vulnerabilities`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 # Best practices
 
 Modern web development standards based on Lighthouse best practices audits. Covers security, browser compatibility, and code quality patterns.
@@ -439,149 +436,6 @@ controller.abort();
 
 ---
 
-## Code quality
+## Additional References
 
-### Valid HTML
-
-```html
-<!-- ❌ Invalid HTML -->
-<div id="header">
-<div id="header"> <!-- Duplicate ID -->
-
-<ul>
-  <div>Item</div> <!-- Invalid child -->
-</ul>
-
-<a href="/"><button>Click</button></a> <!-- Invalid nesting -->
-
-<!-- ✅ Valid HTML -->
-<header id="site-header">
-</header>
-
-<ul>
-  <li>Item</li>
-</ul>
-
-<a href="/" class="button">Click</a>
-```
-
-### Semantic HTML
-
-```html
-<!-- ❌ Non-semantic -->
-<div class="header">
-  <div class="nav">
-    <div class="nav-item">Home</div>
-  </div>
-</div>
-<div class="main">
-  <div class="article">
-    <div class="title">Headline</div>
-  </div>
-</div>
-
-<!-- ✅ Semantic HTML5 -->
-<header>
-  <nav>
-    <a href="/">Home</a>
-  </nav>
-</header>
-<main>
-  <article>
-    <h1>Headline</h1>
-  </article>
-</main>
-```
-
-### Image aspect ratios
-
-```html
-<!-- ❌ Distorted images -->
-<img src="photo.jpg" width="300" height="100">
-<!-- If actual ratio is 4:3, this squishes the image -->
-
-<!-- ✅ Preserve aspect ratio -->
-<img src="photo.jpg" width="300" height="225">
-<!-- Actual 4:3 dimensions -->
-
-<!-- ✅ CSS object-fit for flexibility -->
-<img src="photo.jpg" style="width: 300px; height: 200px; object-fit: cover;">
-```
-
----
-
-## Permissions & privacy
-
-### Request permissions properly
-
-```javascript
-// ❌ Request on page load (bad UX, often denied)
-navigator.geolocation.getCurrentPosition(success, error);
-
-// ✅ Request in context, after user action
-findNearbyButton.addEventListener('click', async () => {
-  // Explain why you need it
-  if (await showPermissionExplanation()) {
-    navigator.geolocation.getCurrentPosition(success, error);
-  }
-});
-```
-
-### Permissions policy
-
-```html
-<!-- Restrict powerful features -->
-<meta http-equiv="Permissions-Policy" 
-      content="geolocation=(), camera=(), microphone=()">
-
-<!-- Or allow for specific origins -->
-<meta http-equiv="Permissions-Policy" 
-      content="geolocation=(self 'https://maps.example.com')">
-```
-
----
-
-## Audit checklist
-
-### Security (critical)
-- [ ] HTTPS enabled, no mixed content
-- [ ] No vulnerable dependencies (`npm audit`)
-- [ ] CSP headers configured
-- [ ] Security headers present
-- [ ] No exposed source maps
-
-### Compatibility
-- [ ] Valid HTML5 doctype
-- [ ] Charset declared first in head
-- [ ] Viewport meta tag present
-- [ ] No deprecated APIs used
-- [ ] Passive event listeners for scroll/touch
-
-### Code quality
-- [ ] No console errors
-- [ ] Valid HTML (no duplicate IDs)
-- [ ] Semantic HTML elements used
-- [ ] Proper error handling
-- [ ] Memory cleanup in components
-
-### UX
-- [ ] No intrusive interstitials
-- [ ] Permission requests in context
-- [ ] Clear error messages
-- [ ] Appropriate image aspect ratios
-
-## Tools
-
-| Tool | Purpose |
-|------|---------|
-| `npm audit` | Dependency vulnerabilities |
-| [SecurityHeaders.com](https://securityheaders.com) | Header analysis |
-| [W3C Validator](https://validator.w3.org) | HTML validation |
-| Lighthouse | Best practices audit |
-| [Observatory](https://observatory.mozilla.org) | Security scan |
-
-## References
-
-- [MDN Web Security](https://developer.mozilla.org/en-US/docs/Web/Security)
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [Web Quality Audit](../web-quality-audit/SKILL.md)
+- Read [references/REFERENCE.md](references/REFERENCE.md) when you need code quality checks, permissions and privacy guidance, the audit checklist, or supporting tools.

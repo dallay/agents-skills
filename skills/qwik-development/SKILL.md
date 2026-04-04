@@ -1,18 +1,14 @@
 ---
 name: qwik-development
-version: 1.0.0
-description: >
-  Qwik framework patterns for building instantly-interactive web applications using resumability,
-  lazy loading, and fine-grained serialization. Covers components, signals, tasks, QwikCity routing,
-  and the optimizer.
-triggers:
-  - "Qwik"
-  - "@builder.io/qwik"
-  - "QwikCity"
-  - "resumability"
-  - "Qwik framework"
+description: >-
+  Qwik framework patterns for building instantly-interactive web applications using
+  resumability, lazy loading, and fine-grained serialization. Covers components, signals,
+  tasks, QwikCity routing, and the optimizer. Use when the task involves `Qwik`,
+  `@builder.io/qwik`, `QwikCity`, `resumability`, or `Qwik framework`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Building web applications with Qwik or QwikCity.

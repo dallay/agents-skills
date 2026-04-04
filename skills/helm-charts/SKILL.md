@@ -1,17 +1,14 @@
 ---
 name: helm-charts
-version: 1.0.0
-description: >
-  Helm chart development and management for Kubernetes: chart structure, template functions,
-  values and overrides, dependencies, hooks, testing, and packaging best practices.
-triggers:
-  - "Helm"
-  - "Helm chart"
-  - "Chart.yaml"
-  - "Helm template"
-  - "Kubernetes package management"
+description: >-
+  Helm chart development and management for Kubernetes: chart structure, template
+  functions, values and overrides, dependencies, hooks, testing, and packaging best
+  practices. Use when the task involves `Helm`, `Helm chart`, `Chart.yaml`, `Helm
+  template`, or `Kubernetes package management`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Creating a new Helm chart for a Kubernetes application.

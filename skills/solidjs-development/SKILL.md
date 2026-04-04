@@ -1,17 +1,15 @@
 ---
 name: solidjs-development
-version: 1.0.0
-description: >
-  Solid.js reactive framework patterns for building high-performance web applications with fine-grained reactivity.
-  Covers signals, effects, memos, stores, control flow components, routing, resources, and key differences from React.
-triggers:
-  - "Solid.js"
-  - "solid-js"
-  - "SolidStart"
-  - "fine-grained reactivity"
-  - "Solid signals"
+description: >-
+  Solid.js reactive framework patterns for building high-performance web applications with
+  fine-grained reactivity. Covers signals, effects, memos, stores, control flow
+  components, routing, resources, and key differences from React. Use when the task
+  involves `Solid.js`, `solid-js`, `SolidStart`, `fine-grained reactivity`, or `Solid
+  signals`.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
-
 ## When to Use
 
 - Building web applications with Solid.js or SolidStart.
