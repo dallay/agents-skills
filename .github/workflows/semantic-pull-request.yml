@@ -1,0 +1,10 @@
+name: Semantic PR
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize]
+permissions:
+  contents: read
+  packages: read
+jobs:
+  main:
+    uses: dallay/common-actions/.github/workflows/semantic-pull-request.yml@v2.0.0
