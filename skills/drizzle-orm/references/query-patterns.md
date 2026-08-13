@@ -228,7 +228,7 @@ function buildFilters(filters: Filters): SQL | undefined {
 
 // Usage
 const filters: Filters = { name: 'John', isActive: true };
-const users = await db
+const filteredUsers = await db
   .select()
   .from(users)
   .where(buildFilters(filters));
@@ -373,16 +373,20 @@ await db.transaction(async (tx) => {
 });
 
 // Bulk update with CASE
-await db.execute(sql`
-  UPDATE ${users}
-  SET ${users.role} = CASE ${users.id}
-    ${sql.join(
-      updates.map((u) => sql`WHEN ${u.id} THEN ${u.role}`),
-      sql.raw(' ')
-    )}
-  END
-  WHERE ${users.id} IN (${sql.join(updates.map((u) => u.id), sql.raw(', '))})
-`);
+async function bulkUpdateRoles(updates: { id: number; role: string }[]) {
+  if (updates.length === 0) return;
+
+  await db.update(users)
+    .set({
+      role: sql`CASE ${users.id}
+        ${sql.join(
+          updates.map((u) => sql`WHEN ${u.id} THEN ${u.role}`),
+          sql.raw(' '),
+        )}
+      END`,
+    })
+    .where(inArray(users.id, updates.map((u) => u.id)));
+}
 ```
 
 ### Batch Delete
@@ -462,11 +466,16 @@ const latestPostPerAuthor = await db
 ```typescript
 // FOR UPDATE (pessimistic locking)
 await db.transaction(async (tx) => {
-  const user = await tx
+  const [user] = await tx
     .select()
     .from(users)
     .where(eq(users.id, userId))
     .for('update');
+
+  if (!user) {
+    tx.rollback();
+    return;
+  }
 
   // Critical section - user row is locked
   await tx.update(users)
@@ -497,14 +506,15 @@ const availableTask = await db
 ```typescript
 class UserQueryBuilder {
   private query = db.select().from(users);
+  private conditions: SQL[] = [];
 
   whereRole(role: string) {
-    this.query = this.query.where(eq(users.role, role));
+    this.conditions.push(eq(users.role, role));
     return this;
   }
 
   whereActive() {
-    this.query = this.query.where(eq(users.isActive, true));
+    this.conditions.push(eq(users.isActive, true));
     return this;
   }
 
@@ -514,7 +524,11 @@ class UserQueryBuilder {
   }
 
   async execute() {
-    return await this.query;
+    const query = this.conditions.length > 0
+      ? this.query.where(and(...this.conditions))
+      : this.query;
+
+    return await query;
   }
 }
 
@@ -532,9 +546,10 @@ const admins = await new UserQueryBuilder()
 
 ```typescript
 // ❌ Bad: N+1 query
-const authors = await db.select().from(authors);
-for (const author of authors) {
-  author.posts = await db.select().from(posts).where(eq(posts.authorId, author.id));
+const allAuthors = await db.select().from(authors);
+for (const author of allAuthors) {
+  const authorPosts = await db.select().from(posts).where(eq(posts.authorId, author.id));
+  author.posts = authorPosts;
 }
 
 // ✅ Good: Single query with join
@@ -546,10 +561,10 @@ const authorsWithPosts = await db.query.authors.findMany({
 import DataLoader from 'dataloader';
 
 const postLoader = new DataLoader(async (authorIds: number[]) => {
-  const posts = await db.select().from(posts).where(inArray(posts.authorId, authorIds));
+  const authorPosts = await db.select().from(posts).where(inArray(posts.authorId, authorIds));
 
   const grouped = authorIds.map(id =>
-    posts.filter(post => post.authorId === id)
+    authorPosts.filter(post => post.authorId === id)
   );
 
   return grouped;
@@ -559,19 +574,35 @@ const postLoader = new DataLoader(async (authorIds: number[]) => {
 ### Query Timeouts
 
 ```typescript
-// PostgreSQL statement timeout
-await db.execute(sql`SET statement_timeout = '5s'`);
+// The server-side statement timeout cancels the database operation itself.
+// The client-side timer makes the caller fail promptly and is always cleared.
+const withTimeout = async <T>(
+  operation: () => Promise<T>,
+  configureStatementTimeout: (value: string) => Promise<unknown>,
+  ms: number,
+): Promise<T> => {
+  await configureStatementTimeout(`${ms}ms`);
 
-// Per-query timeout
-const withTimeout = async <T>(promise: Promise<T>, ms: number): Promise<T> => {
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error('Query timeout')), ms)
-  );
-  return Promise.race([promise, timeout]);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(
+        () => reject(new Error('Query timeout; statement was cancelled')),
+        ms,
+      );
+    });
+
+    return await Promise.race([operation(), timeout]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 };
 
-const users = await withTimeout(
-  db.select().from(users),
-  5000
-);
+const userRows = await db.transaction((tx) => withTimeout(
+  async () => tx.select().from(users),
+  async (value) => tx.execute(
+    sql`SELECT set_config('statement_timeout', ${value}, true)`,
+  ),
+  5000,
+));
 ```

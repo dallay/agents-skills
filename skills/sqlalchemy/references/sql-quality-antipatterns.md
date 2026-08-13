@@ -32,7 +32,7 @@ for author in authors:
     print(author.name, len(books))
 ```
 
-**Compliant — eager-load in one round-trip:**
+**Compliant — eager-load in batched secondary queries:**
 ```python
 from sqlalchemy.orm import selectinload
 
@@ -43,14 +43,22 @@ for author in authors:
     print(author.name, len(author.books))   # no extra queries
 ```
 
+`selectinload` avoids the N+1 pattern by loading related rows in secondary `SELECT ... WHERE
+IN (...)` statements. It batches parent keys (up to 500 by default), so a large result set can
+require more than one secondary query; the query count grows by batches, not by parent row.
+
 **How to test:** Wrap the call in a query counter (e.g. SQLAlchemy's
 `event.listen(engine, "before_cursor_execute", ...)` or `pytest`'s
 `sqlalchemy.testing.assert_compile`/a counter fixture) and assert the number of emitted
-statements is constant regardless of row count:
+statements is bounded by the parent query plus the selectinload batches:
 ```python
-def test_authors_with_books_is_constant_queries(query_counter):
+from math import ceil
+
+
+def test_authors_with_books_is_batched(session, query_counter, parent_count):
     load_authors_with_books(session)
-    assert query_counter.count <= 2   # one for authors, one for the selectin load
+    expected_max_queries = 1 + ceil(parent_count / 500)
+    assert query_counter.count <= expected_max_queries
 ```
 
 ---
@@ -92,18 +100,23 @@ def test_open_orders_projects_only_needed_columns():
 
 ---
 
-## 3. Add indexes for filter/join/order columns; avoid `SELECT DISTINCT` to mask dupes
+## 3. Index efficiently and preserve result cardinality
 
-**Why:** A `WHERE`, `JOIN`, or `ORDER BY` on an unindexed column forces a full scan.
-Reaching for `SELECT DISTINCT` to remove duplicate rows is usually a symptom of a missing
-join condition or a missing index, not a fix — it adds a sort/hash on top of the scan.
+**Index efficiency:** A `WHERE`, `JOIN`, or `ORDER BY` on an unindexed column can force a full
+scan. Add indexes to the predicates and join/order columns that are actually hot, then verify
+with an execution plan.
 
-**Non-compliant:**
+**Cardinality correctness:** Duplicate rows from a one-to-many join are a separate correctness
+question. Do not add `DISTINCT` merely to hide an accidental join multiplication. If the intended
+result is one row per key, state that intent explicitly with `DISTINCT`, `GROUP BY`, or `EXISTS`;
+fix a missing/incorrect join condition when duplicates are not intended.
+
+**Non-compliant for index efficiency:**
 ```sql
-SELECT DISTINCT customer_id FROM orders WHERE region = 'EU';   -- region not indexed
+SELECT customer_id FROM orders WHERE region = 'EU';   -- region is not indexed
 ```
 
-**Compliant — index the predicate, drop the DISTINCT if the query is correct:**
+**Compliant — index the predicate:**
 ```python
 class Order(Base):
     __tablename__ = "orders"
@@ -112,12 +125,21 @@ class Order(Base):
     region: Mapped[str] = mapped_column(index=True)   # predicate column indexed
 ```
 ```sql
+-- For one row per customer, make cardinality explicit.
+SELECT DISTINCT customer_id FROM orders WHERE region = 'EU';
+-- GROUP BY is appropriate when aggregates or grouping semantics are needed.
 SELECT customer_id FROM orders WHERE region = 'EU' GROUP BY customer_id;
+-- EXISTS is preferable when the outer query only needs to test membership.
+SELECT c.id FROM customers c
+WHERE EXISTS (
+    SELECT 1 FROM orders o WHERE o.customer_id = c.id AND o.region = 'EU'
+);
 ```
 
-**How to test:** In a test database with representative data, capture the query plan
-(`EXPLAIN`) and assert it uses an index scan rather than a sequential/full scan for the
-hot query. For correctness, assert the de-duplicated result matches the intended set.
+**How to test:** Separately capture the query plan (`EXPLAIN`) and assert the hot predicate uses
+an appropriate index rather than a sequential/full scan. Then assert result cardinality against
+representative data, using `DISTINCT`, `GROUP BY`, or `EXISTS` only when the requirement calls for
+that cardinality.
 
 ---
 
@@ -129,7 +151,7 @@ statement. Prefer a single bulk `UPDATE`/`INSERT ... SELECT`.
 
 **Non-compliant:**
 ```python
-for user in session.scalars(select(User).where(User.inactive)):
+for user in session.scalars(select(User).where(User.is_active.is_(False))):
     user.archived = True
     session.flush()        # a write per row
 ```
@@ -139,8 +161,9 @@ for user in session.scalars(select(User).where(User.inactive)):
 from sqlalchemy import update
 
 session.execute(
-    update(User).where(User.inactive.is_(True)).values(archived=True)
+    update(User).where(User.is_active.is_(False)).values(archived=True)
 )
+session.commit()
 ```
 
 **How to test:** Count emitted `UPDATE` statements (query-counter fixture) and assert it

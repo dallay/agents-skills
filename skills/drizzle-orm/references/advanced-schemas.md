@@ -17,12 +17,25 @@ export const users = pgTable('users', {
   role: roleEnum('role').default('user'),
 });
 
-// MySQL/SQLite: Use text with constraints
-import { mysqlTable, text } from 'drizzle-orm/mysql-core';
+// MySQL: enforce the allowed values in the database schema
+import { mysqlEnum, mysqlTable } from 'drizzle-orm/mysql-core';
 
 export const users = mysqlTable('users', {
-  role: text('role', { enum: ['admin', 'user', 'guest'] }).default('user'),
+  role: mysqlEnum('role', ['admin', 'user', 'guest']).default('user'),
 });
+
+// SQLite alternative: text enum metadata is TypeScript-only, so add a DB check.
+import { check, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
+
+export const sqliteUsers = sqliteTable('users', {
+  role: text('role').notNull().default('user'),
+}, (table) => [
+  check(
+    'users_role_check',
+    sql`${table.role} IN ('admin', 'user', 'guest')`,
+  ),
+]);
 ```
 
 ### Custom JSON Types
@@ -200,8 +213,15 @@ CREATE POLICY tenant_isolation ON documents
   USING (tenant_id = current_setting('app.current_tenant_id')::uuid);
 */
 
-// Set tenant context
-await db.execute(sql`SET app.current_tenant_id = ${tenantId}`);
+// Set tenant context and run every tenant-scoped query on the same transaction.
+// `true` makes set_config transaction-local, so pooled connections cannot retain it.
+const tenantDocuments = await db.transaction(async (tx) => {
+  await tx.execute(
+    sql`SELECT set_config('app.current_tenant_id', ${tenantId}, true)`,
+  );
+
+  return tx.select().from(documents);
+});
 ```
 
 ### Schema-Per-Tenant

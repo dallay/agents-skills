@@ -54,8 +54,8 @@ export async function GET() {
   const sql = neon(process.env.DATABASE_URL!);
   const db = drizzle(sql); // ~35KB bundle, <10ms cold start
 
-  const users = await db.select().from(users);
-  return Response.json(users);
+  const edgeUsers = await db.select().from(users);
+  return Response.json(edgeUsers);
 }
 ```
 
@@ -104,10 +104,10 @@ model Post {
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
-  const users = await prisma.user.findMany({
+  const prismaUsers = await prisma.user.findMany({
     include: { posts: true },
   });
-  return Response.json(users);
+  return Response.json(prismaUsers);
 }
 ```
 
@@ -205,7 +205,7 @@ const usersWithPosts = await prisma.user.findMany({
 **Drizzle** (SQL-based):
 ```bash
 # Generate migration
-npx drizzle-kit generate
+npx drizzle-kit@0.31.5 generate
 
 # Output: drizzle/0000_migration.sql
 # CREATE TABLE "users" (
@@ -214,7 +214,7 @@ npx drizzle-kit generate
 # );
 
 # Apply migration
-npx drizzle-kit migrate
+npx drizzle-kit@0.31.5 migrate
 ```
 
 **Prisma** (Declarative):
@@ -235,8 +235,10 @@ npx prisma migrate dev --name add_users
 type User = typeof users.$inferSelect;
 type NewUser = typeof users.$inferInsert;
 
-// Immediate feedback in IDE
-const user: User = await db.select().from(users);
+// Selects return arrays; handle the possibility that the first row is absent.
+const userRows: User[] = await db.select().from(users);
+const user = userRows[0];
+if (!user) throw new Error('User not found');
 ```
 
 **Prisma** (Generated):
@@ -246,7 +248,8 @@ const user: User = await db.select().from(users);
 
 import { User, Post } from '@prisma/client';
 
-const user: User = await prisma.user.findUnique({ where: { id: 1 } });
+const user: User | null = await prisma.user.findUnique({ where: { id: 1 } });
+if (!user) throw new Error('User not found');
 ```
 
 ### Raw SQL
@@ -279,7 +282,7 @@ const result = await prisma.$queryRaw`
 `;
 
 // Typed raw query (manual type annotation)
-const users = await prisma.$queryRaw<User[]>`
+const rawUsers = await prisma.$queryRaw<User[]>`
   SELECT * FROM users
 `;
 ```
@@ -324,7 +327,7 @@ const users = await prisma.$queryRaw<User[]>`
 
 ```bash
 npm install drizzle-orm
-npm install -D drizzle-kit
+npm install -D drizzle-kit@0.31.5
 
 # Keep Prisma temporarily
 # npm uninstall prisma @prisma/client
@@ -348,7 +351,7 @@ export default {
 
 ```bash
 # Generate Drizzle schema from existing database
-npx drizzle-kit introspect
+npx drizzle-kit@0.31.5 introspect
 ```
 
 ### Step 3: Convert Queries
@@ -356,7 +359,7 @@ npx drizzle-kit introspect
 **Prisma**:
 ```typescript
 // Before (Prisma)
-const users = await prisma.user.findMany({
+const prismaUsers = await prisma.user.findMany({
   where: { email: { contains: 'example.com' } },
   include: { posts: true },
   orderBy: { createdAt: 'desc' },
@@ -369,15 +372,15 @@ const users = await prisma.user.findMany({
 // After (Drizzle)
 import { like, desc } from 'drizzle-orm';
 
-const users = await db.query.users.findMany({
-  where: like(users.email, '%example.com%'),
+const drizzleUsers = await db.query.users.findMany({
+  where: (userTable, { like }) => like(userTable.email, '%example.com%'),
   with: { posts: true },
-  orderBy: [desc(users.createdAt)],
+  orderBy: (userTable, { desc }) => desc(userTable.createdAt),
   limit: 10,
 });
 
 // Or SQL-style
-const users = await db
+const drizzleSqlUsers = await db
   .select()
   .from(users)
   .where(like(users.email, '%example.com%'))
@@ -454,8 +457,8 @@ You can use both in the same project:
 import { db as drizzleDb } from './lib/drizzle';
 
 export async function GET() {
-  const users = await drizzleDb.select().from(users);
-  return Response.json(users);
+  const drizzleUsers = await drizzleDb.select().from(users);
+  return Response.json(drizzleUsers);
 }
 
 // Use Prisma for admin dashboards (less performance-critical)
@@ -463,10 +466,16 @@ import { prisma } from './lib/prisma';
 
 export async function getStaticProps() {
   const stats = await prisma.user.aggregate({
-    _count: true,
-    _avg: { posts: true },
+    _count: { _all: true },
+    _avg: { id: true },
   });
-  return { props: { stats } };
+  const postCounts = await prisma.user.findMany({
+    select: {
+      id: true,
+      _count: { select: { posts: true } },
+    },
+  });
+  return { props: { stats, postCounts } };
 }
 ```
 

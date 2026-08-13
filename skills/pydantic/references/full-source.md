@@ -17,9 +17,11 @@ token_estimates:
 # Pydantic Validation Skill
 
 ## Summary
+
 Python data validation using type hints and runtime type checking with Pydantic v2's Rust-powered core for high-performance validation.
 
 ## When to Use
+
 - API request/response validation (FastAPI, Django)
 - Settings and configuration management (env variables, config files)
 - ORM model validation (SQLAlchemy integration)
@@ -30,7 +32,7 @@ Python data validation using type hints and runtime type checking with Pydantic 
 ## Quick Start
 
 ```python
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, ValidationError
 from datetime import datetime
 
 class User(BaseModel):
@@ -52,7 +54,7 @@ assert user2.id == 2  # String "2" coerced to int
 try:
     User(id=3, name="", email="invalid")
 except ValidationError as e:
-    print(e.errors())
+    print(e.errors(include_input=False))
 ```
 
 ---
@@ -87,7 +89,7 @@ product.price = "29.99"  # Auto-converts to float
 ### Field Configuration
 
 ```python
-from pydantic import Field, field_validator
+from pydantic import BaseModel, Field, field_validator
 from typing import Annotated
 
 class Item(BaseModel):
@@ -253,7 +255,7 @@ assert design.primary_color.r == 255
 ### Field Validators
 
 ```python
-from pydantic import field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 class Account(BaseModel):
     username: str
@@ -270,11 +272,12 @@ class Account(BaseModel):
     @field_validator('password')
     @classmethod
     def password_strong(cls, v: str) -> str:
-        if len(v) < 8:
+        value = v.strip()
+        if len(value) < 8:
             raise ValueError('must be at least 8 characters')
-        if not any(c.isupper() for c in v):
+        if not any(c.isupper() for c in value):
             raise ValueError('must contain uppercase letter')
-        return v
+        return value
 
     # Validate multiple fields
     @field_validator('username', 'password')
@@ -288,8 +291,10 @@ class Account(BaseModel):
 ### Model Validators
 
 ```python
-from pydantic import model_validator
+from datetime import datetime
 from typing import Self
+
+from pydantic import BaseModel, model_validator
 
 class DateRange(BaseModel):
     start_date: datetime
@@ -297,7 +302,7 @@ class DateRange(BaseModel):
 
     @model_validator(mode='after')
     def check_dates(self) -> Self:
-        if self.end_date < self.start_date:
+        if self.end_date <= self.start_date:
             raise ValueError('end_date must be after start_date')
         return self
 
@@ -318,7 +323,9 @@ class Order(BaseModel):
 ### Root Validators (Wrap)
 
 ```python
-from pydantic import model_validator, ValidationInfo
+from typing import Any, Literal
+
+from pydantic import BaseModel, ValidationInfo, model_validator
 
 class Config(BaseModel):
     env: Literal['dev', 'prod']
@@ -558,13 +565,14 @@ assert 'password' not in user.model_dump()
 
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field
+from pydantic import BaseModel, Field, SecretStr
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file='.env',
         env_file_encoding='utf-8',
         env_prefix='APP_',
+        env_nested_delimiter='__',
         case_sensitive=False
     )
 
@@ -594,6 +602,10 @@ settings = AppSettings()
 
 ```python
 from functools import lru_cache
+from typing import Literal
+
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     environment: Literal['dev', 'staging', 'prod'] = 'dev'
@@ -627,7 +639,7 @@ def get_config(settings: Settings = Depends(get_settings)):
 
 ```python
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 app = FastAPI()
 
@@ -657,8 +669,10 @@ def create_user(user: UserCreate):
 ### Query Parameters
 
 ```python
-from pydantic import BaseModel, Field
+from typing import Literal
+
 from fastapi import Query
+from pydantic import BaseModel, Field
 
 class PaginationParams(BaseModel):
     skip: int = Field(0, ge=0)
@@ -677,6 +691,13 @@ def search(params: SearchParams = Query()):
 ### Response Model Customization
 
 ```python
+from datetime import datetime
+
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr
+
+app = FastAPI()
+
 class DetailedUser(BaseModel):
     id: int
     username: str
@@ -685,7 +706,7 @@ class DetailedUser(BaseModel):
     last_login: datetime | None
 
 @app.get('/users/{user_id}', response_model=DetailedUser)
-def get_user(user_id: int, include_dates: bool = False):
+def get_user(user_id: int, include_dates: bool = False) -> DetailedUser:
     user = DetailedUser(
         id=user_id,
         username='alice',
@@ -694,8 +715,8 @@ def get_user(user_id: int, include_dates: bool = False):
         last_login=None
     )
 
-    if not include_dates:
-        return user.model_dump(exclude={'created_at', 'last_login'})
+    # include_dates is retained for compatibility, but DetailedUser requires both
+    # date fields, so every response includes them.
     return user
 ```
 
@@ -704,9 +725,12 @@ def get_user(user_id: int, include_dates: bool = False):
 ### ORM Models with Pydantic
 
 ```python
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import DeclarativeBase
-from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+
+from fastapi import HTTPException
+from pydantic import BaseModel, ConfigDict, EmailStr
+from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import DeclarativeBase, Session
 
 class Base(DeclarativeBase):
     pass
@@ -730,10 +754,10 @@ class UserSchema(BaseModel):
     created_at: datetime
 
 # Usage
-from sqlalchemy.orm import Session
-
 def get_user(db: Session, user_id: int) -> UserSchema:
-    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+    user = db.get(UserDB, user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail='User not found')
     return UserSchema.model_validate(user)  # ORM → Pydantic
 ```
 
@@ -780,7 +804,7 @@ def create_user(db: Session, user: UserCreate) -> UserInDB:
 
 ```python
 from django.db import models
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 # Django model
 class Article(models.Model):
@@ -814,7 +838,7 @@ def create_article(request):
         article = Article.objects.create(**data.model_dump())
         return JsonResponse({'id': article.id})
     except ValidationError as e:
-        return JsonResponse({'errors': e.errors()}, status=400)
+        return JsonResponse({'errors': e.errors(include_input=False)}, status=400)
 ```
 
 ## Computed Fields
@@ -881,7 +905,7 @@ class StrictUser(BaseModel):
 try:
     StrictUser(username='ab', age=16)
 except ValidationError as e:
-    for error in e.errors():
+    for error in e.errors(include_input=False):
         print(f"{error['type']}: {error['msg']}")
         print(f"Context: {error.get('ctx')}")
 ```
@@ -929,7 +953,7 @@ class OptimizedModel(BaseModel):
         # Validate assignment only when needed
         validate_assignment=False,
 
-        # Disable validation for internal use
+        # Skip validation of default values, not model input
         validate_default=False,
 
         # Use slots for memory efficiency
@@ -954,6 +978,8 @@ def validate_bulk(items: list[dict]) -> list[Data]:
 ## JSON Schema Generation
 
 ```python
+import json
+
 from pydantic import BaseModel, Field
 
 class Product(BaseModel):
@@ -995,7 +1021,7 @@ def create_product(product: Product):
 
 ```python
 from pydantic.dataclasses import dataclass
-from pydantic import Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 @dataclass
 class User:
@@ -1010,11 +1036,9 @@ user = User(id=1, name='Alice', email='alice@example.com')
 try:
     User(id=2, name='', email='invalid')
 except ValidationError as e:
-    print(e.errors())
+    print(e.errors(include_input=False))
 
 # Convert to Pydantic BaseModel
-from pydantic import BaseModel
-
 class UserModel(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -1031,7 +1055,24 @@ user_model = UserModel.model_validate(user)
 
 ```python
 import pytest
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
+
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+
+
+class Address(BaseModel):
+    street: str
+    city: str
+    country: str
+
+
+class Company(BaseModel):
+    name: str
+    address: Address
 
 def test_user_validation():
     # Valid data
@@ -1042,7 +1083,7 @@ def test_user_validation():
     with pytest.raises(ValidationError) as exc_info:
         User(id='invalid', name='Bob', email='bob@example.com')
 
-    errors = exc_info.value.errors()
+    errors = exc_info.value.errors(include_input=False)
     assert errors[0]['type'] == 'int_parsing'
 
 def test_user_serialization():
@@ -1110,7 +1151,7 @@ def test_user_always_valid(id, name, email):
 
 ```python
 # v1
-from pydantic import BaseModel
+from pydantic import BaseModel, root_validator, validator
 
 class OldModel(BaseModel):
     class Config:
@@ -1171,7 +1212,8 @@ class NewModel(BaseModel):
 - [ ] Update `.parse_obj()` → `.model_validate()`
 - [ ] Update `.parse_raw()` → `.model_validate_json()`
 - [ ] Update `@validator` → `@field_validator` with `@classmethod`
-- [ ] Update `@root_validator` → `@model_validator(mode='after')`
+- [ ] Update `@root_validator(pre=True)` → `@model_validator(mode='before')`
+- [ ] Update post-validation `@root_validator` → `@model_validator(mode='after')`
 - [ ] Review `json_encoders` → use `@field_serializer`
 - [ ] Test strict mode behavior changes
 - [ ] Update custom types to use `__get_pydantic_core_schema__`
@@ -1181,6 +1223,11 @@ class NewModel(BaseModel):
 ### Model Organization
 
 ```python
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+
 # Separate schemas by use case
 class UserBase(BaseModel):
     """Shared fields"""
@@ -1250,7 +1297,7 @@ def safe_validate(data: dict) -> User | None:
         return User.model_validate(data)
     except ValidationError as e:
         # Log validation errors
-        logger.error(f"Validation failed: {e.errors()}")
+        logger.error(f"Validation failed: {e.errors(include_input=False)}")
         return None
 
 def validate_with_details(data: dict):
@@ -1266,7 +1313,7 @@ def validate_with_details(data: dict):
                     'message': err['msg'],
                     'type': err['type']
                 }
-                for err in e.errors()
+                for err in e.errors(include_input=False)
             ]
         }
 ```
@@ -1301,11 +1348,19 @@ error_response = APIResponse[User](
 ### Pagination
 
 ```python
+from typing import Generic, TypeVar
+
+from pydantic import BaseModel, Field, computed_field
+
+
+T = TypeVar('T')
+
+
 class PaginatedResponse(BaseModel, Generic[T]):
     items: list[T]
     total: int
     page: int
-    page_size: int
+    page_size: int = Field(ge=1)
 
     @computed_field
     @property
@@ -1324,6 +1379,11 @@ assert users.total_pages == 10
 ### Audit Fields
 
 ```python
+from datetime import datetime
+
+from pydantic import BaseModel, Field
+
+
 class AuditMixin(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -1334,12 +1394,14 @@ class Document(AuditMixin):
     title: str
     content: str
 
-    @model_validator(mode='before')
-    @classmethod
-    def update_timestamp(cls, data: dict) -> dict:
-        if isinstance(data, dict):
-            data['updated_at'] = datetime.utcnow()
-        return data
+    # Set updated_at explicitly in the service layer when persisting an update.
+
+
+def update_document(document: Document, *, title: str, content: str) -> Document:
+    document.title = title
+    document.content = content
+    document.updated_at = datetime.utcnow()
+    return document
 ```
 
 ## Related Skills
@@ -1355,8 +1417,8 @@ When using Pydantic, consider these complementary skills:
 
 ```python
 # FastAPI with Pydantic (basic pattern)
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, EmailStr
+from fastapi import FastAPI
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 app = FastAPI()
 
@@ -1384,7 +1446,7 @@ def create_user(user: UserCreate):
 ```python
 # SQLAlchemy 2.0 with Pydantic validation
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Session
 from pydantic import BaseModel, ConfigDict
 
 class Base(DeclarativeBase):
@@ -1402,9 +1464,12 @@ class UserSchema(BaseModel):
     username: str
     email: str
 
-# Convert ORM to Pydantic
-user_orm = db.query(UserDB).first()
-user_validated = UserSchema.model_validate(user_orm)
+# Convert ORM to Pydantic using a caller-provided session
+def get_user(db: Session, user_id: int) -> UserSchema | None:
+    user_orm = db.get(UserDB, user_id)
+    if user_orm is None:
+        return None
+    return UserSchema.model_validate(user_orm)
 ```
 
 ### Quick Pytest Testing Reference (Inlined for Standalone Use)
@@ -1412,7 +1477,13 @@ user_validated = UserSchema.model_validate(user_orm)
 ```python
 # Testing Pydantic models with pytest
 import pytest
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
+
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
 
 def test_user_validation():
     user = User(id=1, name='Alice', email='alice@example.com')
@@ -1421,7 +1492,7 @@ def test_user_validation():
 def test_validation_error():
     with pytest.raises(ValidationError) as exc_info:
         User(id='invalid', name='Bob', email='bob@example.com')
-    errors = exc_info.value.errors()
+    errors = exc_info.value.errors(include_input=False)
     assert errors[0]['type'] == 'int_parsing'
 
 @pytest.fixture
@@ -1432,6 +1503,7 @@ def sample_user():
 [Full integration patterns available in respective skills if deployed together]
 
 ## Additional Resources
+
 - [Pydantic Documentation](https://docs.pydantic.dev/)
 - [Migration Guide v1→v2](https://docs.pydantic.dev/latest/migration/)
 - [Performance Benchmarks](https://docs.pydantic.dev/latest/concepts/performance/)
