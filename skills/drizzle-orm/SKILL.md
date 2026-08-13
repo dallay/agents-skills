@@ -23,7 +23,7 @@ npm install mysql2        # MySQL
 npm install better-sqlite3 # SQLite
 
 # Drizzle Kit (migrations)
-npm install -D drizzle-kit
+npm install -D drizzle-kit@0.31.5
 ```
 
 ### Basic Setup
@@ -100,6 +100,7 @@ export const users = pgTable('users', {
   role: text('role', { enum: ['admin', 'user', 'guest'] }).default('user'),
   metadata: json('metadata').$type<{ theme: string; locale: string }>(),
   isActive: boolean('is_active').default(true),
+  deletedAt: timestamp('deleted_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => ({
@@ -277,16 +278,24 @@ await db.transaction(async (tx) => {
   // If any query fails, entire transaction rolls back
 });
 
-// Manual control
-const tx = db.transaction(async (tx) => {
-  const user = await tx.insert(users).values({ ... }).returning();
+// Manual rollback when a required insert does not return a row
+const transactionResult = await db.transaction(async (tx) => {
+  const [user] = await tx.insert(users).values({
+    email: 'transactional@example.com',
+    name: 'Transactional User',
+  }).returning();
 
   if (!user) {
     tx.rollback();
     return;
   }
 
-  await tx.insert(posts).values({ authorId: user.id });
+  await tx.insert(posts).values({
+    title: 'Transactional Post',
+    authorId: 1, // Existing authors.id
+  });
+
+  return user;
 });
 ```
 
@@ -312,19 +321,19 @@ export default {
 
 ```bash
 # Generate migration
-npx drizzle-kit generate
+npx drizzle-kit@0.31.5 generate
 
 # View SQL
 cat drizzle/0000_migration.sql
 
 # Apply migration
-npx drizzle-kit migrate
+npx drizzle-kit@0.31.5 migrate
 
 # Introspect existing database
-npx drizzle-kit introspect
+npx drizzle-kit@0.31.5 introspect
 
 # Drizzle Studio (database GUI)
-npx drizzle-kit studio
+npx drizzle-kit@0.31.5 studio
 ```
 
 ### Example Migration

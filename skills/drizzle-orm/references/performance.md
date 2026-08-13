@@ -82,10 +82,10 @@ process.on('exit', () => sqlite.close());
 
 ```typescript
 // ❌ Bad: Fetch all columns
-const users = await db.select().from(users);
+const allUsers = await db.select().from(users);
 
 // ✅ Good: Fetch only needed columns
-const users = await db.select({
+const userSummaries = await db.select({
   id: users.id,
   email: users.email,
   name: users.name,
@@ -172,9 +172,9 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const db = drizzle(env.DB);
 
-    const users = await db.select().from(users).limit(10);
+    const edgeUsers = await db.select().from(users).limit(10);
 
-    return Response.json(users);
+    return Response.json(edgeUsers);
   },
 };
 ```
@@ -191,9 +191,9 @@ export async function GET() {
   const sql = neon(process.env.DATABASE_URL!);
   const db = drizzle(sql);
 
-  const users = await db.select().from(users);
+  const edgeUsers = await db.select().from(users);
 
-  return Response.json(users);
+  return Response.json(edgeUsers);
 }
 ```
 
@@ -267,7 +267,7 @@ async function getCachedData<T>(
 }
 
 // Usage
-const users = await getCachedData(
+const cachedUsers = await getCachedData(
   'users:all',
   () => db.select().from(users),
   600
@@ -283,8 +283,8 @@ CREATE MATERIALIZED VIEW user_stats AS
 SELECT
   u.id,
   u.name,
-  COUNT(p.id) AS post_count,
-  COUNT(c.id) AS comment_count
+  COUNT(DISTINCT p.id) AS post_count,
+  COUNT(DISTINCT c.id) AS comment_count
 FROM users u
 LEFT JOIN posts p ON p.author_id = u.id
 LEFT JOIN comments c ON c.user_id = u.id
@@ -298,8 +298,8 @@ export const userStats = pgMaterializedView('user_stats').as((qb) =>
   qb.select({
     id: users.id,
     name: users.name,
-    postCount: sql<number>`COUNT(${posts.id})`,
-    commentCount: sql<number>`COUNT(${comments.id})`,
+    postCount: sql<number>`COUNT(DISTINCT ${posts.id})`,
+    commentCount: sql<number>`COUNT(DISTINCT ${comments.id})`,
   })
   .from(users)
   .leftJoin(posts, eq(posts.authorId, users.id))
@@ -323,7 +323,18 @@ import { copyFrom } from 'pg-copy-streams';
 import { pipeline } from 'stream/promises';
 import { Readable } from 'stream';
 
-async function bulkInsert(data: any[]) {
+function encodeCsvField(value: string): string {
+  if (value.includes('\0')) {
+    throw new Error('COPY CSV fields cannot contain NUL bytes');
+  }
+
+  const escaped = value.replace(/"/g, '""');
+  return /[",\r\n\u0001-\u001f\u007f]/.test(value)
+    ? `"${escaped}"`
+    : escaped;
+}
+
+async function bulkInsert(data: Array<{ email: string; name: string }>) {
   const client = await pool.connect();
 
   try {
@@ -331,9 +342,10 @@ async function bulkInsert(data: any[]) {
       copyFrom(`COPY users (email, name) FROM STDIN WITH (FORMAT csv)`)
     );
 
-    const input = Readable.from(
-      data.map(row => `${row.email},${row.name}\n`)
-    );
+    const input = Readable.from(data.map((row) => [
+      encodeCsvField(row.email),
+      encodeCsvField(row.name),
+    ].join(',') + '\n'));
 
     await pipeline(input, stream);
   } finally {
@@ -376,10 +388,10 @@ export async function handler() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const db = drizzle(pool);
 
-  const users = await db.select().from(users);
+  const requestUsers = await db.select().from(users);
 
   await pool.end();
-  return users;
+  return requestUsers;
 }
 
 // ✅ Good: Reuse connection across warm starts
@@ -394,8 +406,8 @@ export async function handler() {
     cachedDb = drizzle(pool);
   }
 
-  const users = await cachedDb.select().from(users);
-  return users;
+  const warmUsers = await cachedDb.select().from(users);
+  return warmUsers;
 }
 ```
 
@@ -410,7 +422,7 @@ const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
 
 // Each query is a single HTTP request
-const users = await db.select().from(users);
+const httpUsers = await db.select().from(users);
 ```
 
 ## Read Replicas
@@ -447,8 +459,16 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 const db = drizzle(pool, {
   logger: {
     logQuery(query: string, params: unknown[]) {
+      const safeParams = params.map((param) => {
+        if (param === null || typeof param === 'number' || typeof param === 'boolean') {
+          return param;
+        }
+
+        return '[REDACTED]';
+      });
+
       console.log('Query:', query);
-      console.log('Params:', params);
+      console.log('Params:', safeParams);
       console.time('query');
     },
   },
@@ -512,7 +532,7 @@ async function measureQuery<T>(
 }
 
 // Usage
-const users = await measureQuery(
+const measuredUsers = await measureQuery(
   'fetchUsers',
   db.select().from(users).limit(100)
 );
@@ -571,13 +591,16 @@ sqlite.pragma('mmap_size = 30000000000'); // 30GB mmap
 // Disable for bulk inserts
 const stmt = sqlite.prepare('INSERT INTO users (email, name) VALUES (?, ?)');
 
-const insertMany = sqlite.transaction((users) => {
-  for (const user of users) {
+const insertMany = sqlite.transaction((userRows: Array<{ email: string; name: string }>) => {
+  for (const user of userRows) {
     stmt.run(user.email, user.name);
   }
 });
 
-insertMany(users); // 100x faster than individual inserts
+const userRows = [
+  { email: 'user@example.com', name: 'User' },
+];
+insertMany(userRows); // 100x faster than individual inserts
 ```
 
 ## Best Practices Summary

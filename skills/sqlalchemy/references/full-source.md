@@ -57,17 +57,19 @@ pip install sqlalchemy[asyncio] asyncpg    # PostgreSQL
 # With Alembic for migrations
 pip install alembic
 
-# FastAPI integration
-pip install fastapi sqlalchemy
+# FastAPI integration (EmailStr requires the email extra)
+pip install fastapi sqlalchemy "pydantic[email]"
 ```
 
 ## Declarative Models (SQLAlchemy 2.0)
 
 ### Basic Model Definition
 ```python
+from decimal import Decimal
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, DateTime, ForeignKey, func
+
+from sqlalchemy import DateTime, ForeignKey, Index, Numeric, String, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 # Base class for all models
@@ -90,6 +92,13 @@ class User(Base):
     full_name: Mapped[Optional[str]] = mapped_column(String(100))
     is_active: Mapped[bool] = mapped_column(default=True)
 
+    # Fixed-point monetary value; use Decimal in application code.
+    balance: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2, asdecimal=True),
+        nullable=False,
+        default=Decimal("0.00")
+    )
+
     # Timestamps with server defaults
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -105,7 +114,7 @@ class User(Base):
     posts: Mapped[list["Post"]] = relationship(back_populates="author")
 
     def __repr__(self) -> str:
-        return f"User(id={self.id}, email={self.email})"
+        return f"User(id={self.id})"
 ```
 
 ### Relationships
@@ -154,6 +163,10 @@ class Tag(Base):
 
 ## Database Setup
 
+> `Base.metadata.create_all(...)` is shown only for isolated development/test databases.
+> Production schema creation and changes must be managed through reviewed Alembic migrations
+> (for example, `alembic upgrade head`), not application startup code.
+
 ### Engine and Session Configuration
 ```python
 from sqlalchemy import create_engine
@@ -185,7 +198,7 @@ SessionLocal = sessionmaker(
     expire_on_commit=False
 )
 
-# Create tables
+# Development/test convenience only; production schema is managed with Alembic.
 Base.metadata.create_all(bind=engine)
 ```
 
@@ -282,10 +295,12 @@ stmt = (
 ```python
 from sqlalchemy.orm import selectinload, joinedload
 
-# selectinload - separate query (better for collections)
+# selectinload - batched secondary queries (better for collections)
 stmt = select(User).options(selectinload(User.posts))
 users = session.execute(stmt).scalars().all()
-# Now users[0].posts won't trigger additional queries
+# One secondary SELECT loads up to 500 parent keys per batch; larger result sets may
+# emit additional batched SELECTs. Accessing users[0].posts does not trigger per-user
+# lazy-load queries.
 
 # joinedload - single query with join (better for one-to-one)
 stmt = select(Post).options(joinedload(Post.author))
@@ -319,7 +334,11 @@ def create_user(db: Session, email: str, username: str, password: str):
 
 # Bulk insert
 users = [
-    User(email=f"user{i}@example.com", username=f"user{i}")
+    User(
+        email=f"user{i}@example.com",
+        username=f"user{i}",
+        hashed_password=hash_password(f"password-{i}")
+    )
     for i in range(100)
 ]
 db.add_all(users)
@@ -351,13 +370,23 @@ def get_users(
 
 ### Update
 ```python
-def update_user(db: Session, user_id: int, **kwargs):
+WRITABLE_USER_FIELDS = frozenset({"email", "username", "full_name", "is_active"})
+
+
+def update_user(db: Session, user_id: int, **kwargs: object):
     """Update user fields."""
     stmt = select(User).where(User.id == user_id)
     user = db.execute(stmt).scalar_one_or_none()
 
     if not user:
         return None
+
+    invalid_fields = set(kwargs) - WRITABLE_USER_FIELDS
+    if invalid_fields:
+        raise ValueError(
+            "Unsupported or protected user fields: "
+            + ", ".join(sorted(invalid_fields))
+        )
 
     for key, value in kwargs.items():
         setattr(user, key, value)
@@ -366,7 +395,7 @@ def update_user(db: Session, user_id: int, **kwargs):
     db.refresh(user)
     return user
 
-# Bulk update
+# Bulk update; commit explicitly so the write is durable.
 from sqlalchemy import update
 
 stmt = (
@@ -427,25 +456,43 @@ with get_db_session() as db:
 
 ### Manual Transaction Control
 ```python
-def transfer_money(db: Session, from_user_id: int, to_user_id: int, amount: float):
+from decimal import Decimal
+
+
+def transfer_money(
+    db: Session,
+    from_user_id: int,
+    to_user_id: int,
+    amount: Decimal,
+) -> None:
     """Transfer money between users with transaction."""
-    try:
-        # Begin nested transaction
-        with db.begin_nested():
-            # Deduct from sender
-            stmt = select(User).where(User.id == from_user_id).with_for_update()
-            sender = db.execute(stmt).scalar_one()
-            sender.balance -= amount
+    if amount <= Decimal("0"):
+        raise ValueError("amount must be positive")
 
-            # Add to receiver
-            stmt = select(User).where(User.id == to_user_id).with_for_update()
-            receiver = db.execute(stmt).scalar_one()
-            receiver.balance += amount
+    # The function owns the transaction: db.begin() commits on success and
+    # rolls back all changes if any lookup or balance update fails.
+    with db.begin():
+        sender_stmt = (
+            select(User)
+            .where(User.id == from_user_id)
+            .with_for_update()
+        )
+        sender = db.execute(sender_stmt).scalar_one_or_none()
 
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        raise
+        receiver_stmt = (
+            select(User)
+            .where(User.id == to_user_id)
+            .with_for_update()
+        )
+        receiver = db.execute(receiver_stmt).scalar_one_or_none()
+
+        if sender is None or receiver is None:
+            raise ValueError("both users must exist")
+        if sender.balance < amount:
+            raise ValueError("insufficient funds")
+
+        sender.balance -= amount
+        receiver.balance += amount
 ```
 
 ## Async SQLAlchemy
@@ -475,7 +522,7 @@ AsyncSessionLocal = async_sessionmaker(
     expire_on_commit=False
 )
 
-# Create tables
+# Development/test convenience only; production schema is managed with Alembic.
 async def init_db():
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -490,10 +537,14 @@ async def get_user_async(user_id: int) -> Optional[User]:
         result = await session.execute(stmt)
         return result.scalar_one_or_none()
 
-async def create_user_async(email: str, username: str) -> User:
+async def create_user_async(email: str, username: str, password: str) -> User:
     """Create user asynchronously."""
     async with AsyncSessionLocal() as session:
-        user = User(email=email, username=username)
+        user = User(
+            email=email,
+            username=username,
+            hashed_password=hash_password(password)
+        )
         session.add(user)
         await session.commit()
         await session.refresh(user)
@@ -529,10 +580,14 @@ alembic init alembic
 
 ### Configure Alembic
 ```python
-# alembic/env.py
-from sqlalchemy import engine_from_config, pool
+import os
+
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 from myapp.models import Base  # Import your Base
+
+# Alembic's runtime configuration must be available before it is read below.
+config = context.config
 
 # Add your model's MetaData
 target_metadata = Base.metadata
@@ -593,8 +648,10 @@ def upgrade():
         sa.PrimaryKeyConstraint('id')
     )
     op.create_index('ix_users_email', 'users', ['email'], unique=True)
+    op.create_index('ix_users_username', 'users', ['username'], unique=True)
 
 def downgrade():
+    op.drop_index('ix_users_username', table_name='users')
     op.drop_index('ix_users_email', table_name='users')
     op.drop_table('users')
 ```
@@ -604,6 +661,7 @@ def downgrade():
 ### Complete FastAPI Example
 ```python
 from fastapi import FastAPI, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import List
@@ -644,7 +702,14 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
         hashed_password=hash_password(user.password)
     )
     db.add(db_user)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email or username already registered",
+        )
     db.refresh(db_user)
     return db_user
 
@@ -730,7 +795,7 @@ def db_session():
         poolclass=StaticPool,
     )
 
-    # Create tables
+    # Test-only setup; production schema is managed with Alembic.
     Base.metadata.create_all(bind=engine)
 
     TestingSessionLocal = sessionmaker(
@@ -752,7 +817,7 @@ def test_user(db_session):
     user = User(
         email="test@example.com",
         username="testuser",
-        hashed_password="hashed"  # pragma: allowlist secret
+        hashed_password=hash_password("test-password")
     )
     db_session.add(user)
     db_session.commit()
@@ -764,7 +829,11 @@ def test_user(db_session):
 ```python
 def test_create_user(db_session):
     """Test user creation."""
-    user = User(email="new@example.com", username="newuser")
+    user = User(
+        email="new@example.com",
+        username="newuser",
+        hashed_password=hash_password("new-password")
+    )
     db_session.add(user)
     db_session.commit()
 
@@ -804,10 +873,15 @@ def test_delete_user(db_session, test_user):
 ### Query Optimization
 ```python
 # Use indexes
+from sqlalchemy import Index, String
+from sqlalchemy.orm import Mapped, mapped_column
+
 class User(Base):
     __tablename__ = "users"
 
+    id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(255), index=True, unique=True)
+    is_active: Mapped[bool] = mapped_column(default=True, index=True)
     created_at: Mapped[datetime] = mapped_column(index=True)
 
     # Composite index
@@ -864,7 +938,11 @@ def receive_checkout(dbapi_conn, connection_record, connection_proxy):
 from sqlalchemy import insert
 
 data = [
-    {"email": f"user{i}@example.com", "username": f"user{i}"}
+    {
+        "email": f"user{i}@example.com",
+        "username": f"user{i}",
+        "hashed_password": hash_password(f"password-{i}")
+    }
     for i in range(1000)
 ]
 
@@ -881,6 +959,7 @@ stmt = (
     .values(deleted_at=func.now())
 )
 db.execute(stmt)
+db.commit()
 ```
 
 ## Best Practices
@@ -946,7 +1025,7 @@ class SoftDeleteMixin:
     def is_deleted(self) -> bool:
         return self.deleted_at is not None
 
-class User(Base, SoftDeleteMixin):
+class User(SoftDeleteMixin, Base):
     __tablename__ = "users"
     # ... fields
 
@@ -987,15 +1066,16 @@ during query review:
   query per row.
 - **`SELECT *` / over-fetching** — project only the columns you use with
   `select(Model.col_a, Model.col_b)`.
-- **Missing indexes / `SELECT DISTINCT` to mask duplicates** — index filter/join/order
-  columns; `DISTINCT` usually hides a missing join, not a fix.
+- **Missing indexes** — index filter/join/order columns that are hot and verify the plan.
+- **Duplicate cardinality** — use `DISTINCT`, `GROUP BY`, or `EXISTS` when one row per key is
+  the requirement; fix an incorrect join when duplicates are accidental.
 - **Cursor-in-loop writes** — replace row-by-row writes with a single set-based
   `update()`/`insert()`.
 - **DDL/DML interleaving** — keep schema changes in migrations; runtime code is DML-only.
 - **Unparameterized queries** — bind parameters; never f-string untrusted data into SQL.
 - **Correlated subqueries** — prefer independent subqueries/CTEs or joins with indexes.
 
-See **[sql-quality-antipatterns.md](references/sql-quality-antipatterns.md)** for
+See **[sql-quality-antipatterns.md](sql-quality-antipatterns.md)** for
 non-compliant vs compliant examples (raw SQL and SQLAlchemy 2.0) and how to test each.
 
 > Derived from CAST Highlight SQL code-quality indicators
