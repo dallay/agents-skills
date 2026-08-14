@@ -26,6 +26,8 @@ the worktree but are intentionally not part of this unit.
 ## Validation and transformation notes
 
 The target repository's pinned `skills-ref` validator accepts the three materialized directories.
+Run `python3 scripts/validate_provenance.py` from the repository root to verify every materialized
+file hash below against the current bytes.
 The upstream frontmatter used unsupported progressive-disclosure fields and, for Drizzle, the source
 name `drizzle`; the curated entrypoints normalize only those repository packaging fields and retain
 complete source guidance in the linked companion files. The catalog retains the existing local IDs,
@@ -38,13 +40,13 @@ completeness were not verified. Existing unrelated untracked skills also remain 
 
 SHA-256 hashes of the final materialized files, refreshed during verification:
 
-- `drizzle-orm/SKILL.md`: `31aab8f3fff9dc3b4dd0ac593f33d6b5e6583885db5a373dbcfd805b3732714f`
-- `drizzle-orm/references/advanced-schemas.md`: `420e86801c18d535ab531e6621c8a9df5247c11158b9a9f30dc44f11ea35108d`
-- `drizzle-orm/references/performance.md`: `7c7d88acf151be3cd992189999fce590599052979180fceac9fae9133d2bdf27`
-- `drizzle-orm/references/query-patterns.md`: `2f6808e80fd63e7f07d47ade83bd2c89506c1fd4325b8e8b661257337c029778`
-- `drizzle-orm/references/vs-prisma.md`: `a893597eede5b0a4a230fa34d321f97e25dc42529c6aaf760235d8ac05a9022e`
+- `drizzle-orm/SKILL.md`: `d13bb172f93171606b04cb72b21d5b2ed39ddfccdd240ba6b42ebe88f04cad4a`
+- `drizzle-orm/references/advanced-schemas.md`: `e71e8ec21a24b5e0d6e0759e3b4a7926767fbde1c47c69e9186bb6262ce15692`
+- `drizzle-orm/references/performance.md`: `bc47e3926b70d961b45b3d748c63c3d15bd2fb4e29b4acb1e43190866732fbe8`
+- `drizzle-orm/references/query-patterns.md`: `f291b839fde2008f3af5fec4b56c4af5dfdf437e33c28bdb79a369e13bdcde79`
+- `drizzle-orm/references/vs-prisma.md`: `93a29571f1c02fd9c70b4a7a50491b311cdf820055395317dbec2468ec2d1ca4`
 - `pydantic/SKILL.md`: `6769a7817671c8673e94221357d2e2058867594a006fdc05b3d551850cf4ff99`
-- `pydantic/references/full-source.md`: `b370a330c9f2ca486b58e306853aae31edf5c70ca8fd24d3cfbb79127fe269a5`
+- `pydantic/references/full-source.md`: `59ad03a0452eaf89b8c43ce3780fcc36443c710d45b53d9e373288ddc09d85b9`
 - `sqlalchemy/SKILL.md`: `35e1956c80ec9b8644d6b67de13909696ee83191534a51bf0d7dbfdfca65df4b`
-- `sqlalchemy/references/full-source.md`: `4ce69ba775e5c954a7201e1e4dc3863201ebd0887c64ea47efccbacc9b14631a`
-- `sqlalchemy/references/sql-quality-antipatterns.md`: `564fb37be603f965d8f7678e5030cc5c9c4059d746bcb8f317ddd70a9d53fc11`
+- `sqlalchemy/references/full-source.md`: `87059b5aaa81ab2e70977c327c50b26ebf7bd494a4f6badbe9a6a6c57db384df`
+- `sqlalchemy/references/sql-quality-antipatterns.md`: `06d1875db687a9a6e25158cb2039e6382ebc7ca599dc94107fa0b332a306872a`
