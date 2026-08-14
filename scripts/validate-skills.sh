@@ -26,4 +26,5 @@ for skill_dir in "$SKILLS_DIR"/*; do
 done
 
 echo "[INFO] validated $validated skill(s) with skills-ref"
+python3 "$ROOT_DIR/scripts/validate_provenance.py"
 python3 "$ROOT_DIR/scripts/validate_skills.py"
