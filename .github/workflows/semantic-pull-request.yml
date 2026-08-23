@@ -7,4 +7,4 @@ permissions:
   packages: read
 jobs:
   main:
-    uses: dallay/common-actions/.github/workflows/semantic-pull-request.yml@v2.1.0
+    uses: dallay/common-actions/.github/workflows/semantic-pull-request.yml@v2.2.2
