@@ -1,9 +1,10 @@
 # Curated Skill Provenance
 
 This record covers the Phase 1 Bobmatnyc migration. The copied content is preserved under the
-canonical `skills/<local-id>/` directories; no Clerk, Angular, or TypeScript candidate is included
-in this provenance record or migration scope. Those pre-existing untracked candidate files remain in
-the worktree but are intentionally not part of this unit.
+canonical `skills/<local-id>/` directories. The Clerk, Angular, and TypeScript candidates are listed
+below for audit traceability but are not materialized and are excluded from the migration scope.
+Those pre-existing untracked candidate files remain in the worktree but are intentionally not part
+of this unit.
 
 ## Source and license evidence
 
@@ -32,18 +33,18 @@ Per-skill evidence lives under
 `openspec/changes/phase1-e2e-mirror-catalog/evidence/<local-id>.md` (PR1a's change folder);
 the summary audit is `openspec/changes/phase1-e2e-mirror-catalog/evidence/summary.md`.
 
-### Clerk family — blocked by missing top-level SPDX at `clerk/skills`
+### Clerk family — blocked by missing repository-level SPDX metadata at `clerk/skills`
 
 | Local ID | Blocker |
 |---|---|
-| `clerk-setup` | Local bytes are `v2.3.0`; upstream `clerk/skills@main` is `v2.5.0`. Needs an older pinned commit to byte-match. `clerk/skills` repo has no top-level `LICENSE` file — `gh api repos/clerk/skills/license` returns 404. See `evidence/clerk-setup.md`. |
-| `clerk-nextjs-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `7a2c0d7c...`). Repo-level SPDX absent; per-file `license: MIT` is not authoritative. Also needs 5 companion `references/*.md` vendored. See `evidence/clerk-nextjs-patterns.md`. |
-| `clerk-react-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `84496131...`). Same SPDX gap; 4 companion refs vendoring still required. See `evidence/clerk-react-patterns.md`. |
-| `clerk-vue-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `0109b3d7...`). Same SPDX gap; 3 companion refs vendoring still required. See `evidence/clerk-vue-patterns.md`. |
-| `clerk-astro-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `0e5f731e...`). Same SPDX gap; 5 companion refs vendoring still required. See `evidence/clerk-astro-patterns.md`. |
-| `clerk-webhooks` | Byte-identical to upstream at `aac39ed99f18...` (blob `259f099f...`). Same SPDX gap; 1 companion `references/frameworks.md` vendoring required. See `evidence/clerk-webhooks.md`. |
-| `clerk-testing` | Byte-identical to upstream at `aac39ed99f18...` (blob `46b394e0...`). Same SPDX gap; no companion refs. See `evidence/clerk-testing.md`. |
-| `clerk-custom-ui` | Byte-identical to upstream at `aac39ed99f18...` (blob `e6e05dc9...`). Same SPDX gap; 5 `core-2/` + `core-3/` companion refs vendoring required. See `evidence/clerk-custom-ui.md`. |
+| `clerk-setup` | Local bytes are `v2.3.0`; upstream `clerk/skills@main` is `v2.5.0`. Needs an older pinned commit to byte-match. `clerk/skills` repo has no top-level `LICENSE` file — `gh api repos/clerk/skills/license` returns 404 — and lacks repository-level SPDX metadata. See `evidence/clerk-setup.md`. |
+| `clerk-nextjs-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `7a2c0d7c...`). Repository-level SPDX metadata absent; per-file `license: MIT` is not authoritative. Also needs 5 companion `references/*.md` vendored. See `evidence/clerk-nextjs-patterns.md`. |
+| `clerk-react-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `84496131...`). Same repository-level SPDX metadata gap; 4 companion refs vendoring still required. See `evidence/clerk-react-patterns.md`. |
+| `clerk-vue-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `0109b3d7...`). Same repository-level SPDX metadata gap; 3 companion refs vendoring still required. See `evidence/clerk-vue-patterns.md`. |
+| `clerk-astro-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `0e5f731e...`). Same repository-level SPDX metadata gap; 5 companion refs vendoring still required. See `evidence/clerk-astro-patterns.md`. |
+| `clerk-webhooks` | Byte-identical to upstream at `aac39ed99f18...` (blob `259f099f...`). Same repository-level SPDX metadata gap; 1 companion `references/frameworks.md` vendoring required. See `evidence/clerk-webhooks.md`. |
+| `clerk-testing` | Byte-identical to upstream at `aac39ed99f18...` (blob `46b394e0...`). Same repository-level SPDX metadata gap; no companion refs. See `evidence/clerk-testing.md`. |
+| `clerk-custom-ui` | Byte-identical to upstream at `aac39ed99f18...` (blob `e6e05dc9...`). Same repository-level SPDX metadata gap; 5 `core-2/` + `core-3/` companion refs vendoring required. See `evidence/clerk-custom-ui.md`. |
 
 ### dallay-original family — blocked by unconfirmed authorship
 
@@ -54,9 +55,12 @@ the summary audit is `openspec/changes/phase1-e2e-mirror-catalog/evidence/summar
 
 ### Resolution
 
-- Clerk candidates are gated on a top-level `LICENSE` file appearing at `clerk/skills` (or a
-  written re-distribution grant from the Clerk org). A tracking issue in `dallay/agents-skills`
-  records the SPDX / authorship gap for the family.
+- Clerk candidates are gated on repository-level SPDX metadata appearing at `clerk/skills` (or a
+  written re-distribution grant from the Clerk org). For `clerk-setup`, an older matching pinned
+  commit is additionally required. For candidates with companion references, vendoring those
+  companions is also required. All applicable prerequisites must be satisfied for a candidate to
+  clear; a top-level `LICENSE` file or license grant alone does not clear a candidate. A tracking
+  issue in `dallay/agents-skills` records the SPDX / authorship gap for the family.
 - The two `dallay-original` candidates are gated on Yuniel confirming authorship in writing so
   the frontmatter can be patched with `metadata.author: dallay-team` and
   `metadata.source: dallay-original` per REQ-SKILLREC-008 branch (a).
