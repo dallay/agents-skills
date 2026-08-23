@@ -1,9 +1,10 @@
 # Curated Skill Provenance
 
 This record covers the Phase 1 Bobmatnyc migration. The copied content is preserved under the
-canonical `skills/<local-id>/` directories; no Clerk, Angular, or TypeScript candidate is included
-in this provenance record or migration scope. Those pre-existing untracked candidate files remain in
-the worktree but are intentionally not part of this unit.
+canonical `skills/<local-id>/` directories. The Clerk, Angular, and TypeScript candidates are listed
+below for audit traceability but are not materialized and are excluded from the migration scope.
+Those pre-existing untracked candidate files remain in the worktree but are intentionally not part
+of this unit.
 
 ## Source and license evidence
 
@@ -22,6 +23,52 @@ the worktree but are intentionally not part of this unit.
 | `drizzle-orm` | `toolchains/typescript/data/drizzle/` | `SKILL.md` blob `236ae67fa9b66c3d7200c961fc92d6b0c0baab5d`; metadata blob `e23493b8d5f12a3a77a9032194d9bac05d167bac`; references tree `043607220be54467a264ef3fef89c6b17ebe9013` | `SKILL.md`, `references/advanced-schemas.md`, `references/performance.md`, `references/query-patterns.md`, `references/vs-prisma.md` | All four links declared by the source entrypoint are present. |
 | `pydantic` | `toolchains/python/validation/pydantic/` | `SKILL.md` blob `7d8c7eaccdb3bfdc8853c03af0fd8ce55281f53f`; metadata blob `a6d2520f96566cdd197f3a22ea7d85cd676d66f6` | Curated `SKILL.md` entrypoint plus `references/full-source.md` containing the complete source body | No body-linked companion directory was declared by the source. Full source retained as an explicit companion. |
 | `sqlalchemy` | `toolchains/python/data/sqlalchemy/` | `SKILL.md` blob `a8899fe4232fbf80b3bb500940b88aef3065ffef`; metadata blob `2bbcfdcd2ee0c394ca3a7747ffa7443b00068f7e`; references tree `46e9f4899640a3d8f20a8a5bf25732a14f8b37ee` | Curated `SKILL.md` entrypoint, `references/full-source.md`, `references/sql-quality-antipatterns.md` | The declared `sql-quality-antipatterns.md` link is present; full source retained as an explicit companion. |
+
+## Deferred candidates pending upstream SPDX or authorship confirmation
+
+The following ten Phase 1 candidates remain **untracked** in this repository. None has been
+materialized into a `skills/<local-id>/` directory and none has a `Materialized entries` row in
+this file. Each entry below records the audit decision and the audit record that backs it.
+Per-skill evidence lives under
+`openspec/changes/phase1-e2e-mirror-catalog/evidence/<local-id>.md` (PR1a's change folder);
+the summary audit is `openspec/changes/phase1-e2e-mirror-catalog/evidence/summary.md`.
+
+### Clerk family — blocked by missing repository-level SPDX metadata at `clerk/skills`
+
+| Local ID | Blocker |
+|---|---|
+| `clerk-setup` | Local bytes are `v2.3.0`; upstream `clerk/skills@main` is `v2.5.0`. Needs an older pinned commit to byte-match. `clerk/skills` repo has no top-level `LICENSE` file — `gh api repos/clerk/skills/license` returns 404 — and lacks repository-level SPDX metadata. See `evidence/clerk-setup.md`. |
+| `clerk-nextjs-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `7a2c0d7c...`). Repository-level SPDX metadata absent; per-file `license: MIT` is not authoritative. Also needs 5 companion `references/*.md` vendored. See `evidence/clerk-nextjs-patterns.md`. |
+| `clerk-react-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `84496131...`). Same repository-level SPDX metadata gap; 4 companion refs vendoring still required. See `evidence/clerk-react-patterns.md`. |
+| `clerk-vue-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `0109b3d7...`). Same repository-level SPDX metadata gap; 3 companion refs vendoring still required. See `evidence/clerk-vue-patterns.md`. |
+| `clerk-astro-patterns` | Byte-identical to upstream at `aac39ed99f18...` (blob `0e5f731e...`). Same repository-level SPDX metadata gap; 5 companion refs vendoring still required. See `evidence/clerk-astro-patterns.md`. |
+| `clerk-webhooks` | Byte-identical to upstream at `aac39ed99f18...` (blob `259f099f...`). Same repository-level SPDX metadata gap; 1 companion `references/frameworks.md` vendoring required. See `evidence/clerk-webhooks.md`. |
+| `clerk-testing` | Byte-identical to upstream at `aac39ed99f18...` (blob `46b394e0...`). Same repository-level SPDX metadata gap; no companion refs. See `evidence/clerk-testing.md`. |
+| `clerk-custom-ui` | Byte-identical to upstream at `aac39ed99f18...` (blob `e6e05dc9...`). Same repository-level SPDX metadata gap; 5 `core-2/` + `core-3/` companion refs vendoring required. See `evidence/clerk-custom-ui.md`. |
+
+### dallay-original family — blocked by unconfirmed authorship
+
+| Local ID | Blocker |
+|---|---|
+| `angular-architecture` | No upstream candidate; git history is empty for the untracked worktree entry. Frontmatter is missing `metadata.author` and `metadata.source`; prose reads as Yuniel-style but Yuniel has not confirmed authorship in writing. See `evidence/angular-architecture.md`. |
+| `typescript-strict-patterns` | No upstream candidate; git history is empty for the untracked worktree entry. Frontmatter is missing `metadata.author` and `metadata.source`; prose reads as Yuniel-style but Yuniel has not confirmed authorship in writing. See `evidence/typescript-strict-patterns.md`. |
+
+### Resolution
+
+- Clerk candidates are gated on repository-level SPDX metadata appearing at `clerk/skills` (or a
+  written re-distribution grant from the Clerk org). For `clerk-setup`, an older matching pinned
+  commit is additionally required. For candidates with companion references, vendoring those
+  companions is also required. All applicable prerequisites must be satisfied for a candidate to
+  clear; a top-level `LICENSE` file or license grant alone does not clear a candidate. A tracking
+  issue in `dallay/agents-skills` records the SPDX / authorship gap for the family.
+- The two `dallay-original` candidates are gated on Yuniel confirming authorship in writing so
+  the frontmatter can be patched with `metadata.author: dallay-team` and
+  `metadata.source: dallay-original` per REQ-SKILLREC-008 branch (a).
+
+The `validate_provenance.py` script (unchanged for PR1b) does not inspect frontmatter and
+therefore still exits 0 against this repository — this provenance note is a comment, not a hash
+entry. The frontmatter precheck that would catch the missing `metadata.source` fields is
+scoped to a future change after the upstream evidence resolves.
 
 ## Validation and transformation notes
 
